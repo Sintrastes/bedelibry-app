@@ -1,5 +1,6 @@
 .attr-cache
 .cabal-sandbox
+*.apk
 *.hi
 *.o
 cabal.project.local
