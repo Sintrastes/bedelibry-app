@@ -23,7 +23,9 @@ library
     , TypeFamilies
     , TypeOperators
     , FlexibleContexts
+    , FlexibleInstances
     , RankNTypes
+    , GADTs
   exposed-modules:
     Common.Api
     Common.Route
