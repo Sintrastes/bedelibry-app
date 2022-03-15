@@ -9,9 +9,11 @@ ctags
 dist-newstyle/
 dist/
 ghcid-output.txt
+frontend.jsexe/
 profile/
 result
 result-*
 tags
 TAGS
 static.out
+ghcid-output.txt
