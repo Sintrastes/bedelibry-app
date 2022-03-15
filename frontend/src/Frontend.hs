@@ -18,7 +18,9 @@ import Reflex.Dom.Core
 import Common.Api
 import Common.Route
 import Montague
-
+import Data.Maybe
+import Data.Function
+import Data.Functor
 import Prelude hiding ((<=))
 import Control.Applicative
 import Control.Monad.Tree
@@ -138,7 +140,7 @@ frontend = Frontend
   , _frontend_body = do
       elAttr "div" ("class" =: "column main-column") $ do
           el "h1" $ text "Welcome to Montague!"
-
+          
           {-
           el "p" $ text "Enter in the schema for your data:"
 
@@ -151,17 +153,15 @@ frontend = Frontend
 
           inputText <- el "p" $ inputElement def
 
-          let parsed = getParse (Proxy @BasicAtom) <$> 
-                T.unpack <$> _inputElement_value inputText
+          let parsed = getParse (Proxy @BasicAtom) <$> T.unpack <$> _inputElement_value inputText
 
           let isValid = isJust <$> parsed
 
-          let parsedDisplay = T.pack <$> 
-                maybe "Could not parse" show <$> parsed
+          let parsedDisplay = T.pack <$> maybe "Could not parse" show <$> parsed
 
-          let parsedFmt = isValid <&> \case
-            true  -> empty
-            false -> "class" := "red"
+          let parsedFmt = isValid <&> (\case
+               True  -> mempty
+               False -> "class" =: "red-text")
 
           elDynAttr "p" parsedFmt $ do
              dynText parsedDisplay

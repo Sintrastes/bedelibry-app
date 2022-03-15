@@ -14,6 +14,7 @@ library
     , DataKinds
     , FlexibleInstances
     , RecursiveDo
+    , BlockArguments
   build-depends: base
                , common
                , obelisk-frontend
@@ -24,6 +25,7 @@ library
                , obelisk-generated-static
                , text
                , partial-order
+               , monad-tree
   exposed-modules:
     Frontend
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
@@ -38,6 +40,7 @@ executable frontend
                , reflex-dom
                , obelisk-generated-static
                , frontend
+               , monad-tree
   ghc-options: -threaded -O -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -fno-show-valid-hole-fits
   if impl(ghcjs)
     ghc-options: -dedupe

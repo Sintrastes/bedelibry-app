@@ -18,6 +18,7 @@ library
     , MultiParamTypeClasses
     , FunctionalDependencies
     , ScopedTypeVariables
+    , ExistentialQuantification
   exposed-modules:
     Common.Api
     Common.Route

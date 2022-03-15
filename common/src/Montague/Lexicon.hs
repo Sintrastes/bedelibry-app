@@ -2,8 +2,8 @@
 module Montague.Lexicon where
 
 import Montague.Types
-import Text.Parsec
-import Distribution.Compat.CharParsing (sepBy)
+-- import Text.Parsec
+-- import Distribution.Compat.CharParsing (sepBy)
 import GHC.Real (odd)
 
 -- | Raw representation of a parsed montague lexicon file.
