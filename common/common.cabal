@@ -19,6 +19,11 @@ library
     , FunctionalDependencies
     , ScopedTypeVariables
     , ExistentialQuantification
+    , DataKinds
+    , TypeFamilies
+    , TypeOperators
+    , FlexibleContexts
+    , RankNTypes
   exposed-modules:
     Common.Api
     Common.Route

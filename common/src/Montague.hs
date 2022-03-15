@@ -3,7 +3,9 @@ module Montague (
   module Montague.Types,
   module Montague.Semantics,
   getAllParses,
-  getParse
+  getParse,
+  getParseFromLexicon,
+  getAllParsesFromLexicon
 ) where
 
 import Prelude hiding ((>=),(<=))
@@ -13,6 +15,7 @@ import Data.Maybe
 import Data.List
 import Montague.Types
 import Montague.Semantics
+import Montague.Lexicon
 import Data.PartialOrd hiding (nub, (==), elem)
 import Data.Proxy
 import Data.Char
@@ -82,3 +85,11 @@ getAllParses aT xs = nub parses
 -- | Get a single parse of a string with regard to a lexicon.
 getParse :: MontagueSemantics a t x => Proxy a -> String -> Maybe x
 getParse aT xs = listToMaybe $ getAllParses aT xs
+
+-- | Get a single parse of a string with regard to some explicitly passed lexicon.
+getParseFromLexicon :: SomeLexicon -> (forall a t. (Show a, Show t) => AnnotatedTerm a t -> r) -> String -> Maybe r
+getParseFromLexicon (SomeLexicon aT) f input = f <$> getParse aT input
+
+-- | Get all parses of a string with regard to a lexicon.
+getAllParsesFromLexicon :: SomeLexicon -> (forall a t. (Show a, Show t) => AnnotatedTerm a t -> r) -> String -> [r]
+getAllParsesFromLexicon (SomeLexicon aT) f input = f <$> getAllParses aT input

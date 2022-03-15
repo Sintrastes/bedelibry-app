@@ -61,8 +61,6 @@ instance (Show a, Show t) => Show (AnnotatedTerm a t) where
 
 type Lexicon a t = String -> MontagueTerm a t
 
-data SomeLexicon = forall a t. SomeLexicon (Lexicon a t)
-
 ----------------- Helper functions for building up types from trees.
 
 -- | Helper function to combine two nondeterministic types with a left arrow.
