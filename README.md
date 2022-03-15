@@ -2,6 +2,8 @@
 
 Montague-reflex is a simple [reflex](https://reflex-frp.org/) front-end for [Montague](https://github.com/Sintrastes/Montague). 
 
+![](images/montague_screenshot.png)
+
 # Building/Installing
 
 Montague-reflex is built with [nix](https://nixos.org/) and optionally [obelisk](https://github.com/obsidiansystems/obelisk/), so make sure those are installed first. 
