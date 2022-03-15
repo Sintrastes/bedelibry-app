@@ -65,9 +65,9 @@ combineTypeParsers :: (String -> Maybe (ShowableEnum '[x]))
   -> (String -> Maybe (ShowableEnum (x ': xs)))
 combineTypeParsers = undefined
 
-parseSomeLexicon :: [(String, String)] -> SomeTypeLexicon -> Either ParseError SomeLexicon
-parseSomeLexicon [(x,y)] = undefined
-parseSomeLexicon _ = undefined
+parseSomeLexicon :: SomeTypeLexicon -> [(String, String)] -> [([String], String)] -> Either ParseError SomeLexicon
+parseSomeLexicon _ [(x,y)] _ = undefined
+parseSomeLexicon _ _ _ = undefined
 
 data ShowableType (s :: Symbol) = ShowableType (Proxy s)
 
@@ -155,12 +155,18 @@ productionDeclaration = do
     return (x, y)
 
 {-
--- TODO: Need to do some validation between these steps here.
-montagueSchema :: Parser SomeMontagueSchema
-montagueSchema = do
+montagueLexicon = do
     types <- many typeDeclaration
-    subtypeDecs <- many subtypeDeclaraton
+    let Right typeLexicon = parseTypeLexicon types
+
+    -- Ignore this for now. This will be used
+    --  when we implement subtyping.
+    _ <- many subtypeDeclaraton
+
     atoms <- many atomDeclaration
     productions <- many productionDeclaration
 
+    let Right lexicon = parseSomeLexicon typeLexicon atoms productions
+
+    return $ lexicon
 -}
