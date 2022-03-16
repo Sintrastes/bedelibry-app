@@ -34,11 +34,13 @@ data ParseError =
   | WordNotFound String
 
 
-data SomeTypeLexicon = forall t. (Show t, PartialOrd t) => SomeTypeLexicon {
+data SomeTypeLexicon = forall t. (Show t, Eq t, PartialOrd t) => SomeTypeLexicon {
+  typeProxy :: Proxy t,
   parseType :: String -> Maybe t
 }
 
 data SomeLexicon = forall a t. (Eq a, Eq t, PartialOrd t, Show a, Show t) => SomeLexicon {
+  _someLexicon_typeProxy :: Proxy t,
   entityProxy :: Proxy a,
   semantics :: MontagueSemantics a t (AnnotatedTerm a t)
 }
@@ -95,7 +97,7 @@ parseTypeLexicon' (SLCons sym rest) =
 
 parseTypeLexicon :: [String] -> SomeTypeLexicon
 parseTypeLexicon types = types & toSymbolList & \case
-    (SomeSymbolList syms) -> SomeTypeLexicon $ \i ->
+    (SomeSymbolList syms) -> SomeTypeLexicon Proxy $ \i ->
         parseTypeLexicon' syms i
 
 type EntityDeclarations =
@@ -108,8 +110,27 @@ parseSomeLexicon :: SomeTypeLexicon
     -> EntityDeclarations 
     -> ProductionDeclarations
     -> Either ParseError SomeLexicon
-parseSomeLexicon (SomeTypeLexicon lex) entities productions =
-    pure $ undefined
+parseSomeLexicon (SomeTypeLexicon typeProxy lex) entityDecls productions = 
+    let entities = entityDecls & 
+          fmap fst &
+          toSymbolList
+    in
+      pure $ entities & \case
+        SomeSymbolList syms ->
+            let 
+              typeOf = parseTypeOf 
+                  entityDecls
+              parseTerm = parseParseTerm 
+                  entityDecls productions
+              semantics = MontagueSemantics 
+                  typeOf parseTerm id
+            in 
+              SomeLexicon (getEnumType syms) 
+                 typeProxy 
+                 semantics
+
+getEnumType :: SymbolList ss -> Proxy (ShowableEnum ss)
+getEnumType _ = Proxy
 
 parseTypeOf :: EntityDeclarations -> (Term a t -> MontagueType t)
 parseTypeOf = undefined
@@ -144,6 +165,11 @@ instance AllKnownSymbols ss => PartialOrd (ShowableEnum ss) where
     (SEInl sym1 _) <= (SEInl sym2 _)       = symbolVal sym1 == symbolVal sym2
     (SEInr p1 rest1) <= (SEInr p2 rest2) = rest1 Data.PartialOrd.<= rest2
     _             <= _                   = False 
+
+instance AllKnownSymbols ss => Eq (ShowableEnum ss) where
+    (SEInl sym1 _)   == (SEInl sym2 _)   = symbolVal sym1 == symbolVal sym2
+    (SEInr p1 rest1) == (SEInr p2 rest2) = rest1 == rest2
+    _                == _                = False 
 
 class AllKnownSymbols (ss :: [Symbol]) where
 instance AllKnownSymbols '[] where
