@@ -1,6 +1,6 @@
 # montague-reflex
 
-Montague-reflex is a simple [reflex](https://reflex-frp.org/) front-end for [Montague](https://github.com/Sintrastes/Montague). 
+Montague-reflex is a simple [reflex](https://reflex-frp.org/) front-end for [Montague](https://github.com/Sintrastes/Montague). It isn't incredibly useful on it's own, but in the future may become the basis for a GUI for Bedelibry.
 
 Montague lets you specify your own schemas, defining a sub-set of English (or another natural language -- Unicode is supported too!)
  with an assignment of words to both a semantic and syntactic type. Montague then parses
