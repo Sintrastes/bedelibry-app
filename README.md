@@ -2,6 +2,15 @@
 
 Montague-reflex is a simple [reflex](https://reflex-frp.org/) front-end for [Montague](https://github.com/Sintrastes/Montague). 
 
+Montague lets you specify your own schemas, defining a sub-set of English (or another natural language -- Unicode is supported too!)
+ with an assignment of words to both a semantic and syntactic type. Montague then parses
+ sentences (and sentence fragments) into a logical form, which can
+ then be fed as input into other systems (for instance, a logic query language).
+
+Thanks to the power of reflex and Functional Reactive Programming,
+ you get instant feedback as you make changes to your schema and
+ input sentences, as seen in the gif below.
+
 <div align="center">
   <img width="250em" src="https://raw.githubusercontent.com/Sintrastes/montague-reflex/main/images/montague_screenshot.png"/>
 </div>
