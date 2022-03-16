@@ -11,6 +11,7 @@ import GHC.TypeLits
 import Data.PartialOrd hiding ((==))
 import Data.Void
 import Data.Function
+import Data.Constraint
 
 ------------- Public API --------------
 
@@ -41,43 +42,81 @@ data SomeLexicon = forall a t. (Show a, Show t, MontagueSemantics a t (Annotated
   entityProxy :: Proxy a
 }
 
-parseTypeLexicon :: [String] -> SomeTypeLexicon
-parseTypeLexicon [x] = someSymbolVal x & \case
-  SomeSymbol sym -> SomeTypeLexicon {
-    parseType = \i -> if i == x
-        then Just $ SEOne sym
-        else Nothing
-  }
 -- I think the real way to decode this would be via first parsing
 -- the list into a vector.
-parseTypeLexicon (x:xs) = someSymbolVal x & \case
-  SomeSymbol sym -> undefined {- SomeTypeLexicon {
-      parseType = combineTypeParsers
-          (\i -> if i == x
-              then Just $ SEOne sym
-              else Nothing)
-          _
-  } -}
 
--- I need something of the form:
-combineTypeParsers :: (String -> Maybe (ShowableEnum '[x])) 
+data SomeSymbolList = forall (ss :: [Symbol]). AllKnownSymbols ss => SomeSymbolList (SymbolList ss)
+
+data SymbolList (ss :: [Symbol]) where
+    SLOne :: KnownSymbol s => Proxy s -> SymbolList '[s]
+    SLCons :: (KnownSymbol s, AllKnownSymbols ss) => Proxy s -> SymbolList ss -> SymbolList (s ': ss) 
+
+toSymbolList :: [String] -> SomeSymbolList
+toSymbolList [x] = someSymbolVal x & \case
+  SomeSymbol sym -> SomeSymbolList (SLOne sym)
+toSymbolList (x:xs) = someSymbolVal x & \case
+  SomeSymbol sym -> toSymbolList xs & \case
+    SomeSymbolList syms -> 
+      SomeSymbolList $ SLCons sym syms
+
+-- | Helper function to combine the parser for the head of a
+--    ShowableEnum with the parser for the tail of a ShowableEnum
+--    to produce a parser for the whole ShowableEnum.
+combineTypeParsers :: (KnownSymbol x, AllKnownSymbols xs) => (String -> Maybe (ShowableEnum '[x])) 
   -> (String -> Maybe (ShowableEnum xs)) 
   -> (String -> Maybe (ShowableEnum (x ': xs)))
-combineTypeParsers = undefined
+combineTypeParsers xParser xsParser = \input ->
+    case xParser input of
+        Just res -> pure $ injectHead res
+        Nothing  -> case xsParser input of
+            Just res -> pure $ injectTail res
+            Nothing  -> Nothing
 
-parseSomeLexicon :: SomeTypeLexicon -> [(String, String)] -> [([String], String)] -> Either ParseError SomeLexicon
-parseSomeLexicon _ [(x,y)] _ = undefined
-parseSomeLexicon _ _ _ = undefined
+injectHead :: forall x xs. (KnownSymbol x, AllKnownSymbols xs) => ShowableEnum '[x] -> ShowableEnum (x ': xs)
+injectHead (SEInl sym _) = SEInl sym (Proxy @xs)
+
+injectTail :: forall x xs. (KnownSymbol x, AllKnownSymbols xs) => ShowableEnum xs -> ShowableEnum (x ': xs)
+injectTail e = SEInr (Proxy @x) e
+
+parseTypeLexicon' :: AllKnownSymbols ss => 
+       SymbolList ss 
+    -> (String -> Maybe (ShowableEnum ss))
+parseTypeLexicon' (SLCons sym rest) = 
+    let 
+        headParser = \i -> if i == (symbolVal sym)
+          then Just $ SEInl sym Proxy
+          else Nothing
+        tailParser = parseTypeLexicon' rest
+    in
+        combineTypeParsers
+            headParser
+            tailParser
+
+parseTypeLexicon :: [String] -> SomeTypeLexicon
+parseTypeLexicon types = types & toSymbolList & \case
+    (SomeSymbolList syms) -> SomeTypeLexicon $ \i ->
+        parseTypeLexicon' syms i
+
+type EntityDeclarations =
+    [(String, String)]
+
+type ProductionDeclarations =
+    [([String], String)] 
+
+parseSomeLexicon :: SomeTypeLexicon 
+    -> EntityDeclarations 
+    -> ProductionDeclarations
+    -> Either ParseError SomeLexicon
+parseSomeLexicon (SomeTypeLexicon lex) entities productions =
+    pure $ undefined
 
 data ShowableType (s :: Symbol) = ShowableType (Proxy s)
 
 instance KnownSymbol s => Show (ShowableType s) where
     show (ShowableType p) = symbolVal p 
 
-type family FMapShowableType (ss :: [Symbol]) where
-    FMapShowableType '[]     = Void
-    FMapShowableType (x ': xs) = Sum (ShowableType x) (FMapShowableType xs)
-
+-- | Alternative Either implementaton with
+-- custom Show instance (does not display tags).
 data Sum x y = 
       Sum1 x
     | Sum2 y
@@ -87,17 +126,21 @@ instance (Show x, Show y) => Show (Sum x y) where
     show (Sum2 y) = show y
 
 data ShowableEnum (ss :: [Symbol]) where
-    SEOne  :: Proxy s -> ShowableEnum '[s]
-    SECons :: Proxy s -> ShowableEnum ss -> ShowableEnum (s ': ss)
+    SEInl  :: (KnownSymbol s, AllKnownSymbols ss) => Proxy s -> Proxy ss -> ShowableEnum (s ': ss)
+    SEInr  :: (KnownSymbol s, AllKnownSymbols ss) => Proxy s -> ShowableEnum ss -> ShowableEnum (s ': ss)
 
-instance KnownSymbol s => Show (ShowableEnum '[s]) where
-    show (SEOne p) = symbolVal p
+instance AllKnownSymbols ss => Show (ShowableEnum ss) where
+    show (SEInl p _)    = symbolVal p
+    show (SEInr _ rest) = show rest
 
-instance (KnownSymbol s, Show (ShowableEnum (s2 ': ss))) => Show (ShowableEnum (s ': s2 ': ss)) where
-    show (SECons p xs) = symbolVal p
+instance AllKnownSymbols ss => PartialOrd (ShowableEnum ss) where
+    (SEInl sym1 _) <= (SEInl sym2 _)       = symbolVal sym1 == symbolVal sym2
+    (SEInr p1 rest1) <= (SEInr p2 rest2) = rest1 Data.PartialOrd.<= rest2
+    _             <= _                   = False 
 
-instance PartialOrd (ShowableEnum '[s]) where
-    (<=) x y = True
+class AllKnownSymbols (ss :: [Symbol]) where
+instance AllKnownSymbols '[] where
+instance (KnownSymbol s, AllKnownSymbols ss) => AllKnownSymbols (s ': ss) where
 
 data SomeShowableEnum = forall (ss :: [Symbol]). 
     SomeShowableEnum (ShowableEnum ss)
@@ -134,7 +177,7 @@ textT = many alphaNum
 typeDeclaration = do
     typeToken
     equals
-    sepBy1 orT entityT
+    sepBy1 entityT orT
 
 subtypeDeclaration = do
     x <- entityT
@@ -149,24 +192,23 @@ atomDeclaration = do
     return (x, y)
 
 productionDeclaration = do
-    x <- textT
+    x <- sepBy1 textT comma
     arrow
     y <- entityT
     return (x, y)
 
-{-
 montagueLexicon = do
-    types <- many typeDeclaration
-    let Right typeLexicon = parseTypeLexicon types
+    types <- typeDeclaration
+    let typeLexicon = parseTypeLexicon types
 
     -- Ignore this for now. This will be used
     --  when we implement subtyping.
-    _ <- many subtypeDeclaraton
+    _ <- many subtypeDeclaration
 
     atoms <- many atomDeclaration
     productions <- many productionDeclaration
 
+    -- TODO: Add better error handling here.
     let Right lexicon = parseSomeLexicon typeLexicon atoms productions
 
     return $ lexicon
--}

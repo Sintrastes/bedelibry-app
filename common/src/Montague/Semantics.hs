@@ -1,7 +1,6 @@
 
 module Montague.Semantics where
 
-import Control.Monad.Tree
 import Data.PartialOrd
 import Montague.Types
 
