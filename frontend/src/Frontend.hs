@@ -118,12 +118,14 @@ myLexicon = \case
     "happy"   -> pure $ Atom Happy
     _         -> empty
 
-instance MontagueSemantics BasicAtom BasicType (AnnotatedTerm BasicAtom BasicType) where
-   typeOf    = typeOfTerm
-   parseTerm = myLexicon
+exampleSemantics :: MontagueSemantics BasicAtom BasicType (AnnotatedTerm BasicAtom BasicType)
+exampleSemantics = MontagueSemantics {
+   typeOf    = typeOfTerm,
+   parseTerm = myLexicon,
    interp    = id
+}
 
-exampleLexicon = SomeLexicon (Proxy @BasicAtom)
+exampleLexicon = SomeLexicon (Proxy @BasicAtom) exampleSemantics
 
 -- This runs in a monad that can be run on the client or the server.
 -- To run code in a pure client or pure server context, use one of the

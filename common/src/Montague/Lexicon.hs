@@ -38,8 +38,9 @@ data SomeTypeLexicon = forall t. (Show t, PartialOrd t) => SomeTypeLexicon {
   parseType :: String -> Maybe t
 }
 
-data SomeLexicon = forall a t. (Show a, Show t, MontagueSemantics a t (AnnotatedTerm a t)) => SomeLexicon {
-  entityProxy :: Proxy a
+data SomeLexicon = forall a t. (Eq a, Eq t, PartialOrd t, Show a, Show t) => SomeLexicon {
+  entityProxy :: Proxy a,
+  semantics :: MontagueSemantics a t (AnnotatedTerm a t)
 }
 
 -- I think the real way to decode this would be via first parsing
