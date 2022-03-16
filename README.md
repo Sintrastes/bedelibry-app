@@ -2,7 +2,9 @@
 
 Montague-reflex is a simple [reflex](https://reflex-frp.org/) front-end for [Montague](https://github.com/Sintrastes/Montague). 
 
-![](images/montague_screenshot.png)
+<div align="center">
+  <img width="250em" src="https://raw.githubusercontent.com/Sintrastes/montague-reflex/main/images/montague_screenshot.png"/>
+</div>
 
 # Building/Installing
 
