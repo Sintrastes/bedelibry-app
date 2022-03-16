@@ -111,6 +111,12 @@ parseSomeLexicon :: SomeTypeLexicon
 parseSomeLexicon (SomeTypeLexicon lex) entities productions =
     pure $ undefined
 
+parseTypeOf :: EntityDeclarations -> (Term a t -> MontagueType t)
+parseTypeOf = undefined
+
+parseParseTerm :: EntityDeclarations -> ProductionDeclarations -> (String -> MontagueTerm a t)
+parseParseTerm = undefined
+
 data ShowableType (s :: Symbol) = ShowableType (Proxy s)
 
 instance KnownSymbol s => Show (ShowableType s) where
