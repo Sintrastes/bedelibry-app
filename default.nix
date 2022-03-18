@@ -17,19 +17,17 @@
 }:
 with obelisk;
 project ./. ({ ... }: {
-  android.applicationId = "systems.obsidian.obelisk.examples.minimal";
-  android.displayName = "Obelisk Minimal Example";
-  ios.bundleIdentifier = "systems.obsidian.obelisk.examples.minimal";
-  ios.bundleName = "Obelisk Minimal Example";
+  android.applicationId = "org.bedelibry.demos.montague";
+  android.displayName = "Montague App";
+  android.resources = ./static/res;
+  ios.bundleIdentifier = "org.bedelibry.demos.montague";
+  ios.bundleName = "Montague App";
 
-  overrides = self: super: let
-    monadTreePkg = self.callHackageDirect {
-      pkg = "monad-tree";
-      ver = "0.2.0.0";
-      sha256 = "qU50YWyeM1QI3lGQwboJ0iUlC4c4YTOrv3u/aVagRlg=";
-    } {}; 
-    in 
-    {
-      monad-tree = monadTreePkg;
+  overrides = self: super: {
+      monad-tree = self.callHackageDirect {
+        pkg = "monad-tree";
+        ver = "0.2.0.0";
+        sha256 = "qU50YWyeM1QI3lGQwboJ0iUlC4c4YTOrv3u/aVagRlg=";
+      } {}; 
     };
 })
