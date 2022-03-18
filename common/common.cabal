@@ -10,32 +10,7 @@ library
     , obelisk-route
     , mtl
     , text
-    , monad-tree
-    , partial-order
-    , parsec
-    , constraints
-  default-extensions:
-      LambdaCase
-    , MultiParamTypeClasses
-    , FunctionalDependencies
-    , ScopedTypeVariables
-    , ExistentialQuantification
-    , DataKinds
-    , TypeFamilies
-    , TypeOperators
-    , TypeApplications
-    , ScopedTypeVariables
-    , FlexibleContexts
-    , FlexibleInstances
-    , RankNTypes
-    , GADTs
   exposed-modules:
     Common.Api
     Common.Route
-    Montague
-    Montague.Semantics
-    Montague.Types
-    Montague.Lexicon
-    Montague.Display
-    Montague.Autocomplete
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

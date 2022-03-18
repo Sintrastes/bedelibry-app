@@ -25,5 +25,11 @@ project ./. ({ ... }: {
         ver = "0.2.0.0";
         sha256 = "qU50YWyeM1QI3lGQwboJ0iUlC4c4YTOrv3u/aVagRlg=";
       } {}; 
+      montague = pkgs.fetchFromGitHub {
+        owner = "sintrastes";
+        repo = "montague";
+        rev = "0375f049bf009e9599b2168b9519525164cabfac";
+        sha256 = "08q6rnz7w9pn76jkrafig6f50yd0f77z48rk2z5iyyl2jbhcbhx3";
+      };
     };
 })
