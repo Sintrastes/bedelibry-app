@@ -29,8 +29,8 @@ project ./. ({ pkgs, ... }: {
       montague = self.callCabal2nix "montague" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "montague";
-        rev = "1aaabc97a576308feeb778fbeeddad5ac72095f1";
-        sha256 = "3KIu7ZyCHOmtlKqqGnqQHti9sZPcDTZnzRPjmB2OkWA=";
+        rev = "4e94bf545926febb304b33374b2c38b0a48dbf15";
+        sha256 = "49J/iExS+uP63kr2xqR4v22hLKl4XtnFGLBTFh5P4EQ=";
       }) {};
     };
 })

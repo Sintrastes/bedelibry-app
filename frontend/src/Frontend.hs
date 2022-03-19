@@ -54,7 +54,9 @@ frontend = Frontend
 
           schemaText <- textAreaElement def
 
-          let parsedSchema = parseSchema <$> schemaText
+          let parsedSchema = parseSchema <$> 
+                 T.unpack <$> 
+                 _textAreaElement_value schemaText
           
           el "p" $ text "Enter in a sentence you want to parse!"
 
@@ -62,8 +64,11 @@ frontend = Frontend
 
           let parsed = do
                schema <- parsedSchema
-               text <- T.unpack <$> _inputElement_value inputText
-               pure $ getParseFromLexicon schema show text 
+               case schema of
+                 Nothing -> pure Nothing
+                 Just schema -> do
+                    text <- T.unpack <$> _inputElement_value inputText
+                    pure $ getParseFromLexicon schema show text 
 
           let isValid = isJust <$> parsed
 
