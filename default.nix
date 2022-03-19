@@ -12,7 +12,8 @@
   }
 }:
 with obelisk;
-project ./. ({ ... }: {
+project ./. ({ pkgs, ... }: {
+
   android.applicationId = "org.bedelibry.demos.montague";
   android.displayName = "Montague App";
   android.resources = ./static/res;
@@ -25,11 +26,11 @@ project ./. ({ ... }: {
         ver = "0.2.0.0";
         sha256 = "qU50YWyeM1QI3lGQwboJ0iUlC4c4YTOrv3u/aVagRlg=";
       } {}; 
-      montague = pkgs.fetchFromGitHub {
+      montague = self.callCabal2nix "montague" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "montague";
-        rev = "0375f049bf009e9599b2168b9519525164cabfac";
-        sha256 = "08q6rnz7w9pn76jkrafig6f50yd0f77z48rk2z5iyyl2jbhcbhx3";
-      };
+        rev = "1aaabc97a576308feeb778fbeeddad5ac72095f1";
+        sha256 = "3KIu7ZyCHOmtlKqqGnqQHti9sZPcDTZnzRPjmB2OkWA=";
+      }) {};
     };
 })

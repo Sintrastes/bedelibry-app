@@ -31,105 +31,6 @@ import Montague.Semantics
 import Data.PartialOrd hiding ((==))
 import System.Environment
 
--- An example basic type to use with a schema.
-data BasicType =
-   Sentence
- | Question BasicType
- | Noun
- | Adjective
- | Person
- | Thing
- | ProperNoun
- | Determiner
- | DeterminedNoun
- | UndeterminedNoun deriving(Eq, Show)
-
-instance PartialOrd BasicType where
-    Person <= Noun = True
-    Thing  <= Noun = True
-    x <= y | x == y = True
-    _ <= _ = False
-
-data BasicAtom =
-     Nate
-   | Rick
-   | Rachel
-   | Will
-   | Michael
-   | Book
-   | Table
-   | Chair
-   | Happy
-   | Green
-   | Sad
-   | Mad
-   | Mother
-   | Father
-   | Dog
-   | Cat
-   | With
-   | Spoon
-   | Is deriving(Show, Eq)
-
-typeOfTerm :: Term BasicAtom BasicType -> MontagueType BasicType
-typeOfTerm = \case
-    Atom Nate    -> pure $ BasicType Person
-    Atom Rick    -> pure $ BasicType Person
-    Atom Rachel  -> pure $ BasicType Person
-    Atom Will    -> pure $ BasicType Person
-    Atom Michael -> pure $ BasicType Person
-    Atom Book    -> pure $ BasicType Thing
-    Atom Table   -> pure $ BasicType Thing
-    Atom Chair   -> pure $ BasicType Thing
-    Atom Is      -> pure $ ((BasicType Noun) `RightArrow` (BasicType Sentence)) `LeftArrow` (BasicType Adjective)
-    Atom Happy   -> pure $ BasicType Adjective
-    App (Atom Happy) [x] 
-         -> pure $ BasicType Sentence
---    Atom Sad     ->
---    Atom Mad     ->
-    Atom Mother  -> pure $ BasicType Person
-    Atom Father  -> pure $ BasicType Person
-    Atom Dog     -> pure $ BasicType Person
-    Atom Cat     -> pure $ BasicType Person
--- Atom With
-    Atom Spoon   -> pure $ BasicType Thing
-
--- Example lexicon.
-myLexicon :: Lexicon BasicAtom BasicType
-myLexicon = \case
-    "nate"    -> pure $ Atom Nate
-    "nathan"  -> pure $ Atom Nate
-    "rick"    -> pure $ Atom Rick
-    "rachel"  -> pure $ Atom Rachel
-    "will"    -> pure $ Atom Will
-    "william" -> pure $ Atom Will
-    "michael" -> pure $ Atom Michael
-    "book"    -> pure $ Atom Book
-    "table"   -> pure $ Atom Table
-    "chair"   -> pure $ Atom Chair
-    "mother"  -> pure $ Atom Mother
-    "mom"     -> pure $ Atom Mother
-    "father"  -> pure $ Atom Father
-    "dad"     -> pure $ Atom Father
-    "cat"     -> pure $ Atom Cat
-    "dog"     -> pure $ Atom Dog
-    "spoon"   -> pure $ Atom Spoon
-    "is"      -> pure $ Atom Is
-    "happy"   -> pure $ Atom Happy
-    _         -> empty
-
-exampleSemantics :: MontagueSemantics BasicAtom BasicType (AnnotatedTerm BasicAtom BasicType)
-exampleSemantics = MontagueSemantics {
-   typeOf    = typeOfTerm,
-   parseTerm = myLexicon,
-   interp    = id
-}
-
-exampleLexicon = SomeLexicon
-    (Proxy @BasicType) 
-    (Proxy @BasicAtom) 
-    exampleSemantics
-
 -- This runs in a monad that can be run on the client or the server.
 -- To run code in a pure client or pure server context, use one of the
 -- `prerender` functions.
@@ -149,21 +50,20 @@ frontend = Frontend
       elAttr "div" ("class" =: "column main-column") $ do
           el "h2" $ text "Welcome to Montague!"
           
-          {-
           el "p" $ text "Enter in the schema for your data:"
 
           schemaText <- textAreaElement def
 
           let parsedSchema = parseSchema <$> schemaText
-          -}
           
           el "p" $ text "Enter in a sentence you want to parse!"
 
           inputText <- el "p" $ inputElement def
 
-          let parsed = getParseFromLexicon exampleLexicon show <$> 
-               T.unpack <$> 
-               _inputElement_value inputText
+          let parsed = do
+               schema <- parsedSchema
+               text <- T.unpack <$> _inputElement_value inputText
+               pure $ getParseFromLexicon schema show text 
 
           let isValid = isJust <$> parsed
 
