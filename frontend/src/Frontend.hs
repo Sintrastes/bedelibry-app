@@ -57,13 +57,20 @@ frontend = Frontend
           let parsedSchema = parseSchema <$> 
                  T.unpack <$> 
                  _textAreaElement_value schemaText
+
+          let maybeParsedSchema = eitherToMaybe <$> 
+                parsedSchema   
+          
+          el "p" $ dynText $ parsedSchema <&> (\case
+              Left e  -> "❌ Invalid schema: " <> (T.pack $ show e)
+              Right x -> "✅ Schema valid.")  
           
           el "p" $ text "Enter in a sentence you want to parse!"
 
           inputText <- el "p" $ inputElement def
 
           let parsed = do
-               schema <- parsedSchema
+               schema <- maybeParsedSchema
                case schema of
                  Nothing -> pure Nothing
                  Just schema -> do
@@ -85,3 +92,6 @@ frontend = Frontend
 
       return ()
   }
+
+eitherToMaybe (Left e)  = Nothing
+eitherToMaybe (Right x) = Just x
