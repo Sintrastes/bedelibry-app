@@ -25,6 +25,7 @@ library
                , obelisk-executable-config-lookup
                , obelisk-generated-static
                , text
+               , lens
                , partial-order
                , monad-tree
                , montague
@@ -42,6 +43,7 @@ executable frontend
                , reflex-dom
                , obelisk-generated-static
                , frontend
+               , lens
                , monad-tree
                , montague
   ghc-options: -threaded -O -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -fno-show-valid-hole-fits

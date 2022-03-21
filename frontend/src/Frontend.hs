@@ -32,6 +32,8 @@ import Data.Proxy
 import Montague.Semantics
 import Data.PartialOrd hiding ((==))
 import System.Environment
+import Control.Lens
+import Control.Lens.Operators
 
 -- This runs in a monad that can be run on the client or the server.
 -- To run code in a pure client or pure server context, use one of the
@@ -58,7 +60,7 @@ frontend = Frontend
         "rel" =: "stylesheet") blank
   , _frontend_body = mdo
       -- Nav bar
-      NavBar navEvents toggleMenuEvent <- el "nav" $ elClass "div" "nav-wrapper" $ do
+      NavBar navEvents toggleMenuEvent <- el "nav" $ elClass "div" "nav-wrapper light-blue darken-1" $ do
           elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
           navMenu <- elAttr' "a" ("href" =: "#" <> "data-target" =: "mobile-demo" <> "class" =: "sidenav-trigger") $
               elClass "i" "material-icons" $ text "menu"
@@ -99,7 +101,12 @@ frontend = Frontend
       elClass "div" "column main-column" $ mdo
           el "p" $ text "Enter in the schema for your data:"
 
-          schemaText <- textAreaElement def
+          schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
+              def & textAreaElementConfig_elementConfig 
+                  . elementConfig_initialAttributes
+                  .~ ("rows" =: "10" <> "cols" =: "72" <> 
+                        "style" =: "height: auto;width: auto;resize: none;")
+           )
 
           let parsedSchema = parseSchema .
                  T.unpack <$>
@@ -108,9 +115,13 @@ frontend = Frontend
           let maybeParsedSchema = eitherToMaybe <$>
                 parsedSchema
 
-          el "p" $ dynText $ parsedSchema <&> (\case
-              Left e  -> "❌ Invalid schema: " <> T.pack (show e)
-              Right x -> "✅ Schema valid.")
+          el "div" $
+              el "small" $ el "p" $ dynText $ parsedSchema <&> (\case
+                  Left e  -> "❌ Invalid schema: " <> T.pack (show e)
+                  Right x -> "✅ Schema valid.")
+
+          elClass "a" "waves-effect waves-light btn light-blue" $
+              text "Save"
 
           el "p" $ text "Enter in a sentence you want to parse!"
 
