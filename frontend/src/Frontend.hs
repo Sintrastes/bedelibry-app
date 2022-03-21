@@ -1,5 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE RecursiveDo #-}
+{-# LANGUAGE LambdaCase #-}
 
 module Frontend where
 
@@ -37,9 +39,13 @@ import System.Environment
 frontend :: Frontend (R FrontendRoute)
 frontend = Frontend
   { _frontend_head = do
-      el "title" $ text "Montague Android App"
+      el "title" $ text "Montague"
       elAttr "link" (
         "href" =: $(static "materialize.min.css") <> 
+        "type" =: "text/css" <> 
+        "rel" =: "stylesheet") blank
+      elAttr "link" (
+        "href" =: "https://fonts.googleapis.com/icon?family=Material+Icons" <> 
         "type" =: "text/css" <> 
         "rel" =: "stylesheet") blank
       elAttr "link" (
@@ -47,9 +53,45 @@ frontend = Frontend
         "type" =: "text/css" <> 
         "rel" =: "stylesheet") blank
   , _frontend_body = do
-      elAttr "div" ("class" =: "column main-column") $ do
-          el "h2" $ text "Welcome to Montague!"
-          
+      -- Nav bar
+      navEvents <- el "nav" $ elClass "div" "nav-wrapper" $ do
+          elClass "a" "brand-logo" $ text "Montague"
+          elAttr "a" ("href" =: "#" <> "data-target" =: "mobile-demo" <> "class" =: "sidenav-trigger") $ 
+              elClass "i" "material-icons" $ text "menu"
+          elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
+              homeEvents       <- el "li" $ domEvent Click <$> fst <$> 
+                  (elAttr' "a" ("href" =: "#") $ text "Home")
+              schemaEvents     <- el "li" $ domEvent Click <$> fst <$> 
+                  (elAttr' "a" ("href" =: "#") $ text "Schema")
+              preferenceEvents <- el "li" $ domEvent Click <$> fst <$> 
+                  (elAttr' "a" ("href" =: "#") $ text "Preferences")
+
+              pure $ traceEventWith show $ leftmost [
+                  NavHome <$ homeEvents,
+                  NavSchema <$ schemaEvents,
+                  NavPrefs <$ preferenceEvents]
+
+      -- TODO: Replace with events to 
+      -- toggle the sidebar being open and closed.
+      let toggleSidebar = never
+
+      sidebarOpened <- accumDyn (\_ x -> x) False
+          toggleSidebar
+
+      currentPage <- accumDyn (\_ e -> e) NavHome
+          navEvents
+
+      -- Nav bar menu (for small screens.)
+      -- TODO: Keep this in a div, and toggle visiblity based on
+      -- whether or not it is open.
+      -- See: https://www.w3schools.com/w3css/w3css_sidebar.asp
+      elAttr "ul" ("class" =: "sidenav" <> "id" =: "mobile-demo") $ do
+          el "li" $ el "a" $ text "Home"
+          el "li" $ el "a" $ text "Schema"
+          el "li" $ el "a" $ text "Preferences"
+
+      -- App body
+      elClass "div" "column main-column" $ mdo
           el "p" $ text "Enter in the schema for your data:"
 
           schemaText <- textAreaElement def
@@ -95,3 +137,9 @@ frontend = Frontend
 
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
+
+data NavEvent =
+    NavHome
+  | NavSchema
+  | NavPrefs
+ deriving(Show)
