@@ -73,17 +73,14 @@ body = mdo
 
     -- App body
     elClass "div" "column main-column" $ mdo
-        el "p" $ text "Enter in the schema for your data:"
-
         maybeParsedSchema <- schemaPage
 
         homePage maybeParsedSchema
 
+        preferencePage
+
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> m ()
 homePage maybeParsedSchema = do
-    elClass "a" "waves-effect waves-light btn light-blue" $
-            text "Save"
-
     el "p" $ text "Enter in a sentence you want to parse!"
 
     inputText <- el "p" $ inputElement def
@@ -108,6 +105,9 @@ homePage maybeParsedSchema = do
 
     elDynAttr "p" parsedFmt $ do
         dynText parsedDisplay
+
+preferencePage :: _ => m ()
+preferencePage = pure ()
 
 navBar :: _ => m (Dynamic t NavEvent)
 navBar = do
@@ -156,6 +156,11 @@ navBar = do
 
 schemaPage :: _ => m (Dynamic t (Maybe SomeLexicon))
 schemaPage = do
+    el "p" $ text "Enter in the schema for your data:"
+    
+    elAttr "a" ("class" =: "waves-effect waves-light btn light-blue" <> "href" =: "#") $
+            text "Save"
+    
     schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
