@@ -20,13 +20,8 @@ library
     , GADTs
     , PartialTypeSignatures
   build-depends: base
-               , common
-               , obelisk-frontend
-               , obelisk-route
                , jsaddle
                , reflex-dom-core
-               , obelisk-executable-config-lookup
-               , obelisk-generated-static
                , text
                , lens
                , partial-order
@@ -37,15 +32,12 @@ library
     Frontend
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
 
-executable frontend
+executable reflex-frontend
   hs-source-dirs: src-bin
-  main-is: main.hs
+  main-is: main-reflex.hs
   build-depends: base
-               , common
-               , obelisk-frontend
-               , obelisk-route
+               , jsaddle-warp
                , reflex-dom
-               , obelisk-generated-static
                , frontend
                , lens
                , monad-tree

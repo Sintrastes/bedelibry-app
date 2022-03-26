@@ -1,7 +1,16 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE RecursiveDo #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase
+    , MultiParamTypeClasses
+    , FunctionalDependencies
+    , ScopedTypeVariables
+    , TypeApplications
+    , DataKinds
+    , FlexibleInstances
+    , FlexibleContexts
+    , RecursiveDo
+    , BlockArguments
+    , OverloadedStrings
+    , GADTs
+    , PartialTypeSignatures #-}
 
 module Frontend where
 
@@ -10,15 +19,8 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Language.Javascript.JSaddle (eval, liftJSM)
 
-import Obelisk.Frontend
-import Obelisk.Configs
-import Obelisk.Route
-import Obelisk.Generated.Static
-
 import Reflex.Dom.Core
 
-import Common.Api
-import Common.Route
 import Montague
 import Data.Maybe
 import Data.Function
@@ -35,36 +37,6 @@ import System.Environment
 import Control.Lens
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
-import Obelisk.Route.Frontend
-
--- This runs in a monad that can be run on the client or the server.
--- To run code in a pure client or pure server context, use one of the
--- `prerender` functions.
-frontend :: Frontend (R FrontendRoute)
-frontend = Frontend
-  { _frontend_head = header
-  , _frontend_body = body
-  }
-
-header :: _ => m ()
-header = do
-  el "title" $ text "Montague"
-  elAttr "link" (
-    "href" =: $(static "w3.css") <>
-    "type" =: "text/css" <>
-    "rel" =: "stylesheet") blank
-  elAttr "link" (
-    "href" =: $(static "materialize.min.css") <>
-    "type" =: "text/css" <>
-    "rel" =: "stylesheet") blank
-  elAttr "link" (
-    "href" =: "https://fonts.googleapis.com/icon?family=Material+Icons" <>
-    "type" =: "text/css" <>
-    "rel" =: "stylesheet") blank
-  elAttr "link" (
-    "href" =: $(static "main.css") <>
-    "type" =: "text/css" <>
-    "rel" =: "stylesheet") blank
 
 body :: _ => m ()
 body = mdo
