@@ -1,2 +1,1 @@
 packages: ./frontend/frontend.cabal ../Montague/montague.cabal ../meriv-core/meriv-core.cabal
-with-compiler: /nix/store/ny8vq8xl8n90rbk5ypbb4k2d2vmambyn-ghcjs-8.10.7/bin/ghcjs

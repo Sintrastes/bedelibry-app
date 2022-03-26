@@ -1,7 +1,9 @@
 
+{-# LANGUAGE OverloadedStrings, PartialTypeSignatures #-}
+
 import Frontend
 import Reflex.Dom.Core
-import Language.Javascript.JSaddle
+import Language.Javascript.JSaddle.Warp
 
 header :: _ => m ()
 header = do
@@ -19,7 +21,7 @@ header = do
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
   elAttr "link" (
-    "href" =: $(static "main.css") <>
+    "href" =: "https://sintrastes.github.io/demos/montague/main.css" <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
 
