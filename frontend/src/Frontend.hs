@@ -10,7 +10,8 @@
     , BlockArguments
     , OverloadedStrings
     , GADTs
-    , PartialTypeSignatures #-}
+    , PartialTypeSignatures
+    , ImplicitParams #-}
 
 module Frontend where
 
@@ -19,13 +20,13 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Language.Javascript.JSaddle (eval, liftJSM)
 
-import Reflex.Dom.Core
+import Reflex.Dom.Core hiding (button)
 
 import Montague
 import Data.Maybe
 import Data.Function
 import Data.Functor
-import Prelude hiding ((<=))
+import Prelude hiding ((<=), div)
 import Control.Applicative
 import Control.Monad.Tree
 import Montague.Types
@@ -37,25 +38,32 @@ import System.Environment
 import Control.Lens
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
+import Control.Monad.IO.Class
 
 body :: _ => m ()
 body = mdo
+    style <- holdDyn Android never
+    
     -- Nav bar
-    currentPage <- navBar
+    currentPage <- navBar style
 
     -- App body
     elClass "div" "column main-column" $ mdo
-        maybeParsedSchema <- schemaPage
+        maybeParsedSchema <- schemaPage style
 
-        homePage maybeParsedSchema
+        homePage maybeParsedSchema style
 
-        preferencePage
+        preferencePage style
 
-homePage :: _ => Dynamic t (Maybe SomeLexicon) -> m ()
-homePage maybeParsedSchema = do
-    el "p" $ text "Enter in a sentence you want to parse!"
+homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
+homePage maybeParsedSchema style = let ?style = style in do
+    p "Enter in a sentence you want to parse!"
 
-    inputText <- el "p" $ inputElement def
+    inputText <- el "p" $ inputElement (
+         def & inputElementConfig_elementConfig
+            . elementConfig_initialAttributes
+            .~ ("class" =: "p-form-text p-form-no-validate")
+      )
 
     let parsed = do
             schema <- maybeParsedSchema
@@ -78,12 +86,17 @@ homePage maybeParsedSchema = do
     elDynAttr "p" parsedFmt $ do
         dynText parsedDisplay
 
-preferencePage :: _ => m ()
-preferencePage = pure ()
+preferencePage :: _ => Dynamic t Style -> m ()
+preferencePage style = let ?style = style in pure ()
 
-navBar :: _ => m (Dynamic t NavEvent)
-navBar = do
-    (navBarEvents, toggleMenuEvent) <- el "nav" $ elClass "div" "nav-wrapper light-blue darken-1" $ do
+-- | Nav bar widget. Only shown with an Android style.
+navBar :: _ => Dynamic t Style -> m (Dynamic t NavEvent)
+navBar style = let ?style = style in do
+    let navAttrs = ?style <&> \case
+            Android -> "class" =: "nav-wrapper light-blue darken-1"
+            IOS     -> "style" =: "display: none;"
+    
+    (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
         elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
         navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
             elClass "i" "material-icons" $ text "menu"
@@ -101,7 +114,7 @@ navBar = do
                 NavSchema <$ schemaEvents,
                 NavPrefs <$ preferenceEvents],
                domEvent Click (fst navMenu))
-
+    
     sidebarOpened <- accumDyn (\s _ -> not s) False
         toggleMenuEvent
 
@@ -126,17 +139,15 @@ navBar = do
     accumDyn (\_ e -> e) NavHome
         navEvents
 
-schemaPage :: _ => m (Dynamic t (Maybe SomeLexicon))
-schemaPage = do
-    el "p" $ text "Enter in the schema for your data:"
+schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
+schemaPage style = let ?style = style in do
+    p "Enter in the schema for your data:"
     
-    elAttr "a" ("class" =: "waves-effect waves-light btn light-blue" <> "href" =: "#") $
-            text "Save"
     
     schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
-            .~ ("rows" =: "10" <>
+            .~ ("rows" =: "10" <> "class" =: "p-form-text p-form-no-validate" <>
                  "style" =: ("height: auto;resize: none;" <> boxResizing))
      )
 
@@ -147,10 +158,15 @@ schemaPage = do
     let maybeParsedSchema = eitherToMaybe <$>
           parsedSchema
 
-    el "div" $
+    div $
         el "small" $ el "p" $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
             Right x -> "✅ Schema valid.")
+    
+    saveEvent <- button "save"
+
+    performEvent $ saveEvent <&> (\_ -> 
+        toast "Successfully saved")
     
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"
@@ -160,8 +176,30 @@ schemaPage = do
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
 
+data Style = 
+    Android
+  | IOS
+
 data NavEvent =
     NavHome
   | NavSchema
   | NavPrefs
  deriving(Show)
+
+p x = el "p" $ text x
+
+div x = el "div" $ x
+
+toast message = do
+    liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
+    pure ()
+
+-- | A button widget that is styled appropriately
+--    depending on the currently set style.
+button label = do
+    let attributes = ?style <&> \case
+          Android -> "class" =: "waves-effect waves-light btn light-blue" <> "href" =: "#"
+          IOS     -> "class" =: "p-btn p-btn-mob" <> "href" =: "#"
+    clickEvent <- domEvent Click . fst <$> (elDynAttr' "a" attributes $
+      text label)
+    pure clickEvent

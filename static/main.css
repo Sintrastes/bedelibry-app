@@ -1,5 +1,6 @@
 
 .main-column {
-  margin-left: 5em;
-  margin-right: 5em;
+  overflow: hidden;
+  margin: auto;
+  width: min(50em, 85vw);
 }
