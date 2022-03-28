@@ -15,16 +15,16 @@ jobs:
           binary-caches = https://cache.nixos.org https://nixcache.reflex-frp.org
           binary-cache-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=
           binary-caches-parallel-connections = 40
-    - name: Build web frontend with nix
+    - name: Build webapp with nix
       run: |
         nix-build -A ghcjs.frontend -o result
         tar -cvzf montague-js-frontend.tar.gz result/*
-    - name: Build android app with nix
+    - name: Build Android app with nix
       run: |
         nix-build -A android.frontend -o result-android
         ls result-android
-        cp result-android/android_app_debug.apk ./montague-android-app.apk
-    - name: Archive frontend result
+        cp result-android/android-app-debug.apk ./montague-android-app.apk
+    - name: Archive webapp
       uses: actions/upload-artifact@v2
       with:
         name: ghcjs-frontend
@@ -32,5 +32,5 @@ jobs:
     - name: Archive Android app
       uses: actions/upload-artifact@v2
       with:
-        name: androi-app
+        name: android-app
         path: montague-android-app.apk
