@@ -5,7 +5,7 @@
     <img src="https://img.shields.io/badge/Language-Haskell-blue">
   </a>
   <a href="https://github.com/Sintrastes/montague-reflex/actions/workflows/build.yml">
-    <img src="https://github.com/sintrastes/montague-reflex/workflows/BUILD/badge.svg">
+    <img src="https://github.com/Sintrastes/montague-reflex/actions/workflows/build.yml/badge.svg">
   </a>
 </p>
 
