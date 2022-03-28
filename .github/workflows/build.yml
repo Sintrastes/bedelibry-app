@@ -11,9 +11,9 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - name: Build frontend with nix
-      - run: nix-build -A ghcjs.frontend -o result
+      run: nix-build -A ghcjs.frontend -o result
     - name: Archive frontend result
-      - uses: actions/upload-artifact@v2
-      - with:
+      uses: actions/upload-artifact@v2
+      with:
         - name: ghcjs-frontend
         - path: result
