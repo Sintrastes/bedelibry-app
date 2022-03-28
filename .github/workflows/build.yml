@@ -15,5 +15,5 @@ jobs:
     - name: Archive frontend result
       uses: actions/upload-artifact@v2
       with:
-        - name: ghcjs-frontend
-        - path: result
+        name: ghcjs-frontend
+        path: result
