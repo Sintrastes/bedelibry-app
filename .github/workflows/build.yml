@@ -16,9 +16,11 @@ jobs:
           binary-cache-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NWI=
           binary-caches-parallel-connections = 40
     - name: Build frontend with nix
-      run: nix-build -A ghcjs.frontend -o result
+      run: |
+        nix-build -A ghcjs.frontend -o result
+        tar -cvzf montague-js-frontend.tar.gz result/*
     - name: Archive frontend result
       uses: actions/upload-artifact@v2
       with:
         name: ghcjs-frontend
-        path: result
+        path: montague-js-frontend.tar.gz
