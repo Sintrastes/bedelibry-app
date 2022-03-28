@@ -13,7 +13,7 @@ jobs:
         extra_nix_config: |
           sandbox = false
           binary-caches = https://cache.nixos.org https://nixcache.reflex-frp.org
-          binary-cache-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcD>
+          binary-cache-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= ryantrinkle.com-1:JJiAKaRv9mWgpVAz8dwewnZe0AzzEAzPkagE9SP5NW9SP5NWI=
           binary-caches-parallel-connections = 40
     - name: Build frontend with nix
       run: nix-build -A ghcjs.frontend -o result
