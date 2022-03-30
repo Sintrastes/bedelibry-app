@@ -1,3 +1,6 @@
+
+{-# LANGUAGE TemplateHaskell #-}
+
 import Frontend
 import Common.Route
 import Obelisk.Frontend
