@@ -7,6 +7,7 @@
     , FlexibleInstances
     , FlexibleContexts
     , RecursiveDo
+    , TemplateHaskell
     , BlockArguments
     , OverloadedStrings
     , GADTs
