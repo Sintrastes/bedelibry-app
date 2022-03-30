@@ -5,6 +5,7 @@ import Frontend
 import Common.Route
 import Obelisk.Frontend
 import Obelisk.Route.Frontend
+import Obelisk.Generated.Static
 import Reflex.Dom
 
 -- This runs in a monad that can be run on the client or the server.
