@@ -1,1 +1,3 @@
-packages: ./frontend/frontend.cabal ../Montague/montague.cabal ../meriv-core/meriv-core.cabal
+optional-packages:
+  *
+write-ghc-environment-files: never
