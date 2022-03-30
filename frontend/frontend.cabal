@@ -62,6 +62,7 @@ executable frontend
                , reflex-dom
                , obelisk-generated-static
                , frontend
+               , frontend-lib
                , lens
                , monad-tree
                , montague
