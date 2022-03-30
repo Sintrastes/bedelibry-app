@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Frontend
+import Frontend.Obelisk
 import Common.Route
 import Obelisk.Frontend
 import Obelisk.Route.Frontend
