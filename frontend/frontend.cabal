@@ -51,7 +51,10 @@ executable frontend
     , PartialTypeSignatures
   build-depends: base
                , jsaddle
+               , obelisk-frontend
+               , obelisk-route
                , reflex-dom
+               , obelisk-generated-static
                , frontend
                , lens
                , monad-tree
