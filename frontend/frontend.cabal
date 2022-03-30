@@ -50,6 +50,7 @@ executable frontend
     , GADTs
     , PartialTypeSignatures
   build-depends: base
+               , common
                , jsaddle
                , obelisk-frontend
                , obelisk-route
