@@ -22,7 +22,7 @@ project ./. ({ pkgs, ... }: {
 
   packages = {
     frontend-lib = ./frontend-lib;
-  }
+  };
 
   overrides = self: super: {
       monad-tree = self.callHackageDirect {
