@@ -32,11 +32,11 @@ library
     Frontend
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
 
-executable reflex-frontend
+executable frontend
   hs-source-dirs: src-bin
-  main-is: main-reflex.hs
+  main-is: main.hs
   build-depends: base
-               , jsaddle-warp
+               , jsaddle
                , reflex-dom
                , frontend
                , lens

@@ -1,0 +1,21 @@
+name: frontend
+version: 0.1
+cabal-version: >= 1.8
+build-type: Simple
+
+executable reflex-frontend
+  hs-source-dirs: src
+  main-is: main-reflex.hs
+  build-depends: base
+               , jsaddle-warp
+               , reflex-dom
+               , frontend
+               , lens
+               , monad-tree
+               , montague
+  ghc-options: -threaded -O -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -fno-show-valid-hole-fits
+  if impl(ghcjs)
+    ghc-options: -dedupe
+    cpp-options: -DGHCJS_BROWSER
+  if os(darwin)
+    ghc-options: -dynamic
