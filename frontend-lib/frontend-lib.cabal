@@ -1,0 +1,33 @@
+name: frontend-lib
+version: 0.1
+cabal-version: >= 1.8
+build-type: Simple
+
+library
+  hs-source-dirs: src
+  default-extensions:
+      LambdaCase
+    , MultiParamTypeClasses
+    , FunctionalDependencies
+    , ScopedTypeVariables
+    , TypeApplications
+    , DataKinds
+    , FlexibleInstances
+    , FlexibleContexts
+    , RecursiveDo
+    , BlockArguments
+    , OverloadedStrings
+    , GADTs
+    , PartialTypeSignatures
+  build-depends: base
+               , jsaddle
+               , reflex-dom-core
+               , text
+               , lens
+               , partial-order
+               , monad-tree
+               , montague
+               , transformers
+  exposed-modules:
+    Frontend
+  ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

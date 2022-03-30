@@ -20,8 +20,12 @@ library
     , GADTs
     , PartialTypeSignatures
   build-depends: base
+               , frontend-lib
                , jsaddle
-               , reflex-dom-core
+               , obelisk-frontend
+               , obelisk-route
+               , reflex-dom
+               , obelisk-generated-static
                , text
                , lens
                , partial-order
@@ -29,7 +33,7 @@ library
                , montague
                , transformers
   exposed-modules:
-    Frontend
+    Frontend.Obelisk
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
 
 executable frontend
