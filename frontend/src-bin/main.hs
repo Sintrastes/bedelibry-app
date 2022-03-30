@@ -1,5 +1,6 @@
 
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Frontend
 import Common.Route
