@@ -20,6 +20,7 @@ library
     , GADTs
     , PartialTypeSignatures
   build-depends: base
+               , common
                , frontend-lib
                , jsaddle
                , obelisk-frontend
