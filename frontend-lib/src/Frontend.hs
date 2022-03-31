@@ -9,6 +9,7 @@
     , RecursiveDo
     , BlockArguments
     , OverloadedStrings
+    , ConstraintKinds
     , GADTs
     , PartialTypeSignatures
     , ImplicitParams #-}
