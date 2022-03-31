@@ -8,7 +8,7 @@ import Language.Javascript.JSaddle (eval, liftJSM)
 class MonadToast m where
     toast :: T.Text -> m ()
 
-instance MonadWidget m => MonadToast m where
+instance MonadWidget t m => MonadToast m where
     toast message = do
         liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
         pure ()
