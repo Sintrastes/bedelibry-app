@@ -29,5 +29,6 @@ library
                , montague
                , transformers
   exposed-modules:
-    Frontend
+      Frontend
+    , Control.Monad.Toast
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

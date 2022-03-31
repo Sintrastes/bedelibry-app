@@ -19,9 +19,7 @@ import Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Language.Javascript.JSaddle (eval, liftJSM)
-
 import Reflex.Dom.Core hiding (button)
-
 import Montague
 import Data.Maybe
 import Data.Function
@@ -39,6 +37,7 @@ import Control.Lens
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
+import Control.Monad.Toast
 
 body :: _ => m ()
 body = mdo
@@ -189,10 +188,6 @@ data NavEvent =
 p x = el "p" $ text x
 
 div x = el "div" $ x
-
-toast message = do
-    liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
-    pure ()
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.
