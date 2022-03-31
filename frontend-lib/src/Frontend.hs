@@ -39,7 +39,7 @@ import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
 import Control.Monad.Toast
 
-body :: _ => m ()
+body :: _b => m ()
 body = mdo
     style <- holdDyn Android never
     
