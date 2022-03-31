@@ -25,6 +25,7 @@ import Obelisk.Generated.Static
 import Control.Monad.Toast
 import Reflex.Dom
 import Data.Text as T
+import Language.Javascript.JSaddle (eval, liftJSM)
 
 instance ObeliskWidget t route m => MonadToast (RoutedT t route m) where
     toast message = do
