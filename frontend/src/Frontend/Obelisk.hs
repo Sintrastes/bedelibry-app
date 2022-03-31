@@ -26,7 +26,7 @@ import Control.Monad.Toast
 import Reflex.Dom
 import Data.Text as T
 
-instance ObeliskWidget t route m => MonadToast m where
+instance {-# INCOHERENT #-} ObeliskWidget t route m => MonadToast m where
     toast message = do
         prerender_ blank $ 
             liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
