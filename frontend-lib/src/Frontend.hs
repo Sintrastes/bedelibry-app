@@ -139,7 +139,7 @@ navBar style = let ?style = style in do
     accumDyn (\_ e -> e) NavHome
         navEvents
 
-schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
+schemaPage :: (DomBuilder t m, MonadToast m) => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     p "Enter in the schema for your data:"
     
