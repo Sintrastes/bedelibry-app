@@ -29,9 +29,9 @@ import Language.Javascript.JSaddle (eval, liftJSM)
 
 instance ObeliskWidget t route m => MonadToast (RoutedT t route m) where
     toast message = do
-        prerender_ blank $ 
+        prerender_ blank $ do
             liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
-        pure ()
+            pure ()
 
 -- This runs in a monad that can be run on the client or the server.
 -- To run code in a pure client or pure server context, use one of the
