@@ -13,6 +13,7 @@
     , GADTs
     , PartialTypeSignatures
     , ImplicitParams #-}
+{-# LANGUAGE UndecidableInstances #-}
 
 module Frontend.Obelisk where
 
