@@ -1,7 +1,6 @@
 
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE UndecidableInstances #-}
 
 import Frontend
 import Frontend.Obelisk
