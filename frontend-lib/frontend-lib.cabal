@@ -12,6 +12,7 @@ library
     , ScopedTypeVariables
     , TypeApplications
     , DataKinds
+    , UndecidableInstances
     , FlexibleInstances
     , FlexibleContexts
     , RecursiveDo
