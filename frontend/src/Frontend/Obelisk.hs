@@ -23,6 +23,7 @@ import Obelisk.Route.Frontend
 import Obelisk.Generated.Static
 import Control.Monad.Toast
 import Reflex.Dom
+import Data.Text as T
 
 instance ObeliskWidget t route m => MonadToast m where
     toast message = do
