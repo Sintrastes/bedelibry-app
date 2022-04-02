@@ -16,6 +16,8 @@
 
 module Frontend where
 
+import System.Info
+import Control.Exception
 import Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -39,6 +41,7 @@ import Control.Lens.Operators
 import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
 import Control.Monad.Fix
+import System.Directory
 
 body :: _ => m ()
 body = mdo
@@ -136,25 +139,35 @@ navBar style = let ?style = style in do
     accumDyn (\_ e -> e) NavHome
         navEvents
 
-sidebarButton x = li $ 
-    domEvent Click . fst <$> 
-        elClass' "a" "w3-bar-item w3-button" 
+sidebarButton x = li $
+    domEvent Click . fst <$>
+        elClass' "a" "w3-bar-item w3-button"
             (text x)
 
-navButton x = li $ 
+navButton x = li $
     domEvent Click . fst <$>
         el' "a" (text x)
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
-    p $ text "Enter in the schema for your data:"
+    -- Setup the application directory.
+    homeDir <- liftIO getHomeDirectory
+    let montagueDir = homeDir <> "/.montague"
+    liftIO $ createDirectoryIfMissing True montagueDir
 
+    -- Load the schema from disk.
+    loadedSchemaText <- liftIO $ catch (readFile (montagueDir <> "/schema.mont"))
+        (\(e :: IOException) -> pure "")
+
+    p $ text "Enter in the schema for your data:"
 
     schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ ("rows" =: "10" <> "class" =: "p-form-text p-form-no-validate" <>
                  "style" =: ("height: auto;resize: none;" <> boxResizing))
+            & textAreaElementConfig_initialValue
+            .~ T.pack loadedSchemaText
      )
 
     let parsedSchema = parseSchema .
@@ -171,8 +184,17 @@ schemaPage style = let ?style = style in do
 
     saveEvent <- button "save"
 
-    prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> 
-        toast "Saved schema")
+    prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do
+        toast $ T.pack $ "Current OS is: " <> os
+
+        latestSchemaText <- sample $ current $ T.unpack <$>
+              _textAreaElement_value schemaText
+        res <- liftIO $ try $
+            writeFile (homeDir <> "/.montague/schema.mont") latestSchemaText
+        
+        case res of 
+            Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
+            Right _ -> toast "Saved schema")
 
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"
@@ -208,7 +230,7 @@ button label = do
     let attributes = ?style <&> \case
           Android -> "class" =: "waves-effect waves-light btn light-blue"
           IOS     -> "class" =: "p-btn p-btn-mob"
-    domEvent Click . fst <$> elDynAttr' "a" attributes 
+    domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
 
 toast message = do
