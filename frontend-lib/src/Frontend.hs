@@ -41,7 +41,7 @@ import Control.Monad.IO.Class
 import Control.Monad.Toast
 import Control.Monad.Fix
 
-body :: (MonadHold t m, MonadFix m, PostBuild t m, Reflex t, DomBuilder t m, PerformEvent t m, MonadToast m) => m ()
+body :: _ => m ()
 body = mdo
     style <- holdDyn Android never
 
@@ -140,7 +140,7 @@ navBar style = let ?style = style in do
     accumDyn (\_ e -> e) NavHome
         navEvents
 
-schemaPage :: (MonadHold t m, MonadFix m, PostBuild t m, Reflex t, DomBuilder t m, PerformEvent t m, MonadToast m) => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
+schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     p "Enter in the schema for your data:"
 
