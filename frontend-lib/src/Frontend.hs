@@ -44,7 +44,7 @@ import Control.Monad.Fix
 body :: (MonadHold t m, MonadFix m, PostBuild t m, Reflex t, DomBuilder t m, PerformEvent t m, MonadToast m) => m ()
 body = mdo
     style <- holdDyn Android never
-    
+
     -- Nav bar
     currentPage <- navBar style
 
@@ -96,7 +96,7 @@ navBar style = let ?style = style in do
     let navAttrs = ?style <&> \case
             Android -> "class" =: "nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"
-    
+
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
         elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
         navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
@@ -109,13 +109,13 @@ navBar style = let ?style = style in do
             preferenceEvents <- el "li" $ domEvent Click . fst <$>
                 el' "a" (text "Preferences")
 
-            pure $ 
+            pure $
               (leftmost [
                 NavHome <$ homeEvents,
                 NavSchema <$ schemaEvents,
                 NavPrefs <$ preferenceEvents],
                domEvent Click (fst navMenu))
-    
+
     sidebarOpened <- accumDyn (\s _ -> not s) False
         toggleMenuEvent
 
@@ -143,8 +143,8 @@ navBar style = let ?style = style in do
 schemaPage :: (MonadHold t m, MonadFix m, PostBuild t m, Reflex t, DomBuilder t m, PerformEvent t m, MonadToast m) => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     p "Enter in the schema for your data:"
-    
-    
+
+
     schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
@@ -163,12 +163,12 @@ schemaPage style = let ?style = style in do
         el "small" $ el "p" $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
             Right x -> "✅ Schema valid.")
-    
+
     saveEvent <- button "save"
 
-    performEvent $ saveEvent <&> (\_ -> 
+    performEvent $ saveEvent <&> (\_ ->
         pure ())
-    
+
     -- toast "Hello, toast!"
 
     pure maybeParsedSchema
@@ -179,7 +179,7 @@ schemaPage style = let ?style = style in do
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
 
-data Style = 
+data Style =
     Android
   | IOS
 
@@ -191,7 +191,7 @@ data NavEvent =
 
 p x = el "p" $ text x
 
-div x = el "div" $ x
+div = el "div"
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.
@@ -199,6 +199,5 @@ button label = do
     let attributes = ?style <&> \case
           Android -> "class" =: "waves-effect waves-light btn light-blue"
           IOS     -> "class" =: "p-btn p-btn-mob"
-    clickEvent <- domEvent Click . fst <$> (elDynAttr' "a" attributes $
-      text label)
-    pure clickEvent
+    domEvent Click . fst <$> elDynAttr' "a" attributes 
+      (text label)
