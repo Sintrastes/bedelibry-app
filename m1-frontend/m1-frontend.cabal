@@ -1,0 +1,21 @@
+name: m1-frontend
+version: 0.1
+cabal-version: >= 1.8
+build-type: Simple
+
+executable m1-frontend
+  hs-source-dirs: src
+  main-is: main.hs
+  build-depends: base
+               , jsaddle-warp
+               , reflex-dom
+               , frontend-lib
+               , lens
+               , monad-tree
+               , montague
+  ghc-options: -threaded -O -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -fno-show-valid-hole-fits
+  if impl(ghcjs)
+    ghc-options: -dedupe
+    cpp-options: -DGHCJS_BROWSER
+  if os(darwin)
+    ghc-options: -dynamic

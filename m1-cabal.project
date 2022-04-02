@@ -1,0 +1,1 @@
+packages: ./frontend-lib/frontend-lib.cabal ./m1-frontend/m1-frontend.cabal ../Montague/montague.cabal ../meriv-core/meriv-core.cabal
