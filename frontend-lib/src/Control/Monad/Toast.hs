@@ -17,7 +17,7 @@ instance MonadWidget t m => MonadToast m where
         liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
         pure ()
 
-instance PerformEvent t m => MonadToast (Preformable m) where
+instance PerformEvent t m => MonadToast (Performable m) where
     toast message = do
         liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
         pure ()
