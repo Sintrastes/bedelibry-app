@@ -102,12 +102,9 @@ navBar style = let ?style = style in do
         navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
-            homeEvents       <- el "li" $ domEvent Click . fst <$>
-                el' "a" (text "Home")
-            schemaEvents     <- el "li" $ domEvent Click . fst <$>
-                el' "a" (text "Schema")
-            preferenceEvents <- el "li" $ domEvent Click . fst <$>
-                el' "a" (text "Preferences")
+            homeEvents       <- navButton "Home"
+            schemaEvents     <- navButton "Schema"
+            preferenceEvents <- navButton "Preferences"
 
             pure $
               (leftmost [
@@ -141,8 +138,13 @@ navBar style = let ?style = style in do
         navEvents
 
 sidebarButton x = li $ 
-    domEvent Click . fst <$> elClass' "a" "w3-bar-item w3-button" 
-      (text x)
+    domEvent Click . fst <$> 
+        elClass' "a" "w3-bar-item w3-button" 
+            (text x)
+
+navButton x = li $ 
+    domEvent Click . fst <$>
+        el' "a" (text "Home")
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
