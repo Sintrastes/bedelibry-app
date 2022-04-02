@@ -199,3 +199,7 @@ button label = do
           IOS     -> "class" =: "p-btn p-btn-mob"
     domEvent Click . fst <$> elDynAttr' "a" attributes 
       (text label)
+
+toast message = do
+    liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
+    pure ()
