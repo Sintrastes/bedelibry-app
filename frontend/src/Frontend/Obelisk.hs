@@ -22,7 +22,6 @@ import Common.Route
 import Obelisk.Frontend
 import Obelisk.Route.Frontend
 import Obelisk.Generated.Static
-import Control.Monad.Toast
 import Reflex.Dom
 import Data.Text as T
 import Language.Javascript.JSaddle (eval, liftJSM)
