@@ -1,15 +1,15 @@
-name: frontend
+name: m1-frontend
 version: 0.1
 cabal-version: >= 1.8
 build-type: Simple
 
-executable reflex-frontend
+executable m1-frontend
   hs-source-dirs: src
-  main-is: main-reflex.hs
+  main-is: main.hs
   build-depends: base
                , jsaddle-warp
                , reflex-dom
-               , frontend
+               , frontend-lib
                , lens
                , monad-tree
                , montague

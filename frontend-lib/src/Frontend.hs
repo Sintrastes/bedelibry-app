@@ -103,11 +103,11 @@ navBar style = let ?style = style in do
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
             homeEvents       <- el "li" $ domEvent Click . fst <$>
-                elAttr' "a" ("href" =: "#") (text "Home")
+                el' "a" (text "Home")
             schemaEvents     <- el "li" $ domEvent Click . fst <$>
-                elAttr' "a" ("href" =: "#") (text "Schema")
+                el' "a" (text "Schema")
             preferenceEvents <- el "li" $ domEvent Click . fst <$>
-                elAttr' "a" ("href" =: "#") (text "Preferences")
+                el' "a" (text "Preferences")
 
             pure $ 
               (leftmost [
@@ -197,8 +197,8 @@ div x = el "div" $ x
 --    depending on the currently set style.
 button label = do
     let attributes = ?style <&> \case
-          Android -> "class" =: "waves-effect waves-light btn light-blue" <> "href" =: "#"
-          IOS     -> "class" =: "p-btn p-btn-mob" <> "href" =: "#"
+          Android -> "class" =: "waves-effect waves-light btn light-blue"
+          IOS     -> "class" =: "p-btn p-btn-mob"
     clickEvent <- domEvent Click . fst <$> (elDynAttr' "a" attributes $
       text label)
     pure clickEvent
