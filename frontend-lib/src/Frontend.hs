@@ -60,7 +60,7 @@ homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
     p "Enter in a sentence you want to parse!"
 
-    inputText <- el "p" $ inputElement (
+    inputText <- p $ inputElement (
          def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ ("class" =: "p-form-text p-form-no-validate")
@@ -126,10 +126,10 @@ navBar style = let ?style = style in do
                 else "style" =: "display: none;"
 
     -- Nav bar menu
-    navPaneEvents <- elDynAttr "div" sidebarAttrs $ el "ul" $ do
-        homeEvents   <- el "li" $ domEvent Click . fst <$> elClass' "a" "w3-bar-item w3-button" (text "Home")
-        schemaEvents <- el "li" $ domEvent Click . fst <$> elClass' "a" "w3-bar-item w3-button" (text "Schema")
-        preferenceEvents <- el "li" $ domEvent Click . fst <$> elClass' "a" "w3-bar-item w3-button" (text "Preferences")
+    navPaneEvents <- elDynAttr "div" sidebarAttrs $ ul $ do
+        homeEvents       <- sidebarButton "Home"
+        schemaEvents     <- sidebarButton "Schema"
+        preferenceEvents <- sidebarButton "Preferences"
         pure $ leftmost [
             NavHome <$ homeEvents,
             NavSchema <$ schemaEvents,
@@ -139,6 +139,10 @@ navBar style = let ?style = style in do
 
     accumDyn (\_ e -> e) NavHome
         navEvents
+
+sidebarButton x = li $ 
+    domEvent Click . fst <$> elClass' "a" "w3-bar-item w3-button" 
+      (text x)
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
@@ -160,7 +164,7 @@ schemaPage style = let ?style = style in do
           parsedSchema
 
     div $
-        el "small" $ el "p" $ dynText $ parsedSchema <&> (\case
+        small $ p $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
             Right x -> "✅ Schema valid.")
 
@@ -190,6 +194,12 @@ data NavEvent =
 p x = el "p" $ text x
 
 div x = el "div" $ x
+
+small x = el "small" $ x
+
+ul x = el "ul" $ x
+
+li x = el "li" $ x
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.
