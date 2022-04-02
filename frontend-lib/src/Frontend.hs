@@ -191,7 +191,7 @@ data NavEvent =
 
 p x = el "p" $ text x
 
-div = el "div"
+div x = el "div" $ x
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.
