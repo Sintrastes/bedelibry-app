@@ -57,7 +57,7 @@ body = mdo
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
-    p "Enter in a sentence you want to parse!"
+    p $ text "Enter in a sentence you want to parse!"
 
     inputText <- p $ inputElement (
          def & inputElementConfig_elementConfig
@@ -143,11 +143,11 @@ sidebarButton x = li $
 
 navButton x = li $ 
     domEvent Click . fst <$>
-        el' "a" (text "Home")
+        el' "a" (text x)
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
-    p "Enter in the schema for your data:"
+    p $ text "Enter in the schema for your data:"
 
 
     schemaText <- elClass "div" "input-field col s12" $ textAreaElement (
@@ -192,7 +192,7 @@ data NavEvent =
   | NavPrefs
  deriving(Show)
 
-p x = el "p" $ text x
+p x = el "p" $ x
 
 div x = el "div" $ x
 
