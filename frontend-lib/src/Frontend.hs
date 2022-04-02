@@ -151,13 +151,14 @@ navButton x = li $
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    homeDir <- liftIO getHomeDirectory
+    homeDir <- liftFrontend "/" $ getHomeDirectory
     let montagueDir = homeDir <> "/.montague"
-    liftIO $ createDirectoryIfMissing True montagueDir
+    liftFrontend () $ createDirectoryIfMissing True montagueDir
 
     -- Load the schema from disk.
-    loadedSchemaText <- liftIO $ catch (readFile (montagueDir <> "/schema.mont"))
-        (\(e :: IOException) -> pure "")
+    loadedSchemaText <- liftFrontend "" $
+        catch (readFile (montagueDir <> "/schema.mont"))
+            (\(e :: IOException) -> return "")
 
     p $ text "Enter in the schema for your data:"
 
@@ -191,8 +192,8 @@ schemaPage style = let ?style = style in do
               _textAreaElement_value schemaText
         res <- liftIO $ try $
             writeFile (homeDir <> "/.montague/schema.mont") latestSchemaText
-        
-        case res of 
+
+        case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
             Right _ -> toast "Saved schema")
 
@@ -213,6 +214,10 @@ data NavEvent =
   | NavSchema
   | NavPrefs
  deriving(Show)
+
+liftFrontend d x = do
+    res <- current <$> prerender (pure d) (liftIO x) 
+    sample res
 
 p x = el "p" $ x
 
