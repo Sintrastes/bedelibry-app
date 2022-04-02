@@ -167,9 +167,7 @@ schemaPage style = let ?style = style in do
     saveEvent <- button "save"
 
     performEvent $ saveEvent <&> (\_ ->
-        pure ())
-
-    toast "Hello, toast!"
+        toast "Saved changes")
 
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"
