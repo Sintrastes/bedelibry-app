@@ -38,7 +38,6 @@ import Control.Lens
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
-import Control.Monad.Toast
 import Control.Monad.Fix
 
 body :: _ => m ()
