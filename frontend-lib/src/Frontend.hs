@@ -151,7 +151,7 @@ navButton x = li $
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    homeDir <- liftFrontend "/" $ getHomeDirectory
+    homeDir <- liftFrontend "/" getHomeDirectory
     let montagueDir = homeDir <> "/.montague"
     liftFrontend () $ createDirectoryIfMissing True montagueDir
 
