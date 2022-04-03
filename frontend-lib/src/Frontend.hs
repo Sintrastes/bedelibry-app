@@ -251,7 +251,7 @@ toastOnErrors x = do
     res <- x
     case res of 
         Left  e -> 
-            liftFrontend $ 
+            liftFrontend () $ 
                 toast $ "An exception occured when loading Montague: " <> T.pack (show e)
         Right _ -> 
             pure ()
