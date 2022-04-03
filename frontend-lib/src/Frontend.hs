@@ -151,8 +151,10 @@ navButton x = li $
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    homeDir <- liftFrontend "/" getHomeDirectory
-    let montagueDir = homeDir <> "/.montague"
+    montagueDir <- if os == "linux-android"
+        then "/data/app/org.bedelibry.demos.montague"
+        else liftFrontend "/" getHomeDirectory <> "/.montague"
+    
     liftFrontend () $ createDirectoryIfMissing True montagueDir
 
     -- Load the schema from disk.
