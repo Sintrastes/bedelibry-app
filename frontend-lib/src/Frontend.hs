@@ -151,7 +151,7 @@ navButton x = li $
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    montagueDir <- pure "/data/app/org.bedelibry.demos.montague"
+    montagueDir <- pure "/data/data/org.bedelibry.demos.montague"
 
     res <- liftFrontend (Right ()) $ catch
               (do createDirectoryIfMissing True montagueDir
