@@ -155,9 +155,10 @@ schemaPage style = let ?style = style in do
         then pure "/data/app/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
-    res <- liftFrontend (Right ()) $ catch
-              (createDirectoryIfMissing True montagueDir)
-              (\(e :: SomeException) -> Left e)
+    res <- liftFrontend (pure $ Right ()) $ catch
+              (do createDirectoryIfMissing True montagueDir
+                  pure $ Right ())
+              (\(e :: SomeException) -> pure $ Left e)
 
     case res of 
         Left  e -> 
