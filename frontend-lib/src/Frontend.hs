@@ -224,6 +224,10 @@ liftFrontend d x = do
     res <- current <$> prerender (pure d) (liftIO x)
     sample res
 
+liftFrontend' d x = do
+    res <- current <$> prerender (pure d) x
+    sample res
+
 p x = el "p" $ x
 
 div x = el "div" $ x
@@ -251,7 +255,7 @@ toastOnErrors x = do
     res <- x
     case res of 
         Left  e -> 
-            liftFrontend () $ 
+            liftFrontend' () $ 
                 toast $ "An exception occured when loading Montague: " <> T.pack (show e)
         Right _ -> 
             pure ()
