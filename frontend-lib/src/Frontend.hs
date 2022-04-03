@@ -152,8 +152,8 @@ schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
     montagueDir <- if os == "linux-android"
-        then "/data/app/org.bedelibry.demos.montague"
-        else liftFrontend "/" getHomeDirectory <> "/.montague"
+        then pure "/data/app/org.bedelibry.demos.montague"
+        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
     liftFrontend () $ createDirectoryIfMissing True montagueDir
 
@@ -218,7 +218,7 @@ data NavEvent =
  deriving(Show)
 
 liftFrontend d x = do
-    res <- current <$> prerender (pure d) (liftIO x) 
+    res <- current <$> prerender (pure d) (liftIO x)
     sample res
 
 p x = el "p" $ x
