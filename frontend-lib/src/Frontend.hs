@@ -154,7 +154,7 @@ schemaPage style = let ?style = style in do
     montagueDir <- if os == "linux-android"
         then "/data/app/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <> "/.montague"
-    
+
     liftFrontend () $ createDirectoryIfMissing True montagueDir
 
     -- Load the schema from disk.
@@ -193,7 +193,7 @@ schemaPage style = let ?style = style in do
         latestSchemaText <- sample $ current $ T.unpack <$>
               _textAreaElement_value schemaText
         res <- liftIO $ try $
-            writeFile (homeDir <> "/.montague/schema.mont") latestSchemaText
+            writeFile (montagueDir <> "/schema.mont") latestSchemaText
 
         case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
