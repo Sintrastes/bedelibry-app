@@ -153,16 +153,10 @@ schemaPage style = let ?style = style in do
     -- Setup the application directory.
     montagueDir <- pure "/data/data/org.bedelibry.demos.montague"
 
-    res <- liftFrontend (Right ()) $ catch
-              (do createDirectoryIfMissing True montagueDir
-                  pure $ Right ())
-              (\(e :: SomeException) -> pure $ Left e)
-
-    case res of 
-        Left  e -> 
-            p $ text $ "An exception occured when loading Montague: " <> T.pack (show e)
-        Right _ -> 
-            pure ()
+    toastOnErrors $ liftFrontend (Right ()) $ catch
+        (do createDirectoryIfMissing True montagueDir
+            pure $ Right ())
+        (\(e :: SomeException) -> pure $ Left e)
 
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
@@ -250,3 +244,11 @@ button label = do
 toast message = do
     liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
     pure ()
+
+toastOnErrors x = do
+    res <- x
+    case res of 
+        Left  e -> 
+            toast $ "An exception occured when loading Montague: " <> T.pack (show e)
+        Right _ -> 
+            pure ()
