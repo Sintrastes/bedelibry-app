@@ -155,7 +155,11 @@ schemaPage style = let ?style = style in do
         then pure "/data/app/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
-    liftFrontend () $ createDirectoryIfMissing True montagueDir
+    liftFrontend () $ catch
+        (createDirectoryIfMissing True montagueDir)
+        (\(e :: SomeException) -> 
+            p $ text $ "An exception occured when loading Montague: " <> T.pack (show e)
+        )
 
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
