@@ -157,10 +157,10 @@ schemaPage style = let ?style = style in do
 
     res <- liftFrontend (Right ()) $ catch
               (createDirectoryIfMissing True montagueDir)
-              (\(e :: SomeException) -> Left ())
+              (\(e :: SomeException) -> Left e)
 
     case res of 
-        Left  _ -> 
+        Left  e -> 
             p $ text $ "An exception occured when loading Montague: " <> T.pack (show e)
         Right _ -> 
             pure ()
