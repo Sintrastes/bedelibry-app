@@ -16,6 +16,7 @@
 
 module Montague.Frontend where
 
+import Montague.Frontend.Utils
 import System.Info
 import Control.Exception
 import Control.Monad
@@ -207,55 +208,8 @@ schemaPage style = let ?style = style in do
           <> "-moz-box-sizing: border-box;"
           <> "box-sizing: border-box;"
 
-eitherToMaybe (Left e)  = Nothing
-eitherToMaybe (Right x) = Just x
-
-data Style =
-    Android
-  | IOS
-
 data NavEvent =
     NavHome
   | NavSchema
   | NavPrefs
  deriving(Show)
-
-liftFrontend d x = do
-    res <- current <$> prerender (pure d) (liftIO x)
-    sample res
-
-liftFrontend' d x = do
-    res <- current <$> prerender (pure d) x
-    sample res
-
-p x = el "p" $ x
-
-div x = el "div" $ x
-
-small x = el "small" $ x
-
-ul x = el "ul" $ x
-
-li x = el "li" $ x
-
--- | A button widget that is styled appropriately
---    depending on the currently set style.
-button label = do
-    let attributes = ?style <&> \case
-          Android -> "class" =: "waves-effect waves-light btn light-blue"
-          IOS     -> "class" =: "p-btn p-btn-mob"
-    domEvent Click . fst <$> elDynAttr' "a" attributes
-      (text label)
-
-toast message = do
-    liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
-    pure ()
-
-toastOnErrors x = do
-    res <- x
-    case res of 
-        Left  e -> 
-            liftFrontend' () $ 
-                toast $ "An exception occured when loading Montague: " <> T.pack (show e)
-        Right _ -> 
-            pure ()
