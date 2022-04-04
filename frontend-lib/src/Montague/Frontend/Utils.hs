@@ -19,6 +19,9 @@ module Montague.Frontend.Utils where
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Reflex.Dom.Core hiding (button)
+import Language.Javascript.JSaddle (eval, liftJSM)
+import Data.Function
+import Data.Functor
 
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
