@@ -20,6 +20,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Reflex.Dom.Core hiding (button)
 import Language.Javascript.JSaddle (eval, liftJSM)
+import Control.Monad.IO.Class
 import Data.Function
 import Data.Functor
 
