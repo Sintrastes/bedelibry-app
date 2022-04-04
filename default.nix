@@ -34,7 +34,7 @@ project ./. ({ pkgs, ... }: {
         owner = "sintrastes";
         repo = "montague";
         rev = "ff5e56eafe4915c306e8aeb221bc6a78822c8174";
-        sha256 = "ZVmJf2zALWOb2zkdyT2p5CNNRIe3Hs8a1Rcx4DiuQ9o=";
+        sha256 = "TqRUIbsig2YYUZH/FuQjSPs67lMVaqSgiidT73s0nhw=";
       }) {};
     };
 })
