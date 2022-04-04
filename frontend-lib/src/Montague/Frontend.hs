@@ -14,7 +14,7 @@
     , PartialTypeSignatures
     , ImplicitParams #-}
 
-module Frontend where
+module Montague.Frontend where
 
 import System.Info
 import Control.Exception

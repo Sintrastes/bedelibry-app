@@ -17,7 +17,7 @@
 
 module Frontend.Obelisk where
 
-import Frontend
+import Montague.Frontend
 import Common.Route
 import Obelisk.Frontend
 import Obelisk.Route.Frontend
