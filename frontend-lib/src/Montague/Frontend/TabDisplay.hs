@@ -10,7 +10,7 @@ data TabF m a where
 instance Functor (TabF m) where
     fmap f (Tab label widget rest) = Tab label widget (f . rest)
 
-type Tab = Free TabF
+type Tab m = Free (TabF m)
 
 -- Get the labels associated with the tabs.
 labels :: Tab m a -> [T.Text]
