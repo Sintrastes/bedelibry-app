@@ -21,6 +21,7 @@ library
     , GADTs
     , PartialTypeSignatures
   build-depends: base
+               , free
                , jsaddle
                , reflex-dom-core
                , text
