@@ -38,7 +38,7 @@ import Data.Proxy
 import Montague.Semantics
 import Data.PartialOrd hiding ((==))
 import System.Environment
-import Control.Lens
+import Control.Lens hiding (contains)
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
