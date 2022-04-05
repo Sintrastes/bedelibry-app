@@ -7,13 +7,13 @@ import Control.Monad.Free
 data TabF m a where
     Tab :: T.Text -> m r -> (r -> m a) -> TabF m a
 
-instance Functor (TabF m) where
+instance Functor m => Functor (TabF m) where
     fmap f (Tab label widget rest) = Tab label widget (fmap f . rest)
 
 type Tab m = Free (TabF m)
 
 -- Get the labels associated with the tabs.
-labels :: Tab m a -> [T.Text]
+labels :: Functor m => Tab m a -> [T.Text]
 labels (Pure _) = []
 labels (Free (Tab label res rest)) = label:labels (fmap res . rest)
 
