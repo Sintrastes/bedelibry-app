@@ -15,7 +15,7 @@ type Tab m = Free (TabF m)
 -- Get the labels associated with the tabs.
 labels :: Tab m a -> [T.Text]
 labels (Pure _) = []
-labels (Free (Tab label _ rest)) = label:labels rest
+labels (Free (Tab label res rest)) = label:labels (rest res)
 
 wrapComponents :: Monad m => (forall r. T.Text -> m r -> m r) -> Tab m () -> m ()
 wrapComponents wrap (Pure _) = pure ()
