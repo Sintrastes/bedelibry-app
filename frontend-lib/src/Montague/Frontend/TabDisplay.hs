@@ -13,9 +13,11 @@ instance Functor m => Functor (TabF m) where
 type Tab m = Free (TabF m)
 
 -- Get the labels associated with the tabs.
-labels :: Functor m => Tab m a -> [T.Text]
-labels (Pure _) = []
-labels (Free (Tab label res rest)) = label:labels (fmap res . rest)
+labels :: Monad m => Tab m a -> m [T.Text]
+labels (Pure _) = pure []
+labels (Free (Tab label res rest)) = do
+    x <- res >>= rest
+    label:labels x 
 
 wrapComponents :: Monad m => (forall r. T.Text -> m r -> m r) -> Tab m () -> m ()
 wrapComponents wrap (Pure _) = pure ()
