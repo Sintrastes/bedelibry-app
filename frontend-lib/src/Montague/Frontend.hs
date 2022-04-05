@@ -17,13 +17,14 @@
 module Montague.Frontend where
 
 import Montague.Frontend.Utils
+import Montague.Frontend.TabDisplay
 import System.Info
 import Control.Exception
 import Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Language.Javascript.JSaddle (eval, liftJSM)
-import Reflex.Dom.Core hiding (button)
+import Reflex.Dom.Core hiding (button, tabDisplay)
 import Montague
 import Data.Maybe
 import Data.Function
@@ -48,16 +49,23 @@ body :: _ => m ()
 body = mdo
     style <- holdDyn Android never
 
-    -- Nav bar
-    currentPage <- navBar style
+    tabDisplay defaultTab tabs (navBar style) $ do
+        maybeParsedSchema <- tab "Schema" $ schemaPage style
 
-    -- App body
-    elClass "div" "column main-column" $ mdo
-        maybeParsedSchema <- schemaPage style
+        tab "Home" $ homePage maybeParsedSchema style
 
-        homePage maybeParsedSchema style
+        tab "Preferences" $ preferencePage style
 
-        preferencePage style
+defaultTab :: T.Text
+defaultTab = "Schema"
+
+tabs :: [T.Text]
+tabs = 
+  [
+    "Schema"
+  , "Home"
+  , "Preference"
+  ]
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
@@ -94,8 +102,8 @@ preferencePage :: _ => Dynamic t Style -> m ()
 preferencePage style = let ?style = style in pure ()
 
 -- | Nav bar widget. Only shown with an Android style.
-navBar :: _ => Dynamic t Style -> m (Dynamic t NavEvent)
-navBar style = let ?style = style in do
+navBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
+navBar style tabs = let ?style = style in do
     let navAttrs = ?style <&> \case
             Android -> "class" =: "nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"
@@ -105,16 +113,11 @@ navBar style = let ?style = style in do
         navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
-            homeEvents       <- navButton "Home"
-            schemaEvents     <- navButton "Schema"
-            preferenceEvents <- navButton "Preferences"
+            menuEvents <- forM tabs (\tab -> do
+                btnEvents <- navButton tab
+                pure $ tab <$ btnEvents)
 
-            pure $
-              (leftmost [
-                NavHome <$ homeEvents,
-                NavSchema <$ schemaEvents,
-                NavPrefs <$ preferenceEvents],
-               domEvent Click (fst navMenu))
+            pure (leftmost menuEvents, domEvent Click (fst navMenu))
 
     sidebarOpened <- accumDyn (\s _ -> not s) False
         toggleMenuEvent
@@ -127,18 +130,13 @@ navBar style = let ?style = style in do
 
     -- Nav bar menu
     navPaneEvents <- elDynAttr "div" sidebarAttrs $ ul $ do
-        homeEvents       <- sidebarButton "Home"
-        schemaEvents     <- sidebarButton "Schema"
-        preferenceEvents <- sidebarButton "Preferences"
-        pure $ leftmost [
-            NavHome <$ homeEvents,
-            NavSchema <$ schemaEvents,
-            NavPrefs <$ preferenceEvents]
+        tabEvents        <- forM tabs (\tab -> do
+            events <- sidebarButton tab
+            pure $ tab <$ events)
+       
+        pure $ leftmost tabEvents
 
-    let navEvents = leftmost [navBarEvents, navPaneEvents]
-
-    accumDyn (\_ e -> e) NavHome
-        navEvents
+    pure $ leftmost [navBarEvents, navPaneEvents]
 
 sidebarButton x = li $
     domEvent Click . fst <$>
@@ -207,9 +205,3 @@ schemaPage style = let ?style = style in do
   where boxResizing = "-webkit-box-sizing: border-box;"
           <> "-moz-box-sizing: border-box;"
           <> "box-sizing: border-box;"
-
-data NavEvent =
-    NavHome
-  | NavSchema
-  | NavPrefs
- deriving(Show)
