@@ -17,7 +17,8 @@ labels :: Monad m => Tab m a -> m [T.Text]
 labels (Pure _) = pure []
 labels (Free (Tab label res rest)) = do
     x <- res >>= rest
-    label:labels x 
+    y <- labels x
+    pure $ label:y
 
 wrapComponents :: Monad m => (forall r. T.Text -> m r -> m r) -> Tab m () -> m ()
 wrapComponents wrap (Pure _) = pure ()
