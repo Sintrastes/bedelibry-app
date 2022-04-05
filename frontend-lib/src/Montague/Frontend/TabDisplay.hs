@@ -1,8 +1,11 @@
-{-# LANGUAGE GADTs, RankNTypes #-}
+{-# LANGUAGE GADTs, RankNTypes, RecursiveDo, OverloadedStrings, FlexibleContexts #-}
 module Montague.Frontend.TabDisplay where
 
 import qualified Data.Text as T
 import Control.Monad.Free
+import Reflex.Dom.Core hiding(Tab)
+import Control.Monad.Fix
+import Data.Functor
 
 data TabF m a where
     Tab :: T.Text -> m r -> (r -> m a) -> TabF m a
@@ -12,17 +15,34 @@ instance Functor m => Functor (TabF m) where
 
 type Tab m = Free (TabF m)
 
--- Get the labels associated with the tabs.
-labels :: Monad m => Tab m a -> m [T.Text]
-labels (Pure _) = pure []
-labels (Free (Tab label res rest)) = do
-    x <- res >>= rest
-    y <- labels x
-    pure $ label:y
+tabDisplay :: (MonadFix m, DomBuilder t m, PostBuild t m) =>
+     ([T.Text] -> m (Dynamic t T.Text))
+  -> Tab m ()
+  -> m ()
+tabDisplay header tabs = 
+    tabDisplay' header wrap tabs
+  where 
+    displayAttrs navEvents label = navEvents <&> \selected ->
+        if selected == label
+            then "style" =: "display: none;"
+            else mempty
+    wrap navEvents label x = 
+        elDynAttr "div" (displayAttrs navEvents label) x  
 
-wrapComponents :: Monad m => (forall r. T.Text -> m r -> m r) -> Tab m () -> m ()
-wrapComponents wrap (Pure _) = pure ()
-wrapComponents wrap (Free (Tab label x rest)) = do
-    res <- wrap label x
+tabDisplay' :: MonadFix m =>
+     ([T.Text] -> m (Dynamic t T.Text))
+  -> (forall r. Dynamic t T.Text -> T.Text -> m r -> m r)
+  -> Tab m ()
+  -> m ()
+tabDisplay' header wrap tab = mdo
+    navEvents <- header labels
+    labels <- wrapComponents wrap navEvents tab
+    pure ()
+
+wrapComponents :: Monad m => (forall r. Dynamic t T.Text -> T.Text -> m r -> m r) -> Dynamic t T.Text -> Tab m () -> m [T.Text]
+wrapComponents wrap navEvents (Pure _) = pure []
+wrapComponents wrap navEvents (Free (Tab label x rest)) = do
+    res <- wrap navEvents label x
     rest' <- rest res
-    wrapComponents wrap rest'
+    labels <- wrapComponents wrap navEvents rest'
+    pure $ label:labels
