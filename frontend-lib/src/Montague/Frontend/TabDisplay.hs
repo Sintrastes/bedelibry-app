@@ -11,3 +11,8 @@ instance Functor (TabF m) where
     fmap f (Tab label widget rest) = Tab label widget (f . rest)
 
 type Tab = Free TabF
+
+-- Get the labels associated with the tabs.
+labels :: Tab m a -> [T.Text]
+labels (Pure _) = []
+labels (Free (Tab label _ rest)) = label:labels rest
