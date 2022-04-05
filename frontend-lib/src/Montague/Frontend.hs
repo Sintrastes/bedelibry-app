@@ -150,8 +150,6 @@ navButton x = li $
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
-    p $ text $ T.pack os
-
     -- Setup the application directory.
     montagueDir <- if os `contains` "android"
         then pure "/data/data/org.bedelibry.demos.montague"
