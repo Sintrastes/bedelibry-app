@@ -38,13 +38,13 @@ import Data.Proxy
 import Montague.Semantics
 import Data.PartialOrd hiding ((==))
 import System.Environment
-import Control.Lens hiding (contains)
+import Control.Lens
 import Control.Lens.Operators
 import Control.Monad.Trans.Reader
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 import System.Directory
-import Data.List.Utils
+import Data.List
 
 body :: _ => m ()
 body = mdo
@@ -151,7 +151,7 @@ navButton x = li $
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    montagueDir <- if os `contains` "android"
+    montagueDir <- if os `isInfixOf` "android"
         then pure "/data/data/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
