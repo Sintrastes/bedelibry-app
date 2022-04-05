@@ -152,7 +152,9 @@ schemaPage style = let ?style = style in do
     p $ text $ T.pack os
 
     -- Setup the application directory.
-    montagueDir <- pure "/data/data/org.bedelibry.demos.montague"
+    montagueDir <- if os `contains` "android"
+        then pure "/data/data/org.bedelibry.demos.montague"
+        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
     toastOnErrors $ liftFrontend (Right ()) $ catch
         (do createDirectoryIfMissing True montagueDir
