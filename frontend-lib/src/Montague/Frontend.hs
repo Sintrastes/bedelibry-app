@@ -48,14 +48,15 @@ import Data.List
 
 body :: _ => m ()
 body = mdo
-    style <- holdDyn Android never
-
-    tabDisplay defaultTab tabs (navBar style) $ do
+    style <- tabDisplay defaultTab tabs (navBar style) $ do
         maybeParsedSchema <- tab "Schema" $ schemaPage style
 
         tab "Home" $ homePage maybeParsedSchema style
 
         tab "Preferences" $ preferencePage style
+
+        pure $ constDyn Android
+    pure ()
 
 defaultTab :: T.Text
 defaultTab = "Schema"

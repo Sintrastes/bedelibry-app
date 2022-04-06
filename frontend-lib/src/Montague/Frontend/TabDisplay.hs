@@ -22,8 +22,8 @@ tabDisplay :: (MonadFix m, MonadHold t m, DomBuilder t m, PostBuild t m) =>
      T.Text
   -> [T.Text]
   -> ([T.Text] -> m (Event t T.Text))
-  -> Tab m ()
-  -> m ()
+  -> Tab m a
+  -> m a
 tabDisplay defaultTab tabs header = tabDisplay' defaultTab tabs header wrap
   where
     displayAttrs navEvents label = navEvents <&> \selected ->
@@ -38,23 +38,20 @@ tabDisplay' :: (MonadHold t m, MonadFix m) =>
   -> [T.Text]
   -> ([T.Text] -> m (Event t T.Text))
   -> (forall r. Dynamic t T.Text -> T.Text -> m r -> m r)
-  -> Tab m ()
-  -> m ()
-tabDisplay' defaultTab tabs header wrap tab = do
-    rec 
-        navEvents <- header tabs
-        currentTab <- holdDyn defaultTab navEvents
-        wrapComponents wrap currentTab tab
-        pure ()
-    pure ()
+  -> Tab m a
+  -> m a
+tabDisplay' defaultTab tabs header wrap tab = mdo
+    navEvents <- header tabs
+    currentTab <- holdDyn defaultTab navEvents
+    wrapComponents wrap currentTab tab
 
 wrapComponents :: Monad m =>
     (forall r. Dynamic t T.Text -> T.Text -> m r -> m r)
  -> Dynamic t T.Text
- -> Tab m ()
- -> m ()
-wrapComponents wrap navEvents (Pure _) = pure ()
+ -> Tab m a
+ -> m a
+wrapComponents wrap navEvents (Pure x) = pure x
 wrapComponents wrap navEvents (Free (Tab label x rest)) = do
     res <- wrap navEvents label x
     labels <- wrapComponents wrap navEvents (rest res)
-    pure ()
+    pure labels
