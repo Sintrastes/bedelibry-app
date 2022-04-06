@@ -188,8 +188,6 @@ schemaPage style = let ?style = style in do
     saveEvent <- button "save"
 
     prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do
-        toast $ T.pack $ "Current OS is: " <> os
-
         latestSchemaText <- sample $ current $ T.unpack <$>
               _textAreaElement_value schemaText
         res <- liftIO $ try $
