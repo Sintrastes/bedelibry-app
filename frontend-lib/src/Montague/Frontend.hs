@@ -104,7 +104,7 @@ preferencePage style = let ?style = style in pure ()
 
 -- | Nav bar widget. Only shown with an Android style.
 navBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-navBar style tabs = let ?style = style in do
+navBar style tabs = let ?style = style in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"
@@ -120,8 +120,8 @@ navBar style tabs = let ?style = style in do
 
             pure (leftmost menuEvents, domEvent Click (fst navMenu))
 
-    sidebarOpened <- accumDyn (\s _ -> not s) False
-        toggleMenuEvent
+    sidebarOpened <- accumDyn (\s _ -> not s) False 
+        (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
 
     let sidebarAttrs = sidebarOpened <&> \isOpened ->
           "class" =: "w3-sidebar w3-bar-block w3-border-right" <>
