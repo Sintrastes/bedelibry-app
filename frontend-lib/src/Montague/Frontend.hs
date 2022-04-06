@@ -18,6 +18,7 @@ module Montague.Frontend where
 
 import Montague.Frontend.Utils
 import Montague.Frontend.TabDisplay
+import Montague.Frontend.Preferences
 import System.Info
 import Control.Exception
 import Control.Monad
@@ -48,14 +49,12 @@ import Data.List
 
 body :: _ => m ()
 body = mdo
-    style <- tabDisplay defaultTab tabs (navBar style) $ do
-        maybeParsedSchema <- tab "Schema" $ schemaPage style
+    prefs <- tabDisplay defaultTab tabs (navBar $ style <$> prefs) $ do
+        maybeParsedSchema <- tab "Schema" $ schemaPage $ style <$> prefs
+        
+        tab "Home" $ homePage maybeParsedSchema $ style <$> prefs
 
-        tab "Home" $ homePage maybeParsedSchema style
-
-        tab "Preferences" $ preferencePage style
-
-        pure $ constDyn Android
+        tab "Preferences" preferencePage
     pure ()
 
 defaultTab :: T.Text
@@ -66,7 +65,7 @@ tabs =
   [
     "Schema"
   , "Home"
-  , "Preference"
+  , "Preferences"
   ]
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
@@ -99,9 +98,6 @@ homePage maybeParsedSchema style = let ?style = style in do
 
     elDynAttr "p" parsedFmt $ do
         dynText parsedDisplay
-
-preferencePage :: _ => Dynamic t Style -> m ()
-preferencePage style = let ?style = style in pure ()
 
 -- | Nav bar widget. Only shown with an Android style.
 navBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)

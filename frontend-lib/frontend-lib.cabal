@@ -35,4 +35,5 @@ library
       Montague.Frontend
     , Montague.Frontend.Utils
     , Montague.Frontend.TabDisplay
+    , Montague.Frontend.Preferences
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
