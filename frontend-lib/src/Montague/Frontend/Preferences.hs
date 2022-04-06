@@ -18,8 +18,9 @@ data Preferences = Preferences {
 preferencePage :: _ => m (Dynamic t Preferences)
 preferencePage = do
     checkboxValue <- el "form" $ el "p" $ el "label" $ do
-        el "span" $ text "Filled in"
-        _checkbox_value <$> checkbox True def
+        res <- _checkbox_value <$> checkbox True def
+        el "span" $ text "Use Android Style"
+        return res
     
     let style = checkboxValue <&> 
           (\case
