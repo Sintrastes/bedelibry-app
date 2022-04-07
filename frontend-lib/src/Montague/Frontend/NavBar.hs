@@ -8,12 +8,13 @@ import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
 
-navBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-navBar = navBarAndroid
+
+iOSNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
+iOSNavBar style tabs = pure never
 
 -- | Nav bar widget. Only shown with an Android style enabled.
-navBarAndroid :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-navBarAndroid style tabs = let ?style = style in mdo
+androidNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
+androidNavBar style tabs = let ?style = style in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"

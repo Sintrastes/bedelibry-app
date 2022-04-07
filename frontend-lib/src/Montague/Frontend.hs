@@ -51,12 +51,18 @@ import Data.List
 
 body :: _ => m ()
 body = mdo
-    prefs <- tabDisplay defaultTab tabs (navBar $ style <$> prefs) $ do
+    topNavEvents <- androidNavBar (style <$> prefs) tabs
+    
+    let navEvents = leftmost [topNavEvents, bottomNavEvents]
+
+    prefs <- tabDisplay defaultTab tabs navEvents $ do
         maybeParsedSchema <- tab "Schema" $ schemaPage $ style <$> prefs
         
         tab "Home" $ homePage maybeParsedSchema $ style <$> prefs
 
         tab "Preferences" preferencePage
+    
+    bottomNavEvents <- iOSNavBar (style <$> prefs) tabs
     pure ()
 
 defaultTab :: T.Text
