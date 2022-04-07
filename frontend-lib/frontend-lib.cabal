@@ -21,6 +21,7 @@ library
     , GADTs
     , PartialTypeSignatures
   build-depends: base
+               , containers
                , data-default
                , free
                , jsaddle

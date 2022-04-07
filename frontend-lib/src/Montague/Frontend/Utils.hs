@@ -12,7 +12,8 @@
     , ConstraintKinds
     , GADTs
     , PartialTypeSignatures
-    , ImplicitParams #-}
+    , ImplicitParams
+    , RecursiveDo #-}
 
 module Montague.Frontend.Utils where
 
@@ -25,6 +26,7 @@ import Data.Function
 import Data.Functor
 import Data.Default
 import Control.Lens.Operators
+import Data.Map
 
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
@@ -61,13 +63,24 @@ button label = do
       (text label)
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
-textEntry = 
-    -- Note: To make this vary with the style,
-    -- I'll need to use elementConfig_modifyAttributes
-    p $ inputElement (
+textEntry = mdo
+    let attrUpdateStream = ?style <&>
+            attrsFromStyle &
+            updated
+
+    res <- p $ inputElement (
         def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
-            .~ ("class" =: "p-form-text p-form-no-validate"))
+            .~ mempty
+            & inputElementConfig_elementConfig
+            . elementConfig_modifyAttributes
+            .~ attrUpdateStream)
+
+    pure res
+  where
+    attrsFromStyle = \case
+        Android -> "class" =: Nothing 
+        IOS     -> "class" =: Just "p-form-text p-form-no-validate"
 
 toast message = do
     liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
@@ -75,9 +88,9 @@ toast message = do
 
 toastOnErrors x = do
     res <- x
-    case res of 
-        Left  e -> 
-            liftFrontend' () $ 
+    case res of
+        Left  e ->
+            liftFrontend' () $
                 toast $ "An exception occured when loading Montague: " <> T.pack (show e)
-        Right _ -> 
+        Right _ ->
             pure ()
