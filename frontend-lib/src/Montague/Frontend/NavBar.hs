@@ -8,9 +8,18 @@ import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
 
-
 iOSNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-iOSNavBar style tabs = pure never
+iOSNavBar style tabs = 
+  let ?style = style in
+  let navAttrs = style <&> (\case
+        IOS     -> "class" =: "p-mobile-tabs"
+        Android -> "style" =: "display: none;")
+  in 
+     elDynAttr "div" navAttrs $ do
+         forM_ tabs $ \tab -> 
+             el "div" $ elAttr "a" ("data-p-mobile-toggle" =: ("#" <> tab)) $ 
+                text tab
+         pure never
 
 -- | Nav bar widget. Only shown with an Android style enabled.
 androidNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
