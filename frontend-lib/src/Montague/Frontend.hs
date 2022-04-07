@@ -80,11 +80,7 @@ homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
     p $ text "Enter in a sentence you want to parse!"
 
-    inputText <- p $ inputElement (
-         def & inputElementConfig_elementConfig
-            . elementConfig_initialAttributes
-            .~ ("class" =: "p-form-text p-form-no-validate")
-      )
+    inputText <- textEntry
 
     let parsed = do
             schema <- maybeParsedSchema

@@ -23,6 +23,8 @@ import Language.Javascript.JSaddle (eval, liftJSM)
 import Control.Monad.IO.Class
 import Data.Function
 import Data.Functor
+import Data.Default
+import Control.Lens.Operators
 
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
@@ -57,6 +59,15 @@ button label = do
           IOS     -> "class" =: "p-btn p-btn-mob"
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
+
+textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
+textEntry = 
+    -- Note: To make this vary with the style,
+    -- I'll need to use elementConfig_modifyAttributes
+    p $ inputElement (
+        def & inputElementConfig_elementConfig
+            . elementConfig_initialAttributes
+            .~ ("class" =: "p-form-text p-form-no-validate"))
 
 toast message = do
     liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
