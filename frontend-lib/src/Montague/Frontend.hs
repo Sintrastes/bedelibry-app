@@ -19,6 +19,8 @@ module Montague.Frontend where
 import Montague.Frontend.Utils
 import Montague.Frontend.TabDisplay
 import Montague.Frontend.Preferences
+import Montague.Frontend.NavBar
+
 import System.Info
 import Control.Exception
 import Control.Monad
@@ -98,52 +100,6 @@ homePage maybeParsedSchema style = let ?style = style in do
 
     elDynAttr "p" parsedFmt $ do
         dynText parsedDisplay
-
--- | Nav bar widget. Only shown with an Android style.
-navBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-navBar style tabs = let ?style = style in mdo
-    let navAttrs = ?style <&> \case
-            Android -> "class" =: "nav-wrapper light-blue darken-1"
-            IOS     -> "style" =: "display: none;"
-
-    (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
-        elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
-        navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
-            elClass "i" "material-icons" $ text "menu"
-        elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
-            menuEvents <- forM tabs (\tab -> do
-                btnEvents <- navButton tab
-                pure $ tab <$ btnEvents)
-
-            pure (leftmost menuEvents, domEvent Click (fst navMenu))
-
-    sidebarOpened <- accumDyn (\s _ -> not s) False 
-        (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
-
-    let sidebarAttrs = sidebarOpened <&> \isOpened ->
-          "class" =: "w3-sidebar w3-bar-block w3-border-right" <>
-            if isOpened
-                then "style" =: "display: block; z-index: 999;"
-                else "style" =: "display: none;"
-
-    -- Nav bar menu
-    navPaneEvents <- elDynAttr "div" sidebarAttrs $ ul $ do
-        tabEvents        <- forM tabs (\tab -> do
-            events <- sidebarButton tab
-            pure $ tab <$ events)
-       
-        pure $ leftmost tabEvents
-
-    pure $ leftmost [navBarEvents, navPaneEvents]
-
-sidebarButton x = li $
-    domEvent Click . fst <$>
-        elClass' "a" "w3-bar-item w3-button"
-            (text x)
-
-navButton x = li $
-    domEvent Click . fst <$>
-        el' "a" (text x)
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
