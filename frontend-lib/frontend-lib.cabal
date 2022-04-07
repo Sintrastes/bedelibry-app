@@ -36,6 +36,7 @@ library
   exposed-modules:
       Montague.Frontend
     , Montague.Frontend.Utils
+    , Montague.Frontend.Utils.Javascript
     , Montague.Frontend.TabDisplay
     , Montague.Frontend.NavBar
     , Montague.Frontend.Preferences
