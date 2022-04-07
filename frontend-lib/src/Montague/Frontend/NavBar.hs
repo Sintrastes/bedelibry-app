@@ -1,4 +1,4 @@
-{-# LANGUAGE PartialTypeSignatures, ImplicitParams, OverloadedStrings, LambdaCase, RecursiveDo #-}
+{-# LANGUAGE PartialTypeSignatures, ImplicitParams, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts #-}
 
 module Montague.Frontend.NavBar where
 
@@ -16,10 +16,15 @@ iOSNavBar style tabs =
         Android -> "style" =: "display: none;")
   in 
      elDynAttr "div" navAttrs $ do
-         forM_ tabs $ \tab -> 
-             el "div" $ elAttr "a" ("data-p-mobile-toggle" =: ("#" <> tab)) $ 
-                text tab
-         pure never
+         menuEvents <- forM tabs $ \tab -> do
+            btnEvents <- iOSNavButton tab
+            pure $ tab <$ btnEvents
+         pure $ leftmost menuEvents
+
+iOSNavButton x = el "div" $ 
+    domEvent Click . fst <$> 
+        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> x)) 
+            (text x)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
 androidNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
