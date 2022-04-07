@@ -15,19 +15,23 @@ data Preferences = Preferences {
     darkMode :: Bool
 }
 
-preferencePage :: _ => m (Dynamic t Preferences)
-preferencePage = do
-    checkboxValue <- el "form" $ el "p" $ el "label" $ do
+preferencePage :: _ => Dynamic t Style -> m (Dynamic t Preferences)
+preferencePage style = let ?style = style in do
+    let labelAttrs = style <&> (\case
+            IOS -> "class" =: "p-form-switch"
+            Android -> mempty)
+
+    checkboxValue <- el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
         res <- _checkbox_value <$> checkbox True def
         el "span" $ text "Use Android Style"
         return res
     
-    let style = checkboxValue <&> 
+    let styleDyn = checkboxValue <&> 
           (\case
             True  -> Android
             False -> IOS)
 
     return $ 
         Preferences <$> 
-          style <*>
+          styleDyn <*>
           pure False

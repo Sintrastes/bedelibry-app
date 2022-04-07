@@ -52,7 +52,7 @@ import Data.List
 body :: _ => m ()
 body = mdo
     topNavEvents <- androidNavBar (style <$> prefs) tabs
-    
+
     let navEvents = leftmost [topNavEvents, bottomNavEvents]
 
     prefs <- tabDisplay defaultTab tabs navEvents $ do
@@ -60,7 +60,7 @@ body = mdo
         
         tab "Home" $ homePage maybeParsedSchema $ style <$> prefs
 
-        tab "Preferences" preferencePage
+        tab "Preferences" $ preferencePage (style <$> prefs)
     
     bottomNavEvents <- iOSNavBar (style <$> prefs) tabs
     pure ()
