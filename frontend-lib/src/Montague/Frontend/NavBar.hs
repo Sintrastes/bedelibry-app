@@ -8,26 +8,26 @@ import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
 
-iOSNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
-iOSNavBar style tabs = 
+iOSNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
+iOSNavBar style tabs =
   let ?style = style in
   let navAttrs = style <&> (\case
         IOS     -> "class" =: "p-mobile-tabs"
         Android -> "style" =: "display: none;")
-  in 
+  in
      elDynAttr "div" navAttrs $ do
          menuEvents <- forM tabs $ \tab -> do
-            btnEvents <- iOSNavButton tab
+            btnEvents <- iOSNavButton (T.pack $ show tab)
             pure $ tab <$ btnEvents
          pure $ leftmost menuEvents
 
-iOSNavButton x = el "div" $ 
-    domEvent Click . fst <$> 
-        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> x)) 
+iOSNavButton x = el "div" $
+    domEvent Click . fst <$>
+        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> x))
             (text x)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
-androidNavBar :: _ => Dynamic t Style -> [T.Text] -> m (Event t T.Text)
+androidNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
 androidNavBar style tabs = let ?style = style in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "nav-wrapper light-blue darken-1"
@@ -39,12 +39,12 @@ androidNavBar style tabs = let ?style = style in mdo
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
-                btnEvents <- navButton tab
+                btnEvents <- navButton (T.pack $ show tab)
                 pure $ tab <$ btnEvents)
 
             pure (leftmost menuEvents, domEvent Click (fst navMenu))
 
-    sidebarOpened <- accumDyn (\s _ -> not s) False 
+    sidebarOpened <- accumDyn (\s _ -> not s) False
         (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
 
     let sidebarAttrs = sidebarOpened <&> \isOpened ->
@@ -56,9 +56,9 @@ androidNavBar style tabs = let ?style = style in mdo
     -- Nav bar menu
     navPaneEvents <- elDynAttr "div" sidebarAttrs $ ul $ do
         tabEvents        <- forM tabs (\tab -> do
-            events <- sidebarButton tab
+            events <- sidebarButton (T.pack $ show tab)
             pure $ tab <$ events)
-       
+
         pure $ leftmost tabEvents
 
     pure $ leftmost [navBarEvents, navPaneEvents]

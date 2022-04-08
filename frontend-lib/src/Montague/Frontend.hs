@@ -28,7 +28,7 @@ import Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Language.Javascript.JSaddle (eval, liftJSM)
-import Reflex.Dom.Core hiding (button, tabDisplay)
+import Reflex.Dom.Core hiding (button, tabDisplay, Home)
 import Montague
 import Data.Maybe
 import Data.Function
@@ -37,7 +37,7 @@ import Prelude hiding ((<=), div)
 import Control.Applicative
 import Control.Monad.Tree
 import Montague.Types
-import Montague.Lexicon
+import Montague.Lexicon hiding (enumValues)
 import Data.Proxy
 import Montague.Semantics
 import Data.PartialOrd hiding ((==))
@@ -52,37 +52,37 @@ import Data.List
 
 body :: _ => m ()
 body = mdo
-    topNavEvents <- androidNavBar (style <$> prefs) tabs
+    topNavEvents <- androidNavBar (style <$> prefs) (enumValues @Page)
 
     let navEvents = leftmost [topNavEvents, bottomNavEvents]
 
-    prefs <- tabDisplay defaultTab tabs navEvents $ do
-        maybeParsedSchema <- tab "Schema" $ schemaPage $ style <$> prefs
-        
-        tab "Home" $ homePage maybeParsedSchema $ style <$> prefs
+    prefs <- tabDisplay defaultPage enumValues navEvents $ do
+        maybeParsedSchema <- tab Schema $ schemaPage $ style <$> prefs
 
-        tab "Preferences" $ preferencePage (style <$> prefs)
-    
-    bottomNavEvents <- iOSNavBar (style <$> prefs) tabs
+        tab Home $ homePage maybeParsedSchema $ style <$> prefs
 
-    prerender (pure never) $ performEvent $ (updated $ style <$> prefs) <&> \case
-        IOS -> modifyLink "css-style" 
+        tab Preferences $ preferencePage (style <$> prefs)
+
+    bottomNavEvents <- iOSNavBar (style <$> prefs) (enumValues @Page)
+
+    prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
+        IOS -> modifyLink "css-style"
             "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
         Android -> modifyLink "css-style"
             "https://sintrastes.github.io/demos/montague/materialize.min.css"
 
     pure ()
 
-defaultTab :: T.Text
-defaultTab = "Schema"
+defaultPage = Schema
 
-tabs :: [T.Text]
-tabs = 
-  [
-    "Schema"
-  , "Home"
-  , "Preferences"
-  ]
+enumValues :: (Enum a) => [a]
+enumValues = enumFrom (toEnum 0)
+
+data Page =
+    Schema
+  | Home
+  | Preferences
+    deriving(Eq, Enum, Bounded, Show)
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
@@ -114,7 +114,7 @@ homePage maybeParsedSchema style = let ?style = style in do
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    montagueDir <- if "android" `isInfixOf` os 
+    montagueDir <- if "android" `isInfixOf` os
         then pure "/data/data/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 

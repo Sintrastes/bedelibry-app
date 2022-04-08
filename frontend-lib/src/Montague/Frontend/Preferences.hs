@@ -10,12 +10,12 @@ import Montague.Frontend.Utils
 import Reflex.Dom.Core
 import Data.Functor
 
-data Preferences = Preferences {
+data PreferenceData = PreferenceData {
     style :: Style,
     darkMode :: Bool
 }
 
-preferencePage :: _ => Dynamic t Style -> m (Dynamic t Preferences)
+preferencePage :: _ => Dynamic t Style -> m (Dynamic t PreferenceData)
 preferencePage style = let ?style = style in do
     let labelAttrs = style <&> (\case
             IOS -> "class" =: "p-form-switch"
@@ -32,6 +32,6 @@ preferencePage style = let ?style = style in do
             False -> IOS)
 
     return $ 
-        Preferences <$> 
+        PreferenceData <$> 
           styleDyn <*>
           pure False
