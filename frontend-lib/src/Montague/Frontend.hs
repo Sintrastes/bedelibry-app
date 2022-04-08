@@ -61,7 +61,11 @@ body = mdo
 
         tab Home $ homePage maybeParsedSchema $ style <$> prefs
 
-        tab Preferences $ preferencePage (style <$> prefs)
+        prefs <- tab Preferences $ preferencePage (style <$> prefs)
+        
+        tab Entities $ entityPage (style <$> prefs) maybeParsedSchema
+
+        pure prefs
 
     bottomNavEvents <- iOSNavBar (style <$> prefs) (enumValues @Page)
 
@@ -82,6 +86,7 @@ data Page =
     Schema
   | Home
   | Preferences
+  | Entities
     deriving(Eq, Enum, Bounded, Show)
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
@@ -167,3 +172,7 @@ schemaPage style = let ?style = style in do
   where boxResizing = "-webkit-box-sizing: border-box;"
           <> "-moz-box-sizing: border-box;"
           <> "box-sizing: border-box;"
+
+entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
+entityPage style maybeParsedSchema = let ?style = style in do
+    pure ()
