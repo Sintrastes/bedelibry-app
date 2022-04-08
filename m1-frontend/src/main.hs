@@ -15,10 +15,7 @@ header = do
   elAttr "script" (
     "src" =: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js") blank
   elAttr "link" (
-    "href" =: "https://sintrastes.github.io/demos/montague/puppertino/newfull.css" <>
-    "type" =: "text/css" <>
-    "rel" =: "stylesheet") blank
-  elAttr "link" (
+    "id" =: "css-style" <>
     "href" =: "https://sintrastes.github.io/demos/montague/materialize.min.css" <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank

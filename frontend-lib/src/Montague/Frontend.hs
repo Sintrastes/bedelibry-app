@@ -17,6 +17,7 @@
 module Montague.Frontend where
 
 import Montague.Frontend.Utils
+import Montague.Frontend.Utils.Javascript
 import Montague.Frontend.TabDisplay
 import Montague.Frontend.Preferences
 import Montague.Frontend.NavBar
@@ -63,6 +64,13 @@ body = mdo
         tab "Preferences" $ preferencePage (style <$> prefs)
     
     bottomNavEvents <- iOSNavBar (style <$> prefs) tabs
+
+    prerender (pure never) $ performEvent $ (updated $ style <$> prefs) <&> \case
+        IOS -> modifyLink "css-style" 
+            "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
+        Android -> modifyLink "css-style"
+            "https://sintrastes.github.io/demos/montague/materialize.min.css"
+
     pure ()
 
 defaultTab :: T.Text
