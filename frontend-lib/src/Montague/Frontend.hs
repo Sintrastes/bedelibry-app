@@ -175,12 +175,13 @@ schemaPage style = let ?style = style in do
 
 entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 entityPage style maybeParsedSchema = let ?style = style in do
-    dyn $ maybeParsedSchema <&> \case
-        Nothing -> pure ()
-        Just (SomeLexicon pA _ _) -> do
-            let entities = getEntities pA
-            forM_ entities (\entity -> do
-                p $ text $ T.pack $ show entity)
+    elClass "ul" "collection" $
+        dyn $ maybeParsedSchema <&> \case
+            Nothing -> pure ()
+            Just (SomeLexicon pT pA _) -> do
+                let entities = getEntities pA
+                forM_ entities (\entity -> do
+                    elClass "li" "collection-item" $ text $ T.pack $ show entity)
     pure ()
   where 
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
