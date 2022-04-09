@@ -184,7 +184,11 @@ entityPage style maybeParsedSchema = let ?style = style in do
                 let types = fmap (bfs . typeOfAtom semantics) entities
                 let typingPairs = zip entities types
                 forM_ typingPairs (\(entity, typ) -> do
-                    elClass "li" "collection-item" $ text $ T.pack $ show entity <> ": " <> show typ)
+                    elClass "li" "collection-item" $ do
+                        el "span" $ text $ 
+                            T.pack $ show entity <> ": "
+                        elAttr "span" ("style" =: "float: right;") $ text $ 
+                            T.pack $ intercalate " | " . fmap show $ typ)
     pure ()
   where 
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
