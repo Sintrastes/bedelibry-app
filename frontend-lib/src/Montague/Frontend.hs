@@ -79,8 +79,8 @@ body = mdo
 
 defaultPage = Schema
 
-enumValues :: (Enum a) => [a]
-enumValues = enumFrom (toEnum 0)
+enumValues :: (Bounded a, Enum a) => [a]
+enumValues = [minBound..maxBound]
 
 data Page =
     Schema
@@ -175,4 +175,13 @@ schemaPage style = let ?style = style in do
 
 entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 entityPage style maybeParsedSchema = let ?style = style in do
+    dyn $ maybeParsedSchema <&> \case
+        Nothing -> pure ()
+        Just (SomeLexicon pA _ _) -> do
+            let entities = getEntities pA
+            forM_ entities (\entity -> do
+                p $ text $ T.pack $ show entity)
     pure ()
+  where 
+    getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
+    getEntities Proxy = enumValues
