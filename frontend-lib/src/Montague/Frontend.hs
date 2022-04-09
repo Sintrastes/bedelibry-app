@@ -49,6 +49,7 @@ import Control.Monad.IO.Class
 import Control.Monad.Fix
 import System.Directory
 import Data.List
+import Control.Monad.Tree
 
 body :: _ => m ()
 body = mdo
@@ -178,10 +179,12 @@ entityPage style maybeParsedSchema = let ?style = style in do
     elClass "ul" "collection" $
         dyn $ maybeParsedSchema <&> \case
             Nothing -> pure ()
-            Just (SomeLexicon pT pA _) -> do
+            Just (SomeLexicon pT pA semantics) -> do
                 let entities = getEntities pA
-                forM_ entities (\entity -> do
-                    elClass "li" "collection-item" $ text $ T.pack $ show entity)
+                let types = fmap (bfs . typeOfAtom semantics) entities
+                let typingPairs = zip entities types
+                forM_ typingPairs (\(entity, typ) -> do
+                    elClass "li" "collection-item" $ text $ T.pack $ show entity <> ": " <> show typ)
     pure ()
   where 
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
