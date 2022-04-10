@@ -67,8 +67,10 @@ body = mdo
         tab Entities $ entityPage (style <$> prefs) maybeParsedSchema
 
         pure prefs
+    
+    currentPage <- holdDyn defaultPage navEvents
 
-    bottomNavEvents <- iOSNavBar (style <$> prefs) (enumValues @Page)
+    bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
 
     prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
         IOS -> modifyLink "css-style"

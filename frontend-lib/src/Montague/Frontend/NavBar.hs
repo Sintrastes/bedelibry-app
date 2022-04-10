@@ -11,8 +11,8 @@ import Data.Functor
 class HasIcon e where
     iconUrl :: e -> T.Text
 
-iOSNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
-iOSNavBar style tabs =
+iOSNavBar :: _ => Dynamic t e -> Dynamic t Style -> [e] -> m (Event t e)
+iOSNavBar currentlySelected style tabs =
   let ?style = style in
   let navAttrs = style <&> (\case
         IOS     -> "class" =: "p-mobile-tabs"
@@ -20,15 +20,25 @@ iOSNavBar style tabs =
   in
      elDynAttr "div" navAttrs $ do
          menuEvents <- forM tabs $ \tab -> do
-            btnEvents <- iOSNavButton (T.pack $ show tab) (iconUrl tab)
+            let isSelected = currentlySelected <&> (== tab)
+            btnEvents <- iOSNavButton isSelected (T.pack $ show tab) (iconUrl tab)
             pure $ tab <$ btnEvents
          pure $ leftmost menuEvents
 
 -- iOSNavButton :: DomBuilder t m => T.Text -> T.Text -> m (DomEventType t 'ClickTag)
-iOSNavButton label iconUrl = el "div" $
+iOSNavButton isSelected label iconUrl = el "div" $ do
+    let attrs = isSelected <&> \case
+          True  -> "data-p-mobile-toggle" =: ("#" <> label)
+              <> "class" =: "active"
+          False -> "data-p-mobile-toggle" =: ("#" <> label)
     domEvent Click . fst <$>
-        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> label)) (do
-            elAttr "img" ("src" =: iconUrl <> "width" =: "19") $ pure ()
+        elDynAttr' "a" attrs (do
+            elAttr "svg" ("width" =: "24" <>
+                "height" =: "24" <> "fill" =: "none" <>
+                "stroke" =: "currentColor" <> "stroke-width" =: "2" <>
+                "stroke-linecap" =: "round" <>
+                "stroke-linejoin" =: "round") $ 
+                elAttr "use" ("href" =: iconUrl) $ pure ()
             p $ text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
