@@ -1,4 +1,4 @@
-{-# LANGUAGE PartialTypeSignatures, ImplicitParams, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts #-}
+{-# LANGUAGE PartialTypeSignatures, ImplicitParams, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts, DataKinds, GADTs #-}
 
 module Montague.Frontend.NavBar where
 
@@ -7,6 +7,9 @@ import Montague.Frontend.Utils
 import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
+
+class HasIcon e where
+    iconUrl :: e -> T.Text
 
 iOSNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
 iOSNavBar style tabs =
@@ -17,14 +20,16 @@ iOSNavBar style tabs =
   in
      elDynAttr "div" navAttrs $ do
          menuEvents <- forM tabs $ \tab -> do
-            btnEvents <- iOSNavButton (T.pack $ show tab)
+            btnEvents <- iOSNavButton (T.pack $ show tab) (iconUrl tab)
             pure $ tab <$ btnEvents
          pure $ leftmost menuEvents
 
-iOSNavButton x = el "div" $
+-- iOSNavButton :: DomBuilder t m => T.Text -> T.Text -> m (DomEventType t 'ClickTag)
+iOSNavButton label iconUrl = el "div" $
     domEvent Click . fst <$>
-        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> x))
-            (text x)
+        elAttr' "a" ("data-p-mobile-toggle" =: ("#" <> label)) (do
+            elAttr "img" ("src" =: iconUrl <> "width" =: "19") $ pure ()
+            p $ text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
 androidNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)

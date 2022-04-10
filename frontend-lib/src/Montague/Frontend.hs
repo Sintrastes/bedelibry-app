@@ -90,6 +90,13 @@ data Page =
   | Entities
     deriving(Eq, Enum, Bounded, Show)
 
+instance HasIcon Page where
+    iconUrl = \case
+        Schema      -> "https://sintrastes.github.io/demos/montague/file-text.svg"
+        Home        -> "https://sintrastes.github.io/demos/montague/home.svg"
+        Preferences -> "https://sintrastes.github.io/demos/montague/settings.svg"
+        Entities    -> "https://sintrastes.github.io/demos/montague/book.svg"
+
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
     p $ text "Enter in a sentence you want to parse!"
