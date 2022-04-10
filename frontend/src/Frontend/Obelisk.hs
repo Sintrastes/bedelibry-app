@@ -12,7 +12,8 @@
     , OverloadedStrings
     , GADTs
     , PartialTypeSignatures
-    , ImplicitParams #-}
+    , ImplicitParams
+    , CPP #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 module Frontend.Obelisk where
@@ -35,17 +36,35 @@ frontend = Frontend
   , _frontend_body = body
   }
 
+#ifdef ghcjs_HOST_OS
+w3CSS = "w3.css"
+#else
+w3CSS = $(static "w3.css")
+#endif
+
+#ifdef ghcjs_HOST_OS
+materializeCSS = $(static "materialize.min.css")
+#else
+materializeCSS = "materialize.min.css"
+#endif
+
+#ifdef ghcjs_HOST_OS
+mainCSS = $(static "main.css")
+#else
+mainCSS = "main.css"
+#endif
+
 header :: _ => m ()
 header = do
   el "title" $ text "Montague"
   elAttr "link" (
-    "href" =: $(static "w3.css") <>
+    "href" =: w3CSS <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
   elAttr "script" (
     "src" =: "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js") blank
   elAttr "link" (
-    "href" =: $(static "materialize.min.css") <>
+    "href" =: materializeCSS <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
   elAttr "link" (
@@ -53,6 +72,6 @@ header = do
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
   elAttr "link" (
-    "href" =: $(static "main.css") <>
+    "href" =: mainCSS <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
