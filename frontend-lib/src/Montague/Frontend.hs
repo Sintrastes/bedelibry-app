@@ -150,11 +150,11 @@ schemaPage style = let ?style = style in do
 
     p $ text "Enter in the schema for your data:"
 
-    schemaText <- elAttr "div" ("class" =: "input-field col s12" <> "style" =: "display:flex;height:100%;") $ textAreaElement (
+    schemaText <- elAttr "div" ("class" =: "input-field col s12" <> "style" =: "display:flex;height:75%;width:100%;") $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ ("class" =: "p-form-text p-form-no-validate" <>
-                 "style" =: ("height: 100%;" <> boxResizing))
+                 "style" =: ("height: 100%;width:100%;" <> boxResizing))
             & textAreaElementConfig_initialValue
             .~ T.pack loadedSchemaText
      )
