@@ -37,9 +37,9 @@ frontend = Frontend
   }
 
 #ifdef ghcjs_HOST_OS
-w3CSS = $(static "https://sintrastes.github.io/demos/montague/w3.css")
+w3CSS = "https://sintrastes.github.io/demos/montague/w3.css" 
 #else
-w3CSS = "w3.css"
+w3CSS = $(static "w3.css")
 #endif
 
 #ifdef ghcjs_HOST_OS
