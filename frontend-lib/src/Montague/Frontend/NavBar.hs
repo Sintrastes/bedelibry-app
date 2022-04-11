@@ -1,4 +1,4 @@
-{-# LANGUAGE PartialTypeSignatures, ImplicitParams, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts, DataKinds, GADTs #-}
+{-# LANGUAGE PartialTypeSignatures, ImplicitParams, MultiParamTypeClasses, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts, DataKinds, GADTs #-}
 
 module Montague.Frontend.NavBar where
 
@@ -8,38 +8,38 @@ import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
 
-class HasIcon e where
-    iconUrl :: e -> T.Text
+class DomBuilder t m => HasIcon t m e where
+    icon :: e -> m ()
 
 iOSNavBar :: _ => Dynamic t e -> Dynamic t Style -> [e] -> m (Event t e)
 iOSNavBar currentlySelected style tabs =
   let ?style = style in
-  let navAttrs = style <&> (\case
-        IOS     -> "class" =: "p-mobile-tabs"
-        Android -> "style" =: "display: none;")
+  let widget = style <&> (\case
+        IOS -> elClass "div" "p-mobile-tabs" $ do
+            menuEvents <- forM tabs $ \tab -> do
+               let isSelected = currentlySelected <&> (== tab)
+               btnEvents <- iOSNavButton isSelected (T.pack $ show tab) (icon tab)
+               pure $ tab <$ btnEvents
+            pure $ leftmost menuEvents
+        Android -> pure never)
   in
-     elDynAttr "div" navAttrs $ do
-         menuEvents <- forM tabs $ \tab -> do
-            let isSelected = currentlySelected <&> (== tab)
-            btnEvents <- iOSNavButton isSelected (T.pack $ show tab) (iconUrl tab)
-            pure $ tab <$ btnEvents
-         pure $ leftmost menuEvents
+     switch . current <$> dynWidgetHold widget
+
+-- dynWidgetHold :: MonadHold t m => Dynamic t (m a) -> m (Dynamic t a)
+dynWidgetHold widget = do
+    w <- sample $ current widget
+    widgetHold w (updated widget)
 
 -- iOSNavButton :: DomBuilder t m => T.Text -> T.Text -> m (DomEventType t 'ClickTag)
-iOSNavButton isSelected label iconUrl = el "div" $ do
+iOSNavButton isSelected label icon = el "div" $ do
     let attrs = isSelected <&> \case
           True  -> "data-p-mobile-toggle" =: ("#" <> label)
               <> "class" =: "active"
           False -> "data-p-mobile-toggle" =: ("#" <> label)
-    domEvent Click . fst <$>
+    domEvent Click . fst <$> do
         elDynAttr' "a" attrs (do
-            elAttr "svg" ("width" =: "24" <>
-                "height" =: "24" <> "fill" =: "none" <>
-                "stroke" =: "currentColor" <> "stroke-width" =: "2" <>
-                "stroke-linecap" =: "round" <>
-                "stroke-linejoin" =: "round") $ 
-                elAttr "use" ("href" =: iconUrl) $ pure ()
-            p $ text label)
+            icon
+            text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
 androidNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)

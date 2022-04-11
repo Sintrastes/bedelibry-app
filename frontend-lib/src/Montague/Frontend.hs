@@ -12,7 +12,9 @@
     , ConstraintKinds
     , GADTs
     , PartialTypeSignatures
-    , ImplicitParams #-}
+    , ImplicitParams
+    , TemplateHaskell
+    , QuasiQuotes #-}
 
 module Montague.Frontend where
 
@@ -73,8 +75,11 @@ body = mdo
     bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
 
     prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
-        IOS -> modifyLink "css-style"
-            "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
+        IOS -> do
+            modifyLink "css-style"
+                 "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
+            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 150);" :: T.Text)
+            pure ()
         Android -> modifyLink "css-style"
             "https://sintrastes.github.io/demos/montague/materialize.min.css"
 
@@ -92,12 +97,12 @@ data Page =
   | Entities
     deriving(Eq, Enum, Bounded, Show)
 
-instance HasIcon Page where
-    iconUrl = \case
-        Schema      -> "https://sintrastes.github.io/demos/montague/file-text.svg"
-        Home        -> "https://sintrastes.github.io/demos/montague/home.svg"
-        Preferences -> "https://sintrastes.github.io/demos/montague/settings.svg"
-        Entities    -> "https://sintrastes.github.io/demos/montague/book.svg"
+instance DomBuilder t m => HasIcon t m Page where
+    icon = \case
+        Schema      -> elAttr "i" ("data-feather" =: "file-text") $ pure ()
+        Home        -> elAttr "i" ("data-feather" =: "home") $ pure ()
+        Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
+        Entities    -> elAttr "i" ("data-feather" =: "book") $ pure ()
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
