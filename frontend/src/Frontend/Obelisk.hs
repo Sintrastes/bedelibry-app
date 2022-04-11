@@ -37,19 +37,19 @@ frontend = Frontend
   }
 
 #ifdef ghcjs_HOST_OS
-w3CSS = $(static "w3.css")
+w3CSS = $(static "https://sintrastes.github.io/demos/montague/w3.css")
 #else
 w3CSS = "w3.css"
 #endif
 
 #ifdef ghcjs_HOST_OS
-materializeCSS = "materialize.min.css"
+materializeCSS = "https://sintrastes.github.io/demos/montague/materialize.min.css"
 #else
 materializeCSS = $(static "materialize.min.css")
 #endif
 
 #ifdef ghcjs_HOST_OS
-mainCSS = "main.css"
+mainCSS = "https://sintrastes.github.io/demos/montague/main.css"
 #else
 mainCSS = $(static "main.css")
 #endif
