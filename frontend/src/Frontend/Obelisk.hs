@@ -37,21 +37,21 @@ frontend = Frontend
   }
 
 #ifdef ghcjs_HOST_OS
-w3CSS = "w3.css"
-#else
 w3CSS = $(static "w3.css")
+#else
+w3CSS = "w3.css"
 #endif
 
 #ifdef ghcjs_HOST_OS
-materializeCSS = $(static "materialize.min.css")
-#else
 materializeCSS = "materialize.min.css"
+#else
+materializeCSS = $(static "materialize.min.css")
 #endif
 
 #ifdef ghcjs_HOST_OS
-mainCSS = $(static "main.css")
-#else
 mainCSS = "main.css"
+#else
+mainCSS = $(static "main.css")
 #endif
 
 header :: _ => m ()
