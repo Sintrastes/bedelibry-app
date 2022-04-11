@@ -7,7 +7,7 @@
 module Montague.Frontend.Preferences where
 
 import Montague.Frontend.Utils
-import Reflex.Dom.Core
+import Reflex.Dom.Core hiding (checkbox)
 import Data.Functor
 
 data PreferenceData = PreferenceData {
@@ -17,19 +17,11 @@ data PreferenceData = PreferenceData {
 
 preferencePage :: _ => Dynamic t Style -> m (Dynamic t PreferenceData)
 preferencePage style = let ?style = style in do
-    let labelAttrs = style <&> (\case
-            IOS -> "class" =: "p-form-switch"
-            Android -> mempty)
-
-    checkboxValue <- el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
-        res <- _checkbox_value <$> checkbox True def
-        el "span" $ text "Use Android Style"
-        return res
+    checkboxValue <- checkbox "Use Android style"
     
-    let styleDyn = checkboxValue <&> 
-          (\case
+    let styleDyn = checkboxValue <&> \case
             True  -> Android
-            False -> IOS)
+            False -> IOS
 
     return $ 
         PreferenceData <$> 

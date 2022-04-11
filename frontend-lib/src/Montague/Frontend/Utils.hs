@@ -19,7 +19,8 @@ module Montague.Frontend.Utils where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import Reflex.Dom.Core hiding (button)
+import Reflex.Dom.Core hiding (button, checkbox)
+import qualified Reflex.Dom.Core as RD
 import Language.Javascript.JSaddle (eval, liftJSM)
 import Control.Monad.IO.Class
 import Data.Function
@@ -61,6 +62,17 @@ button label = do
           IOS     -> "class" =: "p-btn p-btn-mob"
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
+
+checkbox :: _ => T.Text -> m (Dynamic t Bool)
+checkbox label = do
+    let labelAttrs = ?style <&> (\case
+            IOS -> "class" =: "p-form-checkbox-cont"
+            Android -> mempty)
+    el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
+        res <- _checkbox_value <$> RD.checkbox True def
+        el "span" $ pure ()
+        text label
+        return res
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
 textEntry = mdo
