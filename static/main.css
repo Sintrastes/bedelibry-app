@@ -3,4 +3,5 @@
   overflow: hidden;
   margin: auto;
   width: min(50em, 85vw);
+  height: 68vh;
 }
