@@ -3,7 +3,7 @@ version: 0.1
 cabal-version: >= 1.8
 build-type: Simple
 
-executable m1-frontend
+executable frontend
   hs-source-dirs: src
   main-is: main.hs
   build-depends: base
