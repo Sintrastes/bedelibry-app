@@ -24,6 +24,10 @@ jobs:
         nix-build -A android.frontend -o result-android
         ls result-android
         cp result-android/android-app-debug.apk ./montague-android-app.apk
+    - name: Build Desktop app with nix
+      run: |
+        nix-build -A ghc.frontend -o result-desktop
+        ls result-desktop
     - name: Archive webapp
       uses: actions/upload-artifact@v2
       with:
