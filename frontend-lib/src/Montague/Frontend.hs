@@ -80,8 +80,8 @@ body = mdo
                  "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
             liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 150);" :: T.Text)
             pure ()
-        Android -> modifyLink "css-style"
-            "https://sintrastes.github.io/demos/montague/materialize.min.css"
+        Android -> pure () -- modifyLink "css-style"
+           -- "https://sintrastes.github.io/demos/montague/materialize.min.css"
 
     pure ()
 
