@@ -22,6 +22,7 @@ project ./. ({ pkgs, ... }: {
 
   packages = {
     frontend-lib = ./frontend-lib;
+    m1-frontend = ./m1-frontend;
   };
 
   overrides = self: super: {
