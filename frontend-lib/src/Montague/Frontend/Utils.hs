@@ -95,7 +95,7 @@ textEntry = mdo
         IOS     -> "class" =: Just "p-form-text p-form-no-validate"
 
 toast message = do
-    liftJSM $ eval ("M.toast({html: '" <> message <> "'})" :: T.Text)
+    liftJSM $ eval ("console.log(\"toast\"); M.toast({html: '" <> message <> "'})" :: T.Text)
     pure ()
 
 toastOnErrors x = do
