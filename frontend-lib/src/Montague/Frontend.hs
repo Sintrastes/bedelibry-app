@@ -138,10 +138,10 @@ schemaPage style = let ?style = style in do
         then pure "/data/data/org.bedelibry.demos.montague"
         else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
 
-    toastOnErrors $ liftFrontend (Right ()) $ catch
-        (do createDirectoryIfMissing True montagueDir
-            pure $ Right ())
-        (\(e :: SomeException) -> pure $ Left e)
+    -- toastOnErrors $ liftFrontend (Right ()) $ catch
+    --     (do createDirectoryIfMissing True montagueDir
+    --         pure $ Right ())
+    --     (\(e :: SomeException) -> pure $ Left e)
 
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
