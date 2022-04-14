@@ -17,17 +17,13 @@ jobs:
           binary-caches-parallel-connections = 40
     - name: Build webapp with nix
       run: |
-        nix-build -A ghcjs.frontend -o result
+        nix-build -A ghcjs.m1-frontend -o result
         tar -cvzf montague-js-frontend.tar.gz result/*
     - name: Build Android app with nix
       run: |
         nix-build -A android.frontend -o result-android
         ls result-android
         cp result-android/android-app-debug.apk ./montague-android-app.apk
-    - name: Build Desktop app with nix
-      run: |
-        nix-build -A ghc.frontend -o result-desktop
-        ls result-desktop
     - name: Archive webapp
       uses: actions/upload-artifact@v2
       with:

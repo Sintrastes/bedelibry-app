@@ -3,7 +3,6 @@
 
 import Montague.Frontend
 import Reflex.Dom.Core
-import Language.Javascript.JSaddle.Warp
 
 header :: _ => m ()
 header = do
@@ -30,4 +29,4 @@ header = do
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
 
-main = run 3911 $ mainWidgetWithHead header body
+main = mainWidgetWithHead header body
