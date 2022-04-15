@@ -1,2 +1,2 @@
-static/w3.css linguist-vendored
-static/materialize.min.css linguist-vendored
+static/w3.css -linguist-vendored
+static/materialize.min.css -linguist-vendored
