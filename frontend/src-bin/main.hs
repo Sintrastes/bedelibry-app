@@ -11,6 +11,4 @@ import Obelisk.Generated.Static
 import Reflex.Dom
 
 main :: IO ()
-main = do
-  let Right validFullEncoder = checkEncoder fullRouteEncoder
-  run $ runFrontend validFullEncoder frontend
+main = mainWidgetWithHead header body
