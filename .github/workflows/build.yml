@@ -19,8 +19,18 @@ jobs:
       run: |
         nix-build -A ghcjs.m1-frontend -o result
         tar -cvzf montague-js-frontend.tar.gz result/*
+    - name: Build Android app with nix
+      run: |
+        nix-build -A android.frontend -o result-android
+        ls result-android
+        cp result-android/android-app-debug.apk ./montague-android-app.apk
     - name: Archive webapp
       uses: actions/upload-artifact@v2
       with:
         name: ghcjs-frontend
         path: montague-js-frontend.tar.gz
+    - name: Archive Android app
+      uses: actions/upload-artifact@v2
+      with:
+        name: android-app
+        path: montague-android-app.apk
