@@ -29,4 +29,4 @@ header = do
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
 
-main = mainWidgetWithHead header body
+main = mainWidgetWithHead header $ el "p" $ text "Hello, world." -- body
