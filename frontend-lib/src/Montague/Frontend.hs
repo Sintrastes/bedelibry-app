@@ -74,14 +74,14 @@ body = mdo
 
     bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
 
-    prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
+    {- prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
         IOS -> do
             modifyLink "css-style"
                  "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
             liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 150);" :: T.Text)
             pure ()
         Android -> pure () -- modifyLink "css-style"
-           -- "https://sintrastes.github.io/demos/montague/materialize.min.css"
+           -- "https://sintrastes.github.io/demos/montague/materialize.min.css" -}
 
     pure ()
 
@@ -134,9 +134,9 @@ homePage maybeParsedSchema style = let ?style = style in do
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage style = let ?style = style in do
     -- Setup the application directory.
-    montagueDir <- if "android" `isInfixOf` os
+    {- montagueDir <- if "android" `isInfixOf` os
         then pure "/data/data/org.bedelibry.demos.montague"
-        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
+        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague") -}
 
     -- toastOnErrors $ liftFrontend (Right ()) $ catch
     --     (do createDirectoryIfMissing True montagueDir
@@ -144,9 +144,9 @@ schemaPage style = let ?style = style in do
     --     (\(e :: SomeException) -> pure $ Left e)
 
     -- Load the schema from disk.
-    loadedSchemaText <- liftFrontend "" $
+    loadedSchemaText <- pure "" {- liftFrontend "" $
         catch (readFile (montagueDir <> "/schema.mont"))
-            (\(e :: SomeException) -> return "")
+            (\(e :: SomeException) -> return "") -}
 
     p $ text "Enter in the schema for your data:"
 
@@ -173,7 +173,7 @@ schemaPage style = let ?style = style in do
 
     saveEvent <- button "save"
 
-    prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do
+    {- prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do
         latestSchemaText <- sample $ current $ T.unpack <$>
               _textAreaElement_value schemaText
         res <- liftIO $ try $
@@ -181,7 +181,7 @@ schemaPage style = let ?style = style in do
 
         case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
-            Right _ -> toast "Saved schema")
+            Right _ -> toast "Saved schema") -}
 
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"
