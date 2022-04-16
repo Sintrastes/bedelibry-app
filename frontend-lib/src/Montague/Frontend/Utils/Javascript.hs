@@ -19,7 +19,7 @@ removeWithId id = do
 modifyLink :: _ => T.Text -> T.Text -> m ()
 modifyLink id url = do
     liftJSM $ eval (
-        (" consolve.log(\"modifyLink\"); var element = document.getElementById('" <> id <> "'); \
+        (" console.log(\"modifyLink\"); var element = document.getElementById('" <> id <> "'); \
         \ element.setAttribute('href','" <> url <> "'); \
         \") :: T.Text)
     pure ()
