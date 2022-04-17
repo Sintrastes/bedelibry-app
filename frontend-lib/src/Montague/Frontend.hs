@@ -68,6 +68,8 @@ body = mdo
         
         tab Entities $ entityPage (style <$> prefs) maybeParsedSchema
 
+        tab Types $ typePage (style <$> prefs) maybeParsedSchema
+
         pure prefs
     
     currentPage <- holdDyn defaultPage navEvents
@@ -95,6 +97,7 @@ data Page =
   | Home
   | Preferences
   | Entities
+  | Types
     deriving(Eq, Enum, Bounded, Show)
 
 instance DomBuilder t m => HasIcon t m Page where
@@ -103,6 +106,7 @@ instance DomBuilder t m => HasIcon t m Page where
         Home        -> elAttr "i" ("data-feather" =: "home") $ pure ()
         Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
         Entities    -> elAttr "i" ("data-feather" =: "book") $ pure ()
+        Types       -> elAttr "i" ("data-feather" =: "edit") $ pure ()
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in do
@@ -207,3 +211,19 @@ entityPage style maybeParsedSchema = let ?style = style in do
   where 
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
     getEntities Proxy = enumValues
+
+typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
+typePage style maybeParsedSchema = let ?style = style in do
+    elClass "ul" "collection" $
+        dyn $ maybeParsedSchema <&> \case
+            Nothing -> pure ()
+            Just (SomeLexicon pT pA semantics) -> do
+                let types = getTypes pT
+                forM_ types (\typ -> do
+                    elClass "li" "collection-item" $ do
+                        el "span" $ text $ 
+                            T.pack $ show typ)
+    pure ()
+  where 
+    getTypes :: (Bounded t, Enum t) => Proxy t -> [t]
+    getTypes Proxy = enumValues
