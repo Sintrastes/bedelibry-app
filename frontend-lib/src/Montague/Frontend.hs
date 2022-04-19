@@ -76,15 +76,21 @@ body = mdo
 
     bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
 
+    prerender (pure ()) $ do
+        liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
+        pure ()
+
     prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
         IOS -> do
             modifyLink "css-style"
                  "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
-            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 150);" :: T.Text)
+            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
             pure ()
-        Android -> modifyLink "css-style"
-           "https://sintrastes.github.io/demos/montague/materialize.min.css"
-
+        Android -> do
+            modifyLink "css-style"
+               "https://sintrastes.github.io/demos/montague/materialize.min.css"
+            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
+            pure ()
     pure ()
 
 defaultPage = Schema
@@ -181,6 +187,8 @@ schemaPage style = let ?style = style in mdo
             Right x -> "✅ Schema valid.")
 
     saveEvent <- button "save"
+
+    elAttr "i" ("data-feather" =: "corner-up-left") $ pure ()
 
     let saveStatusEvents = leftmost
           [
