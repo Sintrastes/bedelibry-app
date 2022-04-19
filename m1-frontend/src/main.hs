@@ -8,6 +8,9 @@ import Language.Javascript.JSaddle.Warp
 header :: _ => m ()
 header = do
   el "title" $ text "Montague"
+  elAttr "meta" (
+    "name" =: "viewport" <>
+    "content" =: "width=device-width, initial-scale=1") blank
   elAttr "link" (
     "href" =: "https://sintrastes.github.io/demos/montague/w3.css" <>
     "type" =: "text/css" <>
