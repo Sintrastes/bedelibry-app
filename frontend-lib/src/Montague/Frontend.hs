@@ -152,7 +152,8 @@ schemaPage style = let ?style = style in mdo
         catch (readFile (montagueDir <> "/schema.mont"))
             (\(e :: SomeException) -> return "")
 
-    p $ text "Enter in the schema for your data:"
+    elClass "p" "unselectable" $ 
+        text "Enter in the schema for your data:"
 
     schemaText <- elAttr "div" ("class" =: "input-field col s12" <> "style" =: "display:flex;height:75%;width:100%;") $ textAreaElement (
         def & textAreaElementConfig_elementConfig
@@ -175,7 +176,7 @@ schemaPage style = let ?style = style in mdo
             True  -> "style" =: "float: right;" <> "class" =: "green-led"
             False -> "style" =: "float: right;" <> "class" =: "yellow-led") $ pure ()
         
-        small $ p $ dynText $ parsedSchema <&> (\case
+        small $ elClass "p" "unselectable" $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
             Right x -> "✅ Schema valid.")
 
