@@ -45,7 +45,7 @@ iOSNavButton isSelected label icon = el "div" $ do
 androidNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
 androidNavBar style tabs = let ?style = style in mdo
     let navAttrs = ?style <&> \case
-            Android -> "class" =: "nav-wrapper light-blue darken-1"
+            Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"
 
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
@@ -80,7 +80,7 @@ androidNavBar style tabs = let ?style = style in mdo
 
 sidebarButton x = li $
     domEvent Click . fst <$>
-        elClass' "a" "w3-bar-item w3-button"
+        elClass' "a" "unselectable w3-bar-item w3-button"
             (text x)
 
 navButton x = li $
