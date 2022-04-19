@@ -136,7 +136,7 @@ homePage maybeParsedSchema style = let ?style = style in do
         dynText parsedDisplay
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
-schemaPage style = let ?style = style in do
+schemaPage style = let ?style = style in mdo
     -- Setup the application directory.
     montagueDir <- if "android" `isInfixOf` os
         then pure "/data/data/org.bedelibry.demos.montague"
@@ -170,17 +170,21 @@ schemaPage style = let ?style = style in do
     let maybeParsedSchema = eitherToMaybe <$>
           parsedSchema
 
-    div $
+    div $ do
+        elDynAttr "span" (savedStatus <&> \case
+            True  -> "style" =: "float: right;" <> "class" =: "green-led"
+            False -> "style" =: "float: right;" <> "class" =: "yellow-led") $ pure ()
+        
         small $ p $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
             Right x -> "✅ Schema valid.")
 
     saveEvent <- button "save"
 
-    let saveStatusEvents = leftmost 
+    let saveStatusEvents = leftmost
           [
                True  <$ saveEvent
-             , False <$ (updated $ _textAreaElement_value schemaText)
+             , False <$ updated (_textAreaElement_value schemaText)
           ]
 
     let isNew = loadedSchemaText == ""
@@ -196,10 +200,6 @@ schemaPage style = let ?style = style in do
         case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
             Right _ -> toast "Saved schema")
-
-    p $ dynText $ savedStatus <&> \case
-        True  -> "Saved"
-        False -> "Not saved" 
 
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"

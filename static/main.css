@@ -29,9 +29,10 @@
 .yellow-led {
   height: 0.75em;
   width: 0.75em;
-  background-color: rgb(225, 255, 0);
+  background-color: rgb(255, 185, 0);
   border-radius: 50%;
   display: inline-block;
+  box-shadow: 0px 0px 7px 2px rgb(255, 185, 0);
 }
 
 .green-led {
@@ -40,4 +41,5 @@
   background-color: rgb(0, 255, 38);
   border-radius: 50%;
   display: inline-block;
+  box-shadow: 0px 0px 7px 2px rgb(0, 255, 38);
 }
