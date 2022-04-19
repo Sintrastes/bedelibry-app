@@ -27,8 +27,8 @@
 }
 
 .yellow-led {
-  height: 0.75em;
-  width: 0.75em;
+  height: 0.65em;
+  width: 0.65em;
   background-color: rgb(255, 185, 0);
   border-radius: 50%;
   display: inline-block;
@@ -36,8 +36,8 @@
 }
 
 .green-led {
-  height: 0.75em;
-  width: 0.75em;
+  height: 0.65em;
+  width: 0.65em;
   background-color: rgb(0, 255, 38);
   border-radius: 50%;
   display: inline-block;

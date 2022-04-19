@@ -182,9 +182,10 @@ schemaPage style = let ?style = style in mdo
             True  -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "green-led"
             False -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "yellow-led") $ pure ()
         
-        small $ elClass "p" "unselectable" $ dynText $ parsedSchema <&> (\case
-            Left e  -> "❌ Invalid schema: " <> T.pack (show e)
-            Right x -> "✅ Schema valid.")
+        small $ elAttr "p" ("style" =: "margin-left: 1em;" <> "class" =: "unselectable") $ 
+            dynText $ parsedSchema <&> (\case
+                Left e  -> "❌ Invalid schema: " <> T.pack (show e)
+                Right x -> "✅ Schema valid.")
 
     saveEvent <- button "save"
 
