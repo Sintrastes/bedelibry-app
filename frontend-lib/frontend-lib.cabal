@@ -20,6 +20,7 @@ library
     , OverloadedStrings
     , GADTs
     , PartialTypeSignatures
+    , ImplicitParams
   build-depends: base
                , containers
                , data-default
@@ -35,9 +36,13 @@ library
                , directory
   exposed-modules:
       Montague.Frontend
+    , Montague.Frontend.Home
+    , Montague.Frontend.Schema
+    , Montague.Frontend.Entity
+    , Montague.Frontend.Types
+    , Montague.Frontend.Preferences
     , Montague.Frontend.Utils
     , Montague.Frontend.Utils.Javascript
     , Montague.Frontend.TabDisplay
     , Montague.Frontend.NavBar
-    , Montague.Frontend.Preferences
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits
