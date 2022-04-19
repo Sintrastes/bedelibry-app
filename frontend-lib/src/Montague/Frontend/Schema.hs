@@ -63,14 +63,16 @@ schemaPage style = let ?style = style in mdo
     let parsedSchema = parseSchema .
           T.unpack <$>
             _textAreaElement_value schemaText
-
+    
     let maybeParsedSchema = eitherToMaybe <$>
           parsedSchema
 
     div $ do
+        elAttr "i" ("style" =: "float: right;height:18;" <> "data-feather" =: "corner-up-left") $ pure ()
+
         elDynAttr "span" (savedStatus <&> \case
-            True  -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "green-led"
-            False -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "yellow-led") $ pure ()
+            True  -> "style" =: "float: right;" <> "class" =: "green-led"
+            False -> "style" =: "float: right;" <> "class" =: "yellow-led") $ pure ()
         
         small $ elAttr "p" ("style" =: "margin-left: 1em;" <> "class" =: "unselectable") $ 
             dynText $ parsedSchema <&> (\case
@@ -78,8 +80,6 @@ schemaPage style = let ?style = style in mdo
                 Right x -> "✅ Schema valid.")
 
     saveEvent <- button "save"
-
-    elAttr "i" ("data-feather" =: "corner-up-left") $ pure ()
 
     let saveStatusEvents = leftmost
           [
