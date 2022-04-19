@@ -34,8 +34,9 @@ dynWidgetHold widget = do
 iOSNavButton isSelected label icon = el "div" $ do
     let attrs = isSelected <&> \case
           True  -> "data-p-mobile-toggle" =: ("#" <> label)
-              <> "class" =: "active"
+              <> "class" =: "unselectable active"
           False -> "data-p-mobile-toggle" =: ("#" <> label)
+              <> "class" =: "unselectable"
     domEvent Click . fst <$> do
         elDynAttr' "a" attrs (do
             icon
