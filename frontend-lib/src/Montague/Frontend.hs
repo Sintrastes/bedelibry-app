@@ -65,13 +65,13 @@ body = mdo
         tab Home $ homePage maybeParsedSchema $ style <$> prefs
 
         prefs <- tab Preferences $ preferencePage (style <$> prefs)
-        
+
         tab Entities $ entityPage (style <$> prefs) maybeParsedSchema
 
         tab Types $ typePage (style <$> prefs) maybeParsedSchema
 
         pure prefs
-    
+
     currentPage <- holdDyn defaultPage navEvents
 
     bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
@@ -177,6 +177,16 @@ schemaPage style = let ?style = style in do
 
     saveEvent <- button "save"
 
+    let saveStatusEvents = leftmost 
+          [
+               True  <$ saveEvent
+             , False <$ (updated $ _textAreaElement_value schemaText)
+          ]
+
+    let isNew = loadedSchemaText == ""
+
+    savedStatus <- foldDyn const (not isNew) saveStatusEvents
+
     prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do
         latestSchemaText <- sample $ current $ T.unpack <$>
               _textAreaElement_value schemaText
@@ -186,6 +196,10 @@ schemaPage style = let ?style = style in do
         case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)
             Right _ -> toast "Saved schema")
+
+    p $ dynText $ savedStatus <&> \case
+        True  -> "Saved"
+        False -> "Not saved" 
 
     pure maybeParsedSchema
   where boxResizing = "-webkit-box-sizing: border-box;"
@@ -203,12 +217,12 @@ entityPage style maybeParsedSchema = let ?style = style in do
                 let typingPairs = zip entities types
                 forM_ typingPairs (\(entity, typ) -> do
                     elClass "li" "collection-item" $ do
-                        el "span" $ text $ 
+                        el "span" $ text $
                             T.pack $ show entity <> ": "
-                        elAttr "span" ("style" =: "float: right;") $ text $ 
+                        elAttr "span" ("style" =: "float: right;") $ text $
                             T.pack $ intercalate " | " . fmap show $ typ)
     pure ()
-  where 
+  where
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
     getEntities Proxy = enumValues
 
@@ -221,9 +235,9 @@ typePage style maybeParsedSchema = let ?style = style in do
                 let types = getTypes pT
                 forM_ types (\typ -> do
                     elClass "li" "collection-item" $ do
-                        el "span" $ text $ 
+                        el "span" $ text $
                             T.pack $ show typ)
     pure ()
-  where 
+  where
     getTypes :: (Bounded t, Enum t) => Proxy t -> [t]
     getTypes Proxy = enumValues
