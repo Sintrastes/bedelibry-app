@@ -49,7 +49,7 @@ androidNavBar style tabs = let ?style = style in mdo
             IOS     -> "style" =: "display: none;"
 
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
-        elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
+        elAttr "a" ("class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
         navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
