@@ -179,8 +179,8 @@ schemaPage style = let ?style = style in mdo
 
     div $ do
         elDynAttr "span" (savedStatus <&> \case
-            True  -> "style" =: "float: right;" <> "class" =: "green-led"
-            False -> "style" =: "float: right;" <> "class" =: "yellow-led") $ pure ()
+            True  -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "green-led"
+            False -> "style" =: "float: right;margin-right: 1em;" <> "class" =: "yellow-led") $ pure ()
         
         small $ elClass "p" "unselectable" $ dynText $ parsedSchema <&> (\case
             Left e  -> "❌ Invalid schema: " <> T.pack (show e)
