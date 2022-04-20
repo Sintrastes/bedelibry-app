@@ -34,16 +34,27 @@ import Montague.Frontend.Entity
 
 typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 typePage style maybeParsedSchema = let ?style = style in do
-    elClass "ul" "collection" $
-        dyn $ maybeParsedSchema <&> \case
-            Nothing -> pure ()
-            Just (SomeLexicon pT pA semantics) -> do
-                let types = getTypes pT
-                forM_ types (\typ -> do
-                    elClass "li" "collection-item" $ do
-                        el "span" $ text $
-                            T.pack $ show typ)
+    dyn $ maybeParsedSchema <&> \case
+        Nothing -> elAttr "div" centerContent $
+            el "div" $ do 
+                elClass "p" grayText $ text "No types have been specified."
+                elClass "p" grayText $ text "You can add them in the schema page."
+        Just (SomeLexicon pT pA semantics) -> elClass "ul" "collection" $ do
+            let types = getTypes pT
+            forM_ types (\typ -> do
+                elClass "li" "collection-item" $ do
+                    el "span" $ text $
+                        T.pack $ show typ)
     pure ()
   where
     getTypes :: (Bounded t, Enum t) => Proxy t -> [t]
     getTypes Proxy = enumValues
+
+    grayText = "unselectable grey-text text-lighten-1"
+
+    centerContent =
+        "style" =: ("text-align: center;" <>
+            "min-height:100%;" <> 
+            "display:flex;" <> 
+            "justify-content:center;" <> 
+            "align-items:center;")
