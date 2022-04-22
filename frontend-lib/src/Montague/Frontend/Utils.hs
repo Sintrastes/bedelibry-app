@@ -29,6 +29,9 @@ import Data.Default
 import Control.Lens.Operators
 import Data.Map
 
+class MonadNav r t m where
+    writeNavEvents :: Event t r -> m ()
+
 eitherToMaybe (Left e)  = Nothing
 eitherToMaybe (Right x) = Just x
 
@@ -74,6 +77,15 @@ checkbox label = do
         text label
         return res
 
+textLink :: _ => T.Text -> r -> m ()
+textLink txt navTo = do
+    clickEvents <- domEvent Click . fst <$>
+        elClass' "a" "text-link" (text txt)
+
+    writeNavEvents (navTo <$ clickEvents)
+
+    pure ()
+
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
 textEntry = mdo
     let attrUpdateStream = ?style <&>
@@ -91,7 +103,7 @@ textEntry = mdo
     pure res
   where
     attrsFromStyle = \case
-        Android -> "class" =: Nothing 
+        Android -> "class" =: Nothing
         IOS     -> "class" =: Just "p-form-text p-form-no-validate"
 
 toast message = do

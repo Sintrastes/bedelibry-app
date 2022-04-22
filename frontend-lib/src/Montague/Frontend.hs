@@ -62,9 +62,9 @@ body :: _ => m ()
 body = mdo
     topNavEvents <- androidNavBar (style <$> prefs) (enumValues @Page)
 
-    let navEvents = leftmost [topNavEvents, bottomNavEvents]
+    let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
-    prefs <- tabDisplay defaultPage enumValues navEvents $ do
+    (prefs, pageNavEvents) <- tabDisplay defaultPage enumValues navEvents $ do
         maybeParsedSchema <- tab Schema $ schemaPage $ style <$> prefs
 
         tab Home $ homePage maybeParsedSchema $ style <$> prefs
