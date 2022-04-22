@@ -39,7 +39,7 @@ typePage style maybeParsedSchema = let ?style = style in do
             el "div" $ do 
                 elClass "p" grayText $ text "No types have been specified."
                 elClass "p" grayText $ text "You can add them in the schema page."
-        Just (SomeLexicon pT pA semantics) -> elClass "ul" "collection" $ do
+        Just (SomeLexicon pT pA _ semantics) -> elClass "ul" "collection" $ do
             let types = getTypes pT
             forM_ types (\typ -> do
                 elClass "li" "collection-item" $ do

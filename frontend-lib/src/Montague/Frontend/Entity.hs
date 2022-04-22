@@ -38,7 +38,7 @@ entityPage style maybeParsedSchema = let ?style = style in do
             el "div" $ do
                 elClass "p" grayText $ text "No schema has been specified."
                 elClass "p" grayText $ text "You need to enter one in the schema page."
-        Just (SomeLexicon pT pA semantics) -> do
+        Just (SomeLexicon pT pA getDocs semantics) -> do
             let entities = getEntities pA
             let types = fmap (bfs . typeOfAtom semantics) entities
             let typingPairs = zip entities types
