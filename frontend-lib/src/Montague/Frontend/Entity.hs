@@ -52,7 +52,8 @@ entityPage style maybeParsedSchema = let ?style = style in do
                             el "span" $ text $
                                 T.pack $ show entity <> ": "
                             elAttr "span" ("style" =: "float: right;") $ text $
-                                T.pack $ intercalate " | " . fmap show $ typ)
+                                T.pack $ intercalate " | " . fmap show $ typ
+                            el "p" $ text $ T.pack $ getDocs entity)
     pure ()
   where
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
