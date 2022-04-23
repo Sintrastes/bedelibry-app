@@ -119,8 +119,12 @@ modal onClick contents = mdo
             Closed -> "style" =: "display: none;"
             Open   -> "class" =: "modal open" <>
                 "style" =: "z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);"
-
-    pure never
+    
+    pure $ leftmost 
+      [
+        Just <$> tag (current res) onSubmit
+      , Nothing <$ onCancel
+      ] 
 
 data ModalEvent =
       Open
