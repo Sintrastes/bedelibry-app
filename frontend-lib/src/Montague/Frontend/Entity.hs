@@ -40,6 +40,9 @@ entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
         elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1.5em;") $ text "Add a new entity"
 
         select "Type" ["Person", "Place", "Thing"] "Person"
+        labeledTextEntry "Name"
+        labeledTextArea "Description"
+
         pure $ pure ()
     
     dyn $ maybeParsedSchema <&> \case

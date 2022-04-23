@@ -210,6 +210,13 @@ data ModalEvent =
       Open
     | Closed
 
+-- | A styled text entry from Materialize.css with a label.
+labeledTextEntry :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
+labeledTextEntry label = textEntry
+
+-- | A styled text area from Materialize.css with a label.
+labeledTextArea :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
+labeledTextArea label = textEntry
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
 textEntry = mdo
