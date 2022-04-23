@@ -16,7 +16,7 @@ data PreferenceData = PreferenceData {
 }
 
 preferencePage :: _ => Dynamic t Style -> m (Dynamic t PreferenceData)
-preferencePage style = let ?style = style in do
+preferencePage style = let ?style = style in noScrollPage $ do
     checkboxValue <- checkbox "Use Android style"
     
     let styleDyn = checkboxValue <&> \case
