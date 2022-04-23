@@ -32,7 +32,7 @@ import Control.Monad.Tree
 import Control.Monad
 
 entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
-entityPage style maybeParsedSchema = let ?style = style in do
+entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button "New Entity"
 

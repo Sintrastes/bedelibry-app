@@ -29,7 +29,7 @@ tabDisplay defaultTab tabs navEvents = tabDisplay' defaultTab tabs navEvents wra
   where
     displayAttrs navEvents label = navEvents <&> \selected ->
         if selected == label
-            then "class" =: "column main-column" 
+            then mempty
             else "style" =: "display: none;"
     wrap navEvents label x =
         elDynAttr "div" (displayAttrs navEvents label) x

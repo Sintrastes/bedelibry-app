@@ -32,7 +32,7 @@ import System.Directory
 import Data.List
 
 schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
-schemaPage style = let ?style = style in mdo
+schemaPage style = let ?style = style in noScrollPage $ mdo
     -- Setup the application directory.
     montagueDir <- if "android" `isInfixOf` os
         then pure "/data/data/org.bedelibry.demos.montague"

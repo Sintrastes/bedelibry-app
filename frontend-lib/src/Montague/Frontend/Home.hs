@@ -33,7 +33,7 @@ import Data.Functor
 import Data.Maybe
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
-homePage maybeParsedSchema style = let ?style = style in do
+homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
     p $ text "Enter in a sentence you want to parse!"
 
     inputText <- textEntry

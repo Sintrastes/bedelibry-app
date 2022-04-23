@@ -33,7 +33,7 @@ import Control.Monad
 import Montague.Frontend.Entity
 
 typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
-typePage style maybeParsedSchema = let ?style = style in do
+typePage style maybeParsedSchema = let ?style = style in scrollPage $ do
     dyn $ maybeParsedSchema <&> \case
         Nothing -> elAttr "div" centerContent $
             el "div" $ do 

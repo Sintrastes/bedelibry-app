@@ -54,6 +54,10 @@ ul x = el "ul" $ x
 
 li x = el "li" $ x
 
+noScrollPage x = elClass "div" "column main-column" x
+
+scrollPage x = elAttr "div" ("class" =: "column") x
+
 data Style =
     Android
   | IOS
