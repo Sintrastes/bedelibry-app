@@ -22,7 +22,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Montague.Frontend.Utils
 import Data.Proxy
-import Reflex.Dom.Core hiding (button)
+import Reflex.Dom.Core hiding (button, select)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
 import Montague.Semantics
@@ -37,8 +37,9 @@ entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
         button "New Entity"
 
     modal modalEvent $ do
-        el "h4" $ text "Add a new entity"
-        el "p" $ text "Hello, world"
+        elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1.5em;") $ text "Add a new entity"
+
+        select "Type" ["Person", "Place", "Thing"] "Person"
         pure $ pure ()
     
     dyn $ maybeParsedSchema <&> \case

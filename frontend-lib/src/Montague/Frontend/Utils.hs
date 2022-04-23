@@ -29,6 +29,7 @@ import Data.Default
 import Control.Lens.Operators
 import Data.Map
 import Control.Monad.Fix
+import Control.Monad
 
 class MonadNav r t m where
     writeNavEvents :: Event t r -> m ()
@@ -71,6 +72,70 @@ button label = do
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
 
+-- | A widget for selecting a single item from a list of items.
+select :: (MonadWidget t m, DomBuilder t m) => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+select label items initialValue = elClass "div" "input-field col s12" $ mdo
+    (form, changeSelection) <- elClass "div" "select-wrapper" $ do
+        (form, _) <- el' "div" $ textInput $ def
+            & textInputConfig_attributes
+            .~ inputAttrs
+            & textInputConfig_initialValue
+            .~ T.pack (show initialValue)
+            & textInputConfig_setValue
+            .~ (T.pack . show <$> changeSelection)
+
+        changeSelection <- elDynAttr "ul" selectAttrs $
+            leftmost <$> forM items (\item -> do
+                el "li" $
+                   (item <$) . domEvent Click . fst <$> el' "span" (
+                        text $ T.pack $ show item))
+
+        elSvg "svg" ("class" =: "caret" <>
+            "height" =: "24" <>
+            "viewBox" =: "0 0 24 24" <>
+            "width" =: "24" <>
+            "xmlns" =: "http://www.w3.org/2000/svg") $ do
+                elSvg "path" ("d" =: "M7 10l5 5 5-5z") $ pure ()
+                elSvg "path" ("d" =: "M0 0h24v24H0z" <> "fill" =: "none") $ pure ()
+
+        pure (form, changeSelection)
+
+    elAttr "label" ("style" =: "left: 0rem;") $ text label
+
+    let selectedStyle = "display: block;" <>
+          "width: 100%;" <> "left: 0px;" <>
+          "top: 0px;" <> "height: auto;" <> "transform-origin: 0px 0px;" <>
+          "opacity: 1;" <> "transform: scaleX(1) scaleY(1);"
+
+    let inputClicks = form &
+            domEvent Click
+
+    dropdownOpenDyn <- foldDyn const False $
+        leftmost [
+            True <$ inputClicks, 
+            False <$ changeSelection
+        ]
+
+    let selectAttrs = dropdownOpenDyn <&> \dropdownOpen ->
+            "class" =: "dropdown-content select-dropdown" <>
+                if dropdownOpen
+                    then "style" =: selectedStyle
+                    else empty
+
+    let inputAttrs = pure $
+            "class" =:
+                "select-dropdown dropdown-trigger" <>
+                "type" =: "text" <> "readonly" =: "true"
+
+    dynResult <- foldDyn const initialValue 
+        changeSelection
+
+    pure dynResult
+
+elSvg tag a1 a2 = do
+  elDynAttrNS' (Just "http://www.w3.org/2000/svg") tag (constDyn a1) a2
+  return ()
+
 checkbox :: _ => T.Text -> m (Dynamic t Bool)
 checkbox label = do
     let labelAttrs = ?style <&> (\case
@@ -96,7 +161,7 @@ modal :: (MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
       => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
 modal onClick contents = mdo
     (res, onCancel, onSubmit) <- elDynAttr "div" modalAttrs $ do
-        res <- elClass "div" "modal-content" 
+        res <- elClass "div" "modal-content"
             contents
 
         (onCancel, onSubmit) <- elClass "div" "modal-footer" $ do
@@ -126,18 +191,20 @@ modal onClick contents = mdo
     let modalAttrs = modalVisibility <&> \case
             Closed -> "style" =: "display: none;"
             Open   -> "class" =: "modal open" <>
-                "style" =: "z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);"
+                "style" =: ("overflow: visible;" <> "z-index: 1003;" <>
+                    "display: block;" <> "opacity: 1;" <>
+                    "top: 10%;" <> "transform: scaleX(1) scaleY(1);")
 
     let overlayAttrs = modalVisibility <&> \case
             Closed -> empty
             Open   -> "class" =: "modal-overlay" <>
                 "style" =: "z-index: 1002; display: block; opacity: 0.5;"
 
-    pure $ leftmost 
+    pure $ leftmost
       [
         Just <$> tag (current res) onSubmit
       , Nothing <$ onCancel
-      ] 
+      ]
 
 data ModalEvent =
       Open
