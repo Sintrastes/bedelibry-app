@@ -22,7 +22,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Montague.Frontend.Utils
 import Data.Proxy
-import Reflex.Dom.Core
+import Reflex.Dom.Core hiding (button)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
 import Montague.Semantics
