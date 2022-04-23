@@ -91,8 +91,9 @@ textLink txt navTo = do
 modal :: (MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
       => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
 modal onClick contents = mdo
-    (res, onCancel, onSubmit) <- elDynAttr "div" divAttrs $ do
-        res <- contents
+    (res, onCancel, onSubmit) <- elDynAttr "div" modalAttrs $ do
+        res <- elClass "div" "modal-content" 
+            contents
 
         (onCancel, onSubmit) <- elClass "div" "modal-footer" $ do
             onCancel <- domEvent Click . fst <$>
@@ -106,6 +107,9 @@ modal onClick contents = mdo
 
         pure (res, onCancel, onSubmit)
 
+    -- "Overlay" for darkening the rest of the screen when the modal is open.
+    elDynAttr "div" overlayAttrs $ pure ()
+
     let events = leftmost
             [
                 Open   <$ onClick,
@@ -113,13 +117,18 @@ modal onClick contents = mdo
                 Closed <$ onSubmit
             ]
 
-    divVisibility <- foldDyn const Closed events
+    modalVisibility <- foldDyn const Closed events
 
-    let divAttrs = divVisibility <&> \case
+    let modalAttrs = modalVisibility <&> \case
             Closed -> "style" =: "display: none;"
             Open   -> "class" =: "modal open" <>
                 "style" =: "z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);"
-    
+
+    let overlayAttrs = modalVisibility <&> \case
+            Closed -> empty
+            Open   -> "class" =: "modal-overlay" <>
+                "style" =: "z-index: 1002; display: block; opacity: 0.5;"
+
     pure $ leftmost 
       [
         Just <$> tag (current res) onSubmit
