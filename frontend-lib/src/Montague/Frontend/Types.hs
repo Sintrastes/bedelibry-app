@@ -34,6 +34,14 @@ import Montague.Frontend.Entity
 
 typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 typePage style maybeParsedSchema = let ?style = style in scrollPage $ do
+    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
+        button "New Type"
+
+    modal modalEvent $ do
+        el "h4" $ text "Add a new type"
+        el "p" $ text "Hello, world"
+        pure $ pure ()
+
     dyn $ maybeParsedSchema <&> \case
         Nothing -> elAttr "div" centerContent $
             el "div" $ do 
