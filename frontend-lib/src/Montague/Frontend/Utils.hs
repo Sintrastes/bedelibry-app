@@ -28,6 +28,7 @@ import Data.Functor
 import Data.Default
 import Control.Lens.Operators
 import Data.Map
+import Control.Monad.Fix
 
 class MonadNav r t m where
     writeNavEvents :: Event t r -> m ()
@@ -85,6 +86,46 @@ textLink txt navTo = do
     writeNavEvents (navTo <$ clickEvents)
 
     pure ()
+
+-- | Helper function to open a simple Ok/Cancel modal dialog.
+modal :: (MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
+      => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
+modal onClick contents = mdo
+    (res, onCancel, onSubmit) <- elDynAttr "div" divAttrs $ do
+        res <- contents
+
+        (onCancel, onSubmit) <- elClass "div" "modal-footer" $ do
+            onCancel <- domEvent Click . fst <$>
+                elClass' "a" "modal-close waves-effect waves-green btn-flat" (
+                    text "Cancel")
+            onSubmit <- domEvent Click . fst <$>
+                elClass' "a" "modal-close waves-effect waves-green btn-flat" (
+                    text "Ok")
+
+            pure (onCancel, onSubmit)
+
+        pure (res, onCancel, onSubmit)
+
+    let events = leftmost
+            [
+                Open   <$ onClick,
+                Closed <$ onCancel,
+                Closed <$ onSubmit
+            ]
+
+    divVisibility <- foldDyn const Closed events
+
+    let divAttrs = divVisibility <&> \case
+            Closed -> "style" =: "display: none;"
+            Open   -> "class" =: "modal open" <>
+                "style" =: "z-index: 1003; display: block; opacity: 1; top: 10%; transform: scaleX(1) scaleY(1);"
+
+    pure never
+
+data ModalEvent =
+      Open
+    | Closed
+
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
 textEntry = mdo
