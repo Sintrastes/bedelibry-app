@@ -60,6 +60,8 @@ androidNavBar style tabs = let ?style = style in mdo
 
             pure (leftmost menuEvents, domEvent Click (fst navMenu))
 
+    elDynAttr "div" overlayAttrs $ pure ()
+
     sidebarOpened <- accumDyn (\s _ -> not s) False
         (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
 
@@ -67,6 +69,12 @@ androidNavBar style tabs = let ?style = style in mdo
           "class" =: "w3-sidebar w3-bar-block w3-border-right" <>
             if isOpened
                 then "style" =: "display: block; z-index: 999;"
+                else "style" =: "display: none;"
+    
+    let overlayAttrs = sidebarOpened <&> \isOpened ->
+          "class" =: "sidenav-overlay" <>
+            if isOpened 
+                then "style" =: "display: block; opacity: 1;"
                 else "style" =: "display: none;"
 
     -- Nav bar menu
