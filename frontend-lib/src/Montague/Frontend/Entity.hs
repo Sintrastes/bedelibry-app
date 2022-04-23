@@ -22,7 +22,7 @@ import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 import Montague.Frontend.Utils
 import Data.Proxy
-import Reflex.Dom.Core
+import Reflex.Dom.Core hiding (button)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
 import Montague.Semantics
@@ -33,6 +33,14 @@ import Control.Monad
 
 entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 entityPage style maybeParsedSchema = let ?style = style in do
+    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
+        button "New Entity"
+
+    modal modalEvent $ do
+        el "h4" $ text "Add a new entity"
+        el "p" $ text "Hello, world"
+        pure $ pure ()
+    
     dyn $ maybeParsedSchema <&> \case
         Nothing -> elAttr "div" centerContent $
             el "div" $ do

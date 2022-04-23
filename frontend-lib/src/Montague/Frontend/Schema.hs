@@ -81,12 +81,6 @@ schemaPage style = let ?style = style in mdo
 
     saveEvent <- button "save"
 
-    modalEvent <- button "open modal"
-
-    modal modalEvent $ do
-        el "p" $ text "Hello, world"
-        pure $ pure ()
-
     let saveStatusEvents = leftmost
           [
                True  <$ saveEvent
