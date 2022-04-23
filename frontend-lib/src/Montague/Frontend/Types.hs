@@ -38,8 +38,12 @@ typePage style maybeParsedSchema = let ?style = style in scrollPage $ do
         button "New Type"
 
     modal modalEvent $ do
-        el "h4" $ text "Add a new type"
-        el "p" $ text "Hello, world"
+        elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1.5em;") $ 
+            text "Add a new type"
+        
+        labeledTextEntry "Name"
+        labeledTextArea "Description"
+
         pure $ pure ()
 
     dyn $ maybeParsedSchema <&> \case
