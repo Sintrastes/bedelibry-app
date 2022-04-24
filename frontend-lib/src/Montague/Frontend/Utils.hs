@@ -73,7 +73,7 @@ button label = do
       (text label)
 
 -- | A widget for selecting a single item from a list of items.
-select :: (MonadWidget t m, DomBuilder t m) => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select label items initialValue = elClass "div" "input-field col s12" $ mdo
     (form, changeSelection) <- elClass "div" "select-wrapper" $ do
         (form, _) <- el' "div" $ textInput $ def
