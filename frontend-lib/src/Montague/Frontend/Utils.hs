@@ -90,6 +90,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
                    (item <$) . domEvent Click . fst <$> el' "span" (
                         text $ T.pack $ show item))
 
+        {-
         elSvg "svg" ("class" =: "caret" <>
             "height" =: "24" <>
             "viewBox" =: "0 0 24 24" <>
@@ -97,7 +98,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
             "xmlns" =: "http://www.w3.org/2000/svg") $ do
                 elSvg "path" ("d" =: "M7 10l5 5 5-5z") $ pure ()
                 elSvg "path" ("d" =: "M0 0h24v24H0z" <> "fill" =: "none") $ pure ()
-
+        -}
         pure (form, changeSelection)
 
     elAttr "label" ("style" =: "left: 0rem;") $ text label
