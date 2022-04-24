@@ -212,11 +212,15 @@ data ModalEvent =
 
 -- | A styled text entry from Materialize.css with a label.
 labeledTextEntry :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
-labeledTextEntry label = textEntry
+labeledTextEntry label = elClass "div" "input-field col" $ do
+    res <- textEntry
+    elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $ 
+        text label
+    pure res
 
 -- | A styled text area from Materialize.css with a label.
 labeledTextArea :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
-labeledTextArea label = textEntry
+labeledTextArea label = labeledTextEntry label
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
 textEntry = mdo
