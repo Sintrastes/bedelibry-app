@@ -76,13 +76,11 @@ button label = do
 select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select label items initialValue = elClass "div" "input-field col s12" $ mdo
     (form, changeSelection) <- elClass "div" "select-wrapper" $ do
-        (form, _) <- el' "div" $ textInput $ def
-            & textInputConfig_attributes
-            .~ inputAttrs
-            & textInputConfig_initialValue
-            .~ T.pack (show initialValue)
-            & textInputConfig_setValue
-            .~ (T.pack . show <$> changeSelection)
+        (form, _) <- el' "div" $ inputElement $ def
+            -- TODO: Causes issues with jsaddle.
+            -- & inputElementConfig_elementConfig . elementConfig_initialAttributes .~ inputAttrs
+            & inputElementConfig_initialValue .~ T.pack (show initialValue)
+            & inputElementConfig_setValue .~ (T.pack . show <$> changeSelection)
 
         changeSelection <- elDynAttr "ul" selectAttrs $
             leftmost <$> forM items (\item -> do
@@ -90,7 +88,6 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
                    (item <$) . domEvent Click . fst <$> el' "span" (
                         text $ T.pack $ show item))
 
-        {-
         elSvg "svg" ("class" =: "caret" <>
             "height" =: "24" <>
             "viewBox" =: "0 0 24 24" <>
@@ -98,7 +95,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
             "xmlns" =: "http://www.w3.org/2000/svg") $ do
                 elSvg "path" ("d" =: "M7 10l5 5 5-5z") $ pure ()
                 elSvg "path" ("d" =: "M0 0h24v24H0z" <> "fill" =: "none") $ pure ()
-        -}
+        
         pure (form, changeSelection)
 
     elAttr "label" ("style" =: "left: 0rem;") $ text label
@@ -123,10 +120,12 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
                     then "style" =: selectedStyle
                     else empty
 
-    let inputAttrs = pure $
-            "class" =:
-                "select-dropdown dropdown-trigger" <>
-                "type" =: "text" <> "readonly" =: "true"
+    -- TODO: Seems like not needed. But setting as initialAttrs
+    -- causes issues with jsaddle-down.
+    -- let inputAttrs = 
+    --         "class" =:
+    --             "select-dropdown dropdown-trigger" <>
+    --             "type" =: "text" <> "readonly" =: "true"
 
     dynResult <- foldDyn const initialValue 
         changeSelection
