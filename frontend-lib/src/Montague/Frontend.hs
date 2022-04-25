@@ -81,6 +81,7 @@ body = mdo
         tab Home $ homePage maybeParsedSchema $ stylePref <$> prefs
 
         prefs <- tab Preferences $ preferencePage (stylePref <$> prefs)
+            montagueDir
 
         tab Entities $ entityPage (stylePref <$> prefs) maybeParsedSchema
 

@@ -34,8 +34,8 @@ checkboxPref header description initialValue = do
 
     pure res
 
-preferencePage :: _ => Dynamic t Style -> m (Dynamic t PreferenceData)
-preferencePage style = let ?style = style in scrollPage $ do
+preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
+preferencePage style montagueDir = let ?style = style in scrollPage $ do
     let loadedPrefs = undefined :: PreferenceData 
 
     styleChecked <- checkboxPref "Use Android style" 
