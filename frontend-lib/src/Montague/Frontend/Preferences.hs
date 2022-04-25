@@ -57,15 +57,7 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
     let prefsFile = montagueDir <> "/preferences.json"
 
     -- Load the preference data from disk.
-    #ifdef ghcjs_HOST_OS
-    document <- fromJust <$> currentDocument
-    loadedPrefs :: PreferenceData <- decode . encodeUTF8 <$> 
-        getCookie "preferences" currentDocument
-    #else
-    loadedPrefs :: PreferenceData <- liftFrontend def $
-        catch (fromJust <$> decodeFileStrict prefsFile)
-            (\(e :: SomeException) -> return def)
-    #endif
+    loadedPrefs <- loadPrefs prefsFile
 
     styleChecked <- checkboxPref "Use Android style" 
         "Specify whether or not to use the Android theme."
@@ -86,12 +78,29 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
           darkMode
 
     -- Whenever the preferences update, save it to file.
-    #ifdef ghcjs_HOST_OS
-    #else
-    prerender (pure never) $ performEvent $ updated dynPrefs <&> 
-        \newPrefs ->
-            liftIO $ encodeFile prefsFile newPrefs
-    #endif
+    persistPrefs dynPrefs prefsFile
 
     return dynPrefs
         
+#ifdef ghcjs_HOST_OS
+loadPrefs = do
+    document <- fromJust <$> currentDocument
+    loadedPrefs :: PreferenceData <- decode . encodeUTF8 <$> 
+        getCookie "preferences" currentDocument
+    pure loadedPrefs
+#else
+loadPrefs prefsFile = do
+    loadedPrefs :: PreferenceData <- liftFrontend def $
+        catch (fromJust <$> decodeFileStrict prefsFile)
+            (\(e :: SomeException) -> return def)
+    pure loadedPrefs
+#endif
+
+#ifdef ghcjs_HOST_OS
+persistPrefs dynPrefs prefsFile = undefined
+#else
+persistPrefs dynPrefs prefsFile = 
+    prerender (pure never) $ performEvent $ updated dynPrefs <&> 
+        \newPrefs ->
+            liftIO $ encodeFile prefsFile newPrefs
+#endif
