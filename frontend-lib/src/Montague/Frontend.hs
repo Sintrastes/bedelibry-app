@@ -60,12 +60,23 @@ import Montague.Frontend.Schema
 
 body :: _ => m ()
 body = mdo
+    -- Setup the application directory.
+    montagueDir <- if "android" `isInfixOf` os
+        then pure "/data/data/org.bedelibry.demos.montague"
+        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
+
+    -- toastOnErrors $ liftFrontend (Right ()) $ catch
+    --     (do createDirectoryIfMissing True montagueDir
+    --         pure $ Right ())
+    --     (\(e :: SomeException) -> pure $ Left e)
+
     topNavEvents <- androidNavBar (stylePref <$> prefs) (enumValues @Page)
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
     (prefs, pageNavEvents) <- tabDisplay defaultPage enumValues navEvents $ do
-        maybeParsedSchema <- tab Schema $ schemaPage $ stylePref <$> prefs
+        maybeParsedSchema <- tab Schema $ schemaPage (stylePref <$> prefs) 
+            montagueDir
 
         tab Home $ homePage maybeParsedSchema $ stylePref <$> prefs
 

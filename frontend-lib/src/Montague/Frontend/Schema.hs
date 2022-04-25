@@ -31,18 +31,8 @@ import System.Info
 import System.Directory
 import Data.List
 
-schemaPage :: _ => Dynamic t Style -> m (Dynamic t (Maybe SomeLexicon))
-schemaPage style = let ?style = style in noScrollPage $ mdo
-    -- Setup the application directory.
-    montagueDir <- if "android" `isInfixOf` os
-        then pure "/data/data/org.bedelibry.demos.montague"
-        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
-
-    -- toastOnErrors $ liftFrontend (Right ()) $ catch
-    --     (do createDirectoryIfMissing True montagueDir
-    --         pure $ Right ())
-    --     (\(e :: SomeException) -> pure $ Left e)
-
+schemaPage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
+schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
         catch (readFile (montagueDir <> "/schema.mont"))
