@@ -33,6 +33,7 @@ library
                , monad-tree
                , montague
                , transformers
+               , profunctors
                , directory
   exposed-modules:
       Montague.Frontend
