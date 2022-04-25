@@ -3,6 +3,7 @@
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Montague.Frontend.Preferences where
@@ -12,7 +13,10 @@ import Reflex.Dom.Core hiding (checkbox)
 import Data.Functor
 import qualified Data.Text as T
 import Data.Aeson.TH
-import Data.Bool (Bool(True))
+import Data.Aeson
+import Data.Default
+import Data.Maybe
+import Control.Exception
 
 data PreferenceData = PreferenceData {
     stylePref :: Style,
@@ -43,8 +47,8 @@ checkboxPref header description initialValue = do
 preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
 preferencePage style montagueDir = let ?style = style in scrollPage $ do
     -- Load the preference data from disk.
-    loadedPrefs <- liftFrontend def $
-        catch (readFile (montagueDir <> "/preferences.json"))
+    loadedPrefs :: PreferenceData <- liftFrontend def $
+        catch (fromJust <$> decodeFileStrict (montagueDir <> "/preferences.json"))
             (\(e :: SomeException) -> return def)
 
     styleChecked <- checkboxPref "Use Android style" 
