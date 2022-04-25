@@ -17,6 +17,7 @@ import Data.Aeson
 import Data.Default
 import Data.Maybe
 import Control.Exception
+import Control.Monad.IO.Class
 
 data PreferenceData = PreferenceData {
     stylePref :: Style,
@@ -46,9 +47,11 @@ checkboxPref header description initialValue = do
 
 preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
 preferencePage style montagueDir = let ?style = style in scrollPage $ do
+    let prefsFile = montagueDir <> "/preferences.json"
+
     -- Load the preference data from disk.
     loadedPrefs :: PreferenceData <- liftFrontend def $
-        catch (fromJust <$> decodeFileStrict (montagueDir <> "/preferences.json"))
+        catch (fromJust <$> decodeFileStrict prefsFile)
             (\(e :: SomeException) -> return def)
 
     styleChecked <- checkboxPref "Use Android style" 
@@ -65,7 +68,14 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
             True  -> Android
             False -> IOS
 
-    return $ 
-        PreferenceData <$> 
+    let dynPrefs = PreferenceData <$> 
           styleDyn <*>
           darkMode
+
+    -- Whenever the preferences update, save it to file.
+    prerender (pure never) $ performEvent $ updated dynPrefs <&> 
+        \newPrefs ->
+            liftIO $ encodeFile prefsFile newPrefs
+
+    return dynPrefs
+        
