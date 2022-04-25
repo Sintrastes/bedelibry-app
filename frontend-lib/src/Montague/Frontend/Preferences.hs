@@ -23,7 +23,7 @@ import Control.Monad.IO.Class
 #ifdef ghcjs_HOST_OS
 import GHCJS.DOM.Document (getCookie, setCookie)
 import GHCJS.DOM (currentDocument)
-import Data.Text.Encoding (encodeUTF8)
+import Data.Text.Encoding (encodeUtf8)
 #endif
 
 data PreferenceData = PreferenceData {
@@ -85,7 +85,7 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
 #ifdef ghcjs_HOST_OS
 loadPrefs = do
     document <- fromJust <$> currentDocument
-    loadedPrefs :: PreferenceData <- decode . encodeUTF8 <$> 
+    loadedPrefs :: PreferenceData <- decode . encodeUtf8 <$> 
         getCookie "preferences" currentDocument
     pure loadedPrefs
 #else
