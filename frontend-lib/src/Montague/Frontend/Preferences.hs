@@ -21,6 +21,12 @@ data PreferenceData = PreferenceData {
 
 $(deriveJSON defaultOptions 'PreferenceData)
 
+instance Default PreferenceData where
+    def = PreferenceData {
+        stylePref = Android,
+        darkMode  = False
+    }
+
 checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
 checkboxPref header description initialValue = do
     res <- elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") $ do
@@ -36,7 +42,10 @@ checkboxPref header description initialValue = do
 
 preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
 preferencePage style montagueDir = let ?style = style in scrollPage $ do
-    let loadedPrefs = undefined :: PreferenceData 
+    -- Load the preference data from disk.
+    loadedPrefs <- liftFrontend def $
+        catch (readFile (montagueDir <> "/preferences.json"))
+            (\(e :: SomeException) -> return def)
 
     styleChecked <- checkboxPref "Use Android style" 
         "Specify whether or not to use the Android theme."
