@@ -13,6 +13,7 @@
     , GADTs
     , PartialTypeSignatures
     , ImplicitParams
+    , TemplateHaskell
     , RecursiveDo #-}
 
 module Montague.Frontend.Utils where
@@ -32,6 +33,7 @@ import Control.Monad.Fix
 import Control.Monad
 import Data.Profunctor
 import Data.Functor.Compose
+import Data.Aeson.TH
 
 type Form t m a b
     = Star (Compose m (Dynamic t)) a b
@@ -108,6 +110,8 @@ scrollPage x = elAttr "div" ("class" =: "column") x
 data Style =
     Android
   | IOS
+
+$(deriveJSON defaultOptions ''Style)
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.

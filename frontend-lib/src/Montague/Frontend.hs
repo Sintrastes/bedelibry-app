@@ -60,32 +60,32 @@ import Montague.Frontend.Schema
 
 body :: _ => m ()
 body = mdo
-    topNavEvents <- androidNavBar (style <$> prefs) (enumValues @Page)
+    topNavEvents <- androidNavBar (stylePref <$> prefs) (enumValues @Page)
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
     (prefs, pageNavEvents) <- tabDisplay defaultPage enumValues navEvents $ do
-        maybeParsedSchema <- tab Schema $ schemaPage $ style <$> prefs
+        maybeParsedSchema <- tab Schema $ schemaPage $ stylePref <$> prefs
 
-        tab Home $ homePage maybeParsedSchema $ style <$> prefs
+        tab Home $ homePage maybeParsedSchema $ stylePref <$> prefs
 
-        prefs <- tab Preferences $ preferencePage (style <$> prefs)
+        prefs <- tab Preferences $ preferencePage (stylePref <$> prefs)
 
-        tab Entities $ entityPage (style <$> prefs) maybeParsedSchema
+        tab Entities $ entityPage (stylePref <$> prefs) maybeParsedSchema
 
-        tab Types $ typePage (style <$> prefs) maybeParsedSchema
+        tab Types $ typePage (stylePref <$> prefs) maybeParsedSchema
 
         pure prefs
 
     currentPage <- holdDyn defaultPage navEvents
 
-    bottomNavEvents <- iOSNavBar currentPage (style <$> prefs) (enumValues @Page)
+    bottomNavEvents <- iOSNavBar currentPage (prefs <&> stylePref) (enumValues @Page)
 
     prerender (pure ()) $ do
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
         pure ()
 
-    prerender (pure never) $ performEvent $ updated (style <$> prefs) <&> \case
+    prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> \case
         IOS -> do
             modifyLink "css-style"
                  "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"

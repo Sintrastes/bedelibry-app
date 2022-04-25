@@ -3,6 +3,7 @@
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Montague.Frontend.Preferences where
 
@@ -10,20 +11,24 @@ import Montague.Frontend.Utils
 import Reflex.Dom.Core hiding (checkbox)
 import Data.Functor
 import qualified Data.Text as T
+import Data.Aeson.TH
+import Data.Bool (Bool(True))
 
 data PreferenceData = PreferenceData {
-    style :: Style,
+    stylePref :: Style,
     darkMode :: Bool
 }
 
-checkboxPref :: _ => T.Text -> T.Text -> m (Dynamic t Bool)
-checkboxPref header description = do
+$(deriveJSON defaultOptions 'PreferenceData)
+
+checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
+checkboxPref header description initialValue = do
     res <- elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") $ do
         elClass "div" "col s10" $ do
             elAttr "p" ("style" =: "font-weight: bold;") $ text header
             el "p" $ text description
         elAttr "div" ("class" =: "col s2 valign-wrapper" <> "style" =: "height: 7.5em;") $ 
-            checkbox "" True
+            checkbox "" initialValue
 
     elClass "div" "divider" $ pure ()
 
@@ -31,14 +36,23 @@ checkboxPref header description = do
 
 preferencePage :: _ => Dynamic t Style -> m (Dynamic t PreferenceData)
 preferencePage style = let ?style = style in scrollPage $ do
-    checkboxValue <- checkboxPref "Use Android style" 
+    let loadedPrefs = undefined :: PreferenceData 
+
+    styleChecked <- checkboxPref "Use Android style" 
         "Specify whether or not to use the Android theme."
+        (loadedPrefs & stylePref & \case
+            Android -> True
+            IOS     -> False)
+
+    darkMode <- checkboxPref "Enable dark mode"
+        "Speicfy whether or not darn mode is enabled."
+        (loadedPrefs & darkMode)
     
-    let styleDyn = checkboxValue <&> \case
+    let styleDyn = styleChecked <&> \case
             True  -> Android
             False -> IOS
 
     return $ 
         PreferenceData <$> 
           styleDyn <*>
-          pure False
+          darkMode
