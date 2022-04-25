@@ -39,6 +39,7 @@ library
   if !impl(ghc)
    build-depends: base
                , ghcjs-dom-jsffi
+               , ghcjs-dom
                , containers
                , data-default
                , free
