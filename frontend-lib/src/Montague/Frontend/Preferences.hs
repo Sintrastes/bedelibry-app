@@ -5,6 +5,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE CPP #-}
 
 module Montague.Frontend.Preferences where
 
@@ -18,6 +19,12 @@ import Data.Default
 import Data.Maybe
 import Control.Exception
 import Control.Monad.IO.Class
+
+#ifdef ghcjs_HOST_OS
+import GHCJS.DOM.Document (getCookie, setCookie)
+import GHCJS.DOM (currentDocument)
+import Data.Text.Encoding (encodeUTF8)
+#endif
 
 data PreferenceData = PreferenceData {
     stylePref :: Style,
@@ -50,9 +57,15 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
     let prefsFile = montagueDir <> "/preferences.json"
 
     -- Load the preference data from disk.
+    #ifdef ghcjs_HOST_OS
+    document <- fromJust <$> currentDocument
+    loadedPrefs :: PreferenceData <- decode . encodeUTF8 <$> 
+        getCookie "preferences" currentDocument
+    #else
     loadedPrefs :: PreferenceData <- liftFrontend def $
         catch (fromJust <$> decodeFileStrict prefsFile)
             (\(e :: SomeException) -> return def)
+    #endif
 
     styleChecked <- checkboxPref "Use Android style" 
         "Specify whether or not to use the Android theme."
@@ -73,9 +86,12 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
           darkMode
 
     -- Whenever the preferences update, save it to file.
+    #ifdef ghcjs_HOST_OS
+    #else
     prerender (pure never) $ performEvent $ updated dynPrefs <&> 
         \newPrefs ->
             liftIO $ encodeFile prefsFile newPrefs
+    #endif
 
     return dynPrefs
         
