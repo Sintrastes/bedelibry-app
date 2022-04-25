@@ -23,7 +23,7 @@ checkboxPref header description = do
             elAttr "p" ("style" =: "font-weight: bold;") $ text header
             el "p" $ text description
         elAttr "div" ("class" =: "col s2 valign-wrapper" <> "style" =: "height: 7.5em;") $ 
-            checkbox ""
+            checkbox "" True
 
     elClass "div" "divider" $ pure ()
 

@@ -30,6 +30,52 @@ import Control.Lens.Operators
 import Data.Map
 import Control.Monad.Fix
 import Control.Monad
+import Data.Profunctor
+import Data.Functor.Compose
+
+type Form t m a b
+    = Star (Compose m (Dynamic t)) a b
+
+type SForm t m a = Form t m a a
+
+form :: DomBuilder t m => (a -> m (Dynamic t b)) -> Form t m a b
+form f = Star (Compose . f)
+
+initForm :: DomBuilder t m => Form t m a b -> a -> m (Dynamic t b)
+initForm (Star f) x = getCompose $ f x
+
+(=.) :: Profunctor f => (x -> y) -> f y a -> f x a
+(=.) = lmap
+
+{-
+-- Form API example:
+
+data Example = Example {
+    firstField :: Bool, secondField :: Bool }
+
+exampleForm :: _ => SForm t m Example
+exampleForm = Example <$>
+    firstField  =. form (checkbox "First: ") <*>
+    secondField =. form (checkbox "Second: ")
+
+-}
+
+{-
+-- Idea for more flexible form building.
+-- Probably need to tweak the types to get this to work.
+
+bind :: SForm t m b -> Lens a b -> m ()
+bind = undefined
+
+mkForm :: WriterT [(a -> a)] m () -> SForm t m a
+
+example = mkForm $ do
+    form (checkbox "First") &
+        bind firstField
+
+    form (checkbox "Second") &
+        bind secondField
+-}
 
 class MonadNav r t m where
     writeNavEvents :: Event t r -> m ()
@@ -95,7 +141,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
             "xmlns" =: "http://www.w3.org/2000/svg") $ do
                 elSvg "path" ("d" =: "M7 10l5 5 5-5z") $ pure ()
                 elSvg "path" ("d" =: "M0 0h24v24H0z" <> "fill" =: "none") $ pure ()
-        
+
         pure (form, changeSelection)
 
     elAttr "label" ("style" =: "left: 0rem;") $ text label
@@ -110,7 +156,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
 
     dropdownOpenDyn <- foldDyn const False $
         leftmost [
-            True <$ inputClicks, 
+            True <$ inputClicks,
             False <$ changeSelection
         ]
 
@@ -127,7 +173,7 @@ select label items initialValue = elClass "div" "input-field col s12" $ mdo
     --             "select-dropdown dropdown-trigger" <>
     --             "type" =: "text" <> "readonly" =: "true"
 
-    dynResult <- foldDyn const initialValue 
+    dynResult <- foldDyn const initialValue
         changeSelection
 
     pure dynResult
@@ -136,13 +182,13 @@ elSvg tag a1 a2 = do
   elDynAttrNS' (Just "http://www.w3.org/2000/svg") tag (constDyn a1) a2
   return ()
 
-checkbox :: _ => T.Text -> m (Dynamic t Bool)
-checkbox label = do
+checkbox :: _ => T.Text -> Bool -> m (Dynamic t Bool)
+checkbox label initialValue = do
     let labelAttrs = ?style <&> (\case
             IOS -> "class" =: "p-form-checkbox-cont"
             Android -> mempty)
     el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
-        res <- _checkbox_value <$> RD.checkbox True def
+        res <- _checkbox_value <$> RD.checkbox initialValue def
         el "span" $ pure ()
         text label
         return res
@@ -214,7 +260,7 @@ data ModalEvent =
 labeledTextEntry :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
 labeledTextEntry label = elClass "div" "input-field col" $ do
     res <- textEntry
-    elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $ 
+    elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $
         text label
     pure res
 
