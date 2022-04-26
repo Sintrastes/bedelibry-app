@@ -99,7 +99,8 @@ body = mdo
 
     initialPref <- sample $ current $ prefs <&> stylePref
 
-    initialPref & updateCSS
+    prerender (pure ()) $
+        initialPref & updateCSS
 
     prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> 
         updateCSS
