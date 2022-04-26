@@ -97,18 +97,27 @@ body = mdo
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
         pure ()
 
-    prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> \case
-        IOS -> do
-            modifyLink "css-style"
-                 "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
-            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
-            pure ()
-        Android -> do
-            modifyLink "css-style"
-               "https://sintrastes.github.io/demos/montague/materialize.min.css"
-            liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
-            pure ()
+    initialPref <- sample $ current $ prefs <&> stylePref
+
+    initialPref & updateCSS
+
+    prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> 
+        updateCSS
+
     pure ()
+
+updateCSS :: _ => Style -> m ()
+updateCSS = \case
+    IOS -> do
+        modifyLink "css-style"
+            "https://sintrastes.github.io/demos/montague/puppertino/newfull.css"
+        liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
+        pure ()
+    Android -> do
+        modifyLink "css-style"
+            "https://sintrastes.github.io/demos/montague/materialize.min.css"
+        liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
+        pure ()
 
 defaultPage = Schema
 
