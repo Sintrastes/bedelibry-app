@@ -16,7 +16,7 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Types where
+module Montague.Frontend.Pages.Types where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
@@ -30,7 +30,7 @@ import Data.List
 import Data.Functor
 import Control.Monad.Tree
 import Control.Monad
-import Montague.Frontend.Entity
+import Montague.Frontend.Pages.Entity
 
 typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 typePage style maybeParsedSchema = let ?style = style in scrollPage $ do

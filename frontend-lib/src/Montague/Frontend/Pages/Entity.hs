@@ -16,7 +16,7 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Entity where
+module Montague.Frontend.Pages.Entity where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T

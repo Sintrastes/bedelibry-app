@@ -7,7 +7,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE CPP #-}
 
-module Montague.Frontend.Preferences where
+module Montague.Frontend.Pages.Preferences where
 
 import Montague.Frontend.Utils
 import Reflex.Dom.Core hiding (checkbox)

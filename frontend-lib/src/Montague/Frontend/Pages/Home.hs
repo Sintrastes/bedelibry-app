@@ -16,7 +16,7 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Home where
+module Montague.Frontend.Pages.Home where
 
 import Prelude hiding ((<=), div)
 import qualified Data.Text as T

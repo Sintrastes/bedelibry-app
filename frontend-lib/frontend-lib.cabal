@@ -38,13 +38,13 @@ library
                , directory
   exposed-modules:
       Montague.Frontend
-    , Montague.Frontend.Home
-    , Montague.Frontend.Schema
-    , Montague.Frontend.Entity
-    , Montague.Frontend.Types
-    , Montague.Frontend.Preferences
     , Montague.Frontend.Utils
     , Montague.Frontend.Utils.Javascript
     , Montague.Frontend.TabDisplay
     , Montague.Frontend.NavBar
+    , Montague.Frontend.Pages.Home
+    , Montague.Frontend.Pages.Schema
+    , Montague.Frontend.Pages.Entity
+    , Montague.Frontend.Pages.Types
+    , Montague.Frontend.Pages.Preferences
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

@@ -21,7 +21,7 @@ module Montague.Frontend where
 import Montague.Frontend.Utils
 import Montague.Frontend.Utils.Javascript
 import Montague.Frontend.TabDisplay
-import Montague.Frontend.Preferences
+import Montague.Frontend.Pages.Preferences
 import Montague.Frontend.NavBar
 
 import System.Info
@@ -53,10 +53,10 @@ import System.Directory
 import Data.List
 import Control.Monad.Tree
 
-import Montague.Frontend.Home
-import Montague.Frontend.Entity
-import Montague.Frontend.Types
-import Montague.Frontend.Schema
+import Montague.Frontend.Pages.Home
+import Montague.Frontend.Pages.Entity
+import Montague.Frontend.Pages.Types
+import Montague.Frontend.Pages.Schema
 
 body :: _ => m ()
 body = mdo
