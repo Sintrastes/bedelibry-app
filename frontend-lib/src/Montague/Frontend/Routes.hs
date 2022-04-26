@@ -1,7 +1,7 @@
 
 module Montague.Frontend.Routes where
 
-data Page =
+data Route =
     Schema
   | Home
   | Preferences
