@@ -50,6 +50,11 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
             .~ T.pack loadedSchemaText
      )
 
+    let currentText = current $ T.unpack <$>
+            _textAreaElement_value schemaText
+
+    let lastSavedText = tag currentText saveEvent
+
     let parsedSchema = parseSchema .
           T.unpack <$>
             _textAreaElement_value schemaText
