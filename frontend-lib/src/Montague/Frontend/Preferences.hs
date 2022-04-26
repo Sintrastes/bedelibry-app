@@ -20,12 +20,6 @@ import Data.Maybe
 import Control.Exception
 import Control.Monad.IO.Class
 
-#ifdef ghcjs_HOST_OS
-import GHCJS.DOM.Document (getCookie, setCookie)
-import GHCJS.DOM (currentDocument)
-import Data.Text.Encoding (encodeUtf8)
-#endif
-
 data PreferenceData = PreferenceData {
     stylePref :: Style,
     darkMode :: Bool
@@ -82,25 +76,14 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
 
     return dynPrefs
         
-#ifdef ghcjs_HOST_OS
-loadPrefs = do
-    document <- fromJust <$> currentDocument
-    loadedPrefs :: PreferenceData <- decode . encodeUtf8 <$> 
-        getCookie "preferences" currentDocument
-    pure loadedPrefs
-#else
 loadPrefs prefsFile = do
     loadedPrefs :: PreferenceData <- liftFrontend def $
         catch (fromJust <$> decodeFileStrict prefsFile)
             (\(e :: SomeException) -> return def)
     pure loadedPrefs
-#endif
 
-#ifdef ghcjs_HOST_OS
-persistPrefs dynPrefs prefsFile = undefined
-#else
 persistPrefs dynPrefs prefsFile = 
     prerender (pure never) $ performEvent $ updated dynPrefs <&> 
         \newPrefs ->
             liftIO $ encodeFile prefsFile newPrefs
-#endif
+

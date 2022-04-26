@@ -36,24 +36,6 @@ library
                , profunctors
                , aeson
                , directory
-  if !impl(ghc)
-   build-depends: base
-               , ghcjs-dom-jsffi
-               , ghcjs-dom
-               , containers
-               , data-default
-               , free
-               , jsaddle
-               , reflex-dom-core
-               , text
-               , lens
-               , partial-order
-               , monad-tree
-               , montague
-               , transformers
-               , profunctors
-               , aeson
-               , directory
   exposed-modules:
       Montague.Frontend
     , Montague.Frontend.Home
