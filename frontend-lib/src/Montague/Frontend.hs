@@ -53,6 +53,9 @@ import System.Directory
 import Data.List
 import Control.Monad.Tree
 
+import Montague.Frontend.Route (Route)
+import qualified Montague.Frontend.Route as Route
+
 import Montague.Frontend.Pages.Home
 import Montague.Frontend.Pages.Entity
 import Montague.Frontend.Pages.Types
@@ -70,28 +73,28 @@ body = mdo
     --         pure $ Right ())
     --     (\(e :: SomeException) -> pure $ Left e)
 
-    topNavEvents <- androidNavBar (stylePref <$> prefs) (enumValues @Page)
+    topNavEvents <- androidNavBar (stylePref <$> prefs) (enumValues @Route)
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
-    (prefs, pageNavEvents) <- tabDisplay defaultPage enumValues navEvents $ do
-        maybeParsedSchema <- tab Schema $ schemaPage (stylePref <$> prefs) 
+    (prefs, pageNavEvents) <- tabDisplay Route.defaultPage enumValues navEvents $ do
+        maybeParsedSchema <- tab Route.Schema $ schemaPage (stylePref <$> prefs) 
             montagueDir
 
-        tab Home $ homePage maybeParsedSchema $ stylePref <$> prefs
+        tab Route.Home $ homePage maybeParsedSchema $ stylePref <$> prefs
 
-        prefs <- tab Preferences $ preferencePage (stylePref <$> prefs)
+        prefs <- tab Route.Preferences $ preferencePage (stylePref <$> prefs)
             montagueDir
 
-        tab Entities $ entityPage (stylePref <$> prefs) maybeParsedSchema
+        tab Route.Entities $ entityPage (stylePref <$> prefs) maybeParsedSchema
 
-        tab Types $ typePage (stylePref <$> prefs) maybeParsedSchema
+        tab Route.Types $ typePage (stylePref <$> prefs) maybeParsedSchema
 
         pure prefs
 
-    currentPage <- holdDyn defaultPage navEvents
+    currentPage <- holdDyn Route.defaultPage navEvents
 
-    bottomNavEvents <- iOSNavBar currentPage (prefs <&> stylePref) (enumValues @Page)
+    bottomNavEvents <- iOSNavBar currentPage (prefs <&> stylePref) (enumValues @Route)
 
     prerender (pure ()) $ do
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
@@ -119,21 +122,3 @@ updateCSS = \case
             "https://sintrastes.github.io/demos/montague/materialize.min.css"
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
         pure ()
-
-defaultPage = Schema
-
-data Page =
-    Schema
-  | Home
-  | Preferences
-  | Entities
-  | Types
-    deriving(Eq, Enum, Bounded, Show)
-
-instance DomBuilder t m => HasIcon t m Page where
-    icon = \case
-        Schema      -> elAttr "i" ("data-feather" =: "file-text") $ pure ()
-        Home        -> elAttr "i" ("data-feather" =: "home") $ pure ()
-        Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
-        Entities    -> elAttr "i" ("data-feather" =: "book") $ pure ()
-        Types       -> elAttr "i" ("data-feather" =: "edit") $ pure ()
