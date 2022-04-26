@@ -197,6 +197,16 @@ checkbox label initialValue = do
         text label
         return res
 
+radioGroup :: (MonadHold t m, DomBuilder t m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
+radioGroup name values initialValue = do
+    events <- forM values $ \value -> do
+        event <- el' "p" $ el "label" $ do
+            elAttr "input" ("type" =: "radio" <> "name" =: name) $
+                pure ()
+            el "span" $ text $ T.pack $ show value
+        pure $ value <$ domEvent Click (fst event)
+    holdDyn initialValue (leftmost events)
+
 textLink :: _ => T.Text -> r -> m ()
 textLink txt navTo = do
     clickEvents <- domEvent Click . fst <$>
