@@ -48,12 +48,16 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
                  "style" =: ("resize: none;height: 100%;width:100%;" <> boxResizing))
             & textAreaElementConfig_initialValue
             .~ T.pack loadedSchemaText
+            & textAreaElementConfig_setValue
+            .~ tag (current lastSavedText) undoEvent
      )
 
     let currentText = current $ T.unpack <$>
             _textAreaElement_value schemaText
 
-    let lastSavedText = tag currentText saveEvent
+    let lastSavedTextUpdated = tag currentText saveEvent
+
+    lastSavedText <- (T.pack <$>) <$> holdDyn loadedSchemaText lastSavedTextUpdated
 
     let parsedSchema = parseSchema .
           T.unpack <$>
@@ -63,7 +67,8 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
           parsedSchema
 
     undoEvent <- div $ do
-        undoBtn <- elAttr' "i" ("style" =: "float: right;height:18;" <> "data-feather" =: "corner-up-left") $ pure ()
+        undoBtn <- el' "a" $
+            elAttr "i" ("style" =: "float: right;height:18;" <> "data-feather" =: "corner-up-left") $ pure ()
 
         let undoEvent = domEvent Click $ fst undoBtn
 
