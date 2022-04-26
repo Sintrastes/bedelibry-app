@@ -62,8 +62,10 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
     let maybeParsedSchema = eitherToMaybe <$>
           parsedSchema
 
-    div $ do
-        elAttr "i" ("style" =: "float: right;height:18;" <> "data-feather" =: "corner-up-left") $ pure ()
+    undoEvent <- div $ do
+        undoBtn <- elAttr' "i" ("style" =: "float: right;height:18;" <> "data-feather" =: "corner-up-left") $ pure ()
+
+        let undoEvent = domEvent Click $ fst undoBtn
 
         elDynAttr "span" (savedStatus <&> \case
             True  -> "style" =: "float: right;" <> "class" =: "green-led"
@@ -73,6 +75,8 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
             dynText $ parsedSchema <&> (\case
                 Left e  -> "❌ Invalid schema: " <> T.pack (show e)
                 Right x -> "✅ Schema valid.")
+
+        pure undoEvent
 
     saveEvent <- button "save"
 
