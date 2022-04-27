@@ -54,7 +54,7 @@ homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
 
     let parsedFmt = isValid <&> (\case
             True  -> mempty
-            False -> "class" =: "red-text")
+            False -> "class" =: "red-text p-strawberry-500-color")
 
     elDynAttr "p" parsedFmt $ do
         dynText parsedDisplay
