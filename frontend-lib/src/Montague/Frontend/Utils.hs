@@ -271,20 +271,28 @@ data ModalEvent =
     | Closed
 
 -- | A styled text entry from Materialize.css with a label.
-labeledTextEntry :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
+labeledTextEntry :: _ => T.Text -> m (Dynamic t (InputElement EventResult (DomBuilderSpace m) t))
 labeledTextEntry label = elClass "div" "input-field col" $ do
-    res <- textEntry
-    elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $
-        text label
-    pure res
+    initialWidget <- getWidget <$> sample (current ?style)
+    widgetHold initialWidget $ updated ?style <&> getWidget
+  where
+    getWidget = \case
+        IOS -> elClass "label" "p-form-label" $ do
+            text $ label <> ": "
+            textEntry
+        Android -> do
+            res <- textEntry
+            elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $
+                text label
+            pure res
 
 -- | A styled text area from Materialize.css with a label.
-labeledTextArea :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m) t)
+labeledTextArea :: _ => T.Text -> m (Dynamic t (InputElement EventResult (DomBuilderSpace m) t))
 labeledTextArea label = labeledTextEntry label
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
-textEntry = 
-    p $ inputElement (
+textEntry =
+    inputElement (
         def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ attrs)
