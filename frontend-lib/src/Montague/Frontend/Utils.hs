@@ -283,24 +283,14 @@ labeledTextArea :: _ => T.Text -> m (InputElement EventResult (DomBuilderSpace m
 labeledTextArea label = labeledTextEntry label
 
 textEntry :: _ => m (InputElement EventResult (DomBuilderSpace m) t)
-textEntry = mdo
-    let attrUpdateStream = ?style <&>
-            attrsFromStyle &
-            updated
-
-    res <- p $ inputElement (
+textEntry = 
+    p $ inputElement (
         def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
-            .~ mempty
-            & inputElementConfig_elementConfig
-            . elementConfig_modifyAttributes
-            .~ attrUpdateStream)
-
-    pure res
+            .~ attrs)
   where
-    attrsFromStyle = \case
-        Android -> "class" =: Nothing
-        IOS     -> "class" =: Just "p-form-text p-form-no-validate"
+    attrs = "class" =: "p-form-text p-form-no-validate"
+
 
 toast message = do
     liftJSM $ eval ("console.log(\"toast\"); M.toast({html: '" <> message <> "'})" :: T.Text)
