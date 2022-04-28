@@ -217,10 +217,10 @@ textLink txt navTo = do
     pure ()
 
 -- | Helper function to open a simple Ok/Cancel modal dialog.
-modal :: (MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
+modal :: (?style :: Dynamic t Style, MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
       => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
 modal onClick contents = mdo
-    (res, onCancel, onSubmit) <- elDynAttr "div" modalAttrs $ do
+    (res, onCancel, onSubmit) <- elDynAttr "div" iosOverlayAttrs $ elDynAttr "div" modalAttrs $ do
         res <- elClass "div" "modal-content"
             contents
 
@@ -236,9 +236,6 @@ modal onClick contents = mdo
 
         pure (res, onCancel, onSubmit)
 
-    -- "Overlay" for darkening the rest of the screen when the modal is open.
-    elDynAttr "div" overlayAttrs $ pure ()
-
     let events = leftmost
             [
                 Open   <$ onClick,
@@ -248,17 +245,26 @@ modal onClick contents = mdo
 
     modalVisibility <- foldDyn const Closed events
 
-    let modalAttrs = modalVisibility <&> \case
-            Closed -> "style" =: "display: none;"
-            Open   -> "class" =: "modal open p-modal active" <>
+    elDynAttr "div" overlayAttrs $ pure ()
+
+    let modalAttrs = liftM2 (,) ?style modalVisibility <&> \case
+            (Android, Closed) -> "style" =: "display: none;"
+            (Android, Open)   -> "class" =: "modal open" <>
                 "style" =: ("overflow: visible;" <> "z-index: 1003;" <>
                     "display: block;" <> "opacity: 1;" <>
                     "top: 10%;" <> "transform: scaleX(1) scaleY(1);")
+            (IOS, Closed) -> "class" =: "p-modal"
+            (IOS, Open)   -> "class" =: "p-modal active"
 
-    let overlayAttrs = modalVisibility <&> \case
-            Closed -> empty
-            Open   -> "class" =: "modal-overlay p-modal-background nowactive" <>
+    let iosOverlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
+            (IOS, Closed) -> "class" =: "p-modal-background"
+            (IOS, Open)   -> "class" =: "p-modal-background nowactive" 
+            _ -> empty
+
+    let overlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
+            (Android, Open) -> "class" =: "modal-overlay" <>
                 "style" =: "z-index: 1002; display: block; opacity: 0.5;"
+            _ -> empty
 
     pure $ leftmost
       [
