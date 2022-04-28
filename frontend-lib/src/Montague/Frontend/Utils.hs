@@ -224,7 +224,7 @@ modal onClick contents = mdo
         res <- elClass "div" "modal-content"
             contents
 
-        (onCancel, onSubmit) <- elClass "div" "modal-footer" $ do
+        (onCancel, onSubmit) <- elClass "div" "modal-footer p-modal-button-container" $ do
             onCancel <- domEvent Click . fst <$>
                 elClass' "a" "modal-close waves-effect waves-green btn-flat" (
                     text "Cancel")
@@ -250,14 +250,14 @@ modal onClick contents = mdo
 
     let modalAttrs = modalVisibility <&> \case
             Closed -> "style" =: "display: none;"
-            Open   -> "class" =: "modal open" <>
+            Open   -> "class" =: "modal open p-modal active" <>
                 "style" =: ("overflow: visible;" <> "z-index: 1003;" <>
                     "display: block;" <> "opacity: 1;" <>
                     "top: 10%;" <> "transform: scaleX(1) scaleY(1);")
 
     let overlayAttrs = modalVisibility <&> \case
             Closed -> empty
-            Open   -> "class" =: "modal-overlay" <>
+            Open   -> "class" =: "modal-overlay p-modal-background nowactive" <>
                 "style" =: "z-index: 1002; display: block; opacity: 0.5;"
 
     pure $ leftmost
