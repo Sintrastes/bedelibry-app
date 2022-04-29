@@ -123,8 +123,17 @@ button label = do
       (text label)
 
 -- | A widget for selecting a single item from a list of items.
-select :: _ => Show a => T.Text -> [a] a -> m (Dynamic t a)
+select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select = selectAndroid
+
+selectIOS :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+selectIOS label items initialValue = do
+    elClass "div" "p-form-select" $
+        el "select" $
+            forM_ items $ \item ->
+                el "option" $ text $ T.pack $ 
+                    show item
+    pure $ pure initialValue
 
 selectAndroid :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 selectAndroid label items initialValue = elClass "div" "input-field col s12" $ mdo
