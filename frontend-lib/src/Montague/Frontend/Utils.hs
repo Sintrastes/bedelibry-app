@@ -123,8 +123,11 @@ button label = do
       (text label)
 
 -- | A widget for selecting a single item from a list of items.
-select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
-select label items initialValue = elClass "div" "input-field col s12" $ mdo
+select :: _ => Show a => T.Text -> [a] a -> m (Dynamic t a)
+select = selectAndroid
+
+selectAndroid :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+selectAndroid label items initialValue = elClass "div" "input-field col s12" $ mdo
     (form, changeSelection) <- elClass "div" "select-wrapper" $ do
         (form, _) <- el' "div" $ inputElement $ def
             -- TODO: Causes issues with jsaddle.
@@ -260,7 +263,7 @@ modal onClick contents = mdo
             (IOS, Closed) -> "class" =: "p-modal-background"
             (IOS, Open)   -> "class" =: "p-modal-background nowactive" 
             _ -> empty
-
+    
     let overlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
             (Android, Open) -> "class" =: "modal-overlay" <>
                 "style" =: "z-index: 1002; display: block; opacity: 0.5;"
