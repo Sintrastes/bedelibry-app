@@ -126,13 +126,14 @@ button label = do
 select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select = selectAndroid
 
-selectIOS :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+selectIOS :: DomBuilder t m => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 selectIOS label items initialValue = do
     elClass "div" "p-form-select" $
         el "select" $
-            forM_ items $ \item ->
-                el "option" $ text $ T.pack $ 
-                    show item
+            leftmost <$> forM items (\item ->
+                (item <$) . domEvent Click . fst <$>
+                    el' "option" (text $ T.pack $
+                        show item))
     pure $ pure initialValue
 
 selectAndroid :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
@@ -270,9 +271,9 @@ modal onClick contents = mdo
 
     let iosOverlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
             (IOS, Closed) -> "class" =: "p-modal-background"
-            (IOS, Open)   -> "class" =: "p-modal-background nowactive" 
+            (IOS, Open)   -> "class" =: "p-modal-background nowactive"
             _ -> empty
-    
+
     let overlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
             (Android, Open) -> "class" =: "modal-overlay" <>
                 "style" =: "z-index: 1002; display: block; opacity: 0.5;"
