@@ -37,7 +37,7 @@ entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
         button "New Entity"
 
     modal modalEvent $ do
-        elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1.5em;") $ text "Add a new entity"
+        modalHeader "Add a new entity"
 
         select "Type" ["Person", "Place", "Thing"] "Person"
         labeledTextEntry "Name"

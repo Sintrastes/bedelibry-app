@@ -238,6 +238,13 @@ textLink txt navTo = do
 
     pure ()
 
+modalHeader :: _ => T.Text -> m ()
+modalHeader txt = do
+    dyn $ ?style <&> \case
+        IOS     -> el "h3" $ text txt
+        Android -> elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1em;") $ text txt
+    pure ()
+
 -- | Helper function to open a simple Ok/Cancel modal dialog.
 modal :: (?style :: Dynamic t Style, MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
       => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
