@@ -126,7 +126,7 @@ button label = do
 select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select = selectAndroid
 
-selectIOS :: DomBuilder t m => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
+selectIOS :: (MonadHold t m, DomBuilder t m, MonadFix m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 selectIOS label items initialValue = do
     changeSelection <- elClass "div" "p-form-select" $
         el "select" $
@@ -134,7 +134,9 @@ selectIOS label items initialValue = do
                 (item <$) . domEvent Click . fst <$>
                     el' "option" (text $ T.pack $
                         show item))
-    pure $ pure initialValue
+    
+    foldDyn const initialValue
+        changeSelection
 
 selectAndroid :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 selectAndroid label items initialValue = elClass "div" "input-field col s12" $ mdo
