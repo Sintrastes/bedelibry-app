@@ -1,5 +1,6 @@
 
 {-# LANGUAGE ImplicitParams #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -10,7 +11,7 @@
 module Montague.Frontend.Pages.Preferences where
 
 import Montague.Frontend.Utils
-import Reflex.Dom.Core hiding (checkbox)
+import Reflex.Dom.Core hiding (checkbox, button)
 import Data.Functor
 import qualified Data.Text as T
 import Data.Aeson.TH
@@ -19,6 +20,7 @@ import Data.Default
 import Data.Maybe
 import Control.Exception
 import Control.Monad.IO.Class
+import Control.Monad.Fix
 
 data PreferenceData = PreferenceData {
     stylePref :: Style,
@@ -45,6 +47,16 @@ checkboxPref header description initialValue = do
     elClass "div" "divider" $ pure ()
 
     pure res
+
+radioPref :: (PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
+radioPref header description values initialValue = do
+    el "h5" $ text header
+    el "p" $ text description
+    onClick <- button "Open"
+    modal onClick $ do
+        el "h5" $ text header
+        radioGroup header values initialValue
+    pure $ pure initialValue
 
 preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
 preferencePage style montagueDir = let ?style = style in scrollPage $ do
