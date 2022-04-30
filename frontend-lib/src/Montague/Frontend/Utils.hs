@@ -128,7 +128,7 @@ select = selectAndroid
 
 selectIOS :: DomBuilder t m => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 selectIOS label items initialValue = do
-    elClass "div" "p-form-select" $
+    changeSelection <- elClass "div" "p-form-select" $
         el "select" $
             leftmost <$> forM items (\item ->
                 (item <$) . domEvent Click . fst <$>
