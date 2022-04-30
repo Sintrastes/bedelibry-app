@@ -124,7 +124,14 @@ button label = do
 
 -- | A widget for selecting a single item from a list of items.
 select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
-select = selectAndroid
+select names items initialValue = do
+    initialWidget <- getWidget <$> sample (current ?style)
+    join <$> widgetHold initialWidget (getWidget <$> updated ?style) 
+  where 
+      getWidget = \case
+          Android -> selectAndroid names items initialValue
+          IOS     -> selectIOS names items initialValue
+
 
 selectIOS :: (MonadHold t m, DomBuilder t m, MonadFix m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 selectIOS label items initialValue = do
