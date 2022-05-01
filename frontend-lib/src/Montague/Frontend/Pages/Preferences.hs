@@ -18,46 +18,77 @@ import qualified Montague.Frontend.Strings as Strings
 import Data.Aeson.TH
 import Data.Aeson
 import Data.Default
-import Data.Maybe
+import Data.Maybe hiding (mapMaybe)
 import Control.Exception
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 
 data PreferenceData = PreferenceData {
     stylePref :: Style,
-    darkMode :: Bool
+    darkMode  :: Bool,
+    textSize  :: TextSize
 }
 
+data TextSize =
+      Small
+    | Medium
+    | Large
+  deriving(Eq)
+
+instance Show TextSize where
+    show = \case
+        Small  -> show Strings.Small
+        Medium -> show Strings.Medium
+        Large  -> show Strings.Large
+
 $(deriveJSON defaultOptions 'PreferenceData)
+$(deriveJSON defaultOptions ''TextSize)
 
 instance Default PreferenceData where
     def = PreferenceData {
         stylePref = Android,
-        darkMode  = False
+        darkMode  = False,
+        textSize  = Medium
     }
+
+prefRow :: _ => m a -> m a
+prefRow x = elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
+
+prefHeader :: _ => T.Text -> m ()
+prefHeader headerText = elAttr "p" ("style" =: "font-weight: bold;") $ text headerText
+
+divider :: _ => m ()
+divider = elClass "div" "divider" $ pure ()
 
 checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
 checkboxPref header description initialValue = do
-    res <- elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") $ do
+    res <- prefRow $ do
         elClass "div" "col s10" $ do
-            elAttr "p" ("style" =: "font-weight: bold;") $ text header
+            prefHeader header
             el "p" $ text description
         elAttr "div" ("class" =: "col s2 valign-wrapper" <> "style" =: "height: 7.5em;") $ 
             checkbox "" initialValue
 
-    elClass "div" "divider" $ pure ()
+    divider
 
     pure res
 
 radioPref :: (PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
 radioPref header description values initialValue = do
-    el "h5" $ text header
-    el "p" $ text description
-    onClick <- button "Open"
-    modal onClick $ do
-        el "h5" $ text header
-        radioGroup header values initialValue
-    pure $ pure initialValue
+    modalDismissEvent <- prefRow $ elClass "div" "col s10" $ do
+        prefHeader header
+        el "p" $ text description
+        onClick <- button "Open"
+        modal onClick $ do
+            el "h5" $ text header
+            radioGroup header values initialValue
+
+    divider
+
+    let submitPrefEvent = mapMaybe id modalDismissEvent
+
+    holdDyn initialValue 
+        submitPrefEvent
 
 preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
 preferencePage style montagueDir = let ?style = style in scrollPage $ do
@@ -75,6 +106,11 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
     darkMode <- checkboxPref (T.pack $ show Strings.DarkModePrefHeader)
         (T.pack $ show Strings.DarkModePrefDescription)
         (loadedPrefs & darkMode)
+
+    textSize <- radioPref "Set text size"
+        "Set the default text size for the application"
+        [Small, Medium, Large]
+        (loadedPrefs & textSize)
     
     let styleDyn = styleChecked <&> \case
             True  -> Android
@@ -82,7 +118,8 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
 
     let dynPrefs = PreferenceData <$> 
           styleDyn <*>
-          darkMode
+          darkMode <*>
+          textSize
 
     -- Whenever the preferences update, save it to file.
     persistPrefs dynPrefs prefsFile
