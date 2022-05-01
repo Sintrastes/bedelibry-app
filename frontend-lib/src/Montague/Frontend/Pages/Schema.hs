@@ -39,8 +39,8 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
         catch (readFile (montagueDir <> "/schema.mont"))
             (\(e :: SomeException) -> return "")
 
-    elClass "p" "unselectable" $
-        text $ T.pack $ show Strings.EnterSchema
+    appText $
+        T.pack $ show Strings.EnterSchema
 
     schemaText <- elAttr "div" ("spellcheck" =: "false" <> "class" =: "input-field col s12" <> "style" =: "display:flex;height:75%;width:100%;") $ textAreaElement (
         def & textAreaElementConfig_elementConfig

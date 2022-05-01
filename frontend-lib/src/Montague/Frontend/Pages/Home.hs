@@ -35,7 +35,7 @@ import Data.Maybe
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
-    p $ text $ T.pack $ show Strings.EnterSentence
+    appText $ T.pack $ show Strings.EnterSentence
 
     inputText <- textEntry
 

@@ -219,6 +219,9 @@ checkbox label initialValue = do
         text label
         return res
 
+appText :: _ => T.Text -> m ()
+appText x = elClass "p" "unselectable" $ text x
+
 radioGroup :: (MonadHold t m, DomBuilder t m, Eq a, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 radioGroup name values initialValue = do
     events <- forM values $ \value -> do
