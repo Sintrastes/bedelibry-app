@@ -20,6 +20,7 @@ module Montague.Frontend.Pages.Entity where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Data.Proxy
 import Reflex.Dom.Core hiding (button, select)
@@ -34,14 +35,14 @@ import Control.Monad
 entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
-        button "New Entity"
+        button $ T.pack $ show Strings.NewEntity
 
     modal modalEvent $ do
         modalHeader "Add a new entity"
 
         select "Type" ["Person", "Place", "Thing"] "Person"
-        labeledTextEntry "Name"
-        labeledTextArea "Description"
+        labeledTextEntry $ T.pack $ show Strings.Name
+        labeledTextArea $ T.pack $ show Strings.Description
 
         pure $ pure ()
     

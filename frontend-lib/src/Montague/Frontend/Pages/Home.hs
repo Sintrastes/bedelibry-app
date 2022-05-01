@@ -21,6 +21,7 @@ module Montague.Frontend.Pages.Home where
 import Prelude hiding ((<=), div)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Control.Exception
 import Reflex.Dom.Core hiding (button, tabDisplay, Home)
@@ -34,7 +35,7 @@ import Data.Maybe
 
 homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
 homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
-    p $ text "Enter in a sentence you want to parse!"
+    p $ text $ T.pack $ show Strings.EnterSentence
 
     inputText <- textEntry
 
@@ -49,7 +50,7 @@ homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
     let isValid = isJust <$> parsed
 
     let parsedDisplay = T.pack .
-            fromMaybe "Could not parse" <$>
+            fromMaybe (show Strings.CouldNotParse) <$>
             parsed
 
     let parsedFmt = isValid <&> (\case

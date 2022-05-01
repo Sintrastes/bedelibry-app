@@ -3,6 +3,7 @@
 module Montague.Frontend.NavBar where
 
 import qualified Data.Text as T
+import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Reflex.Dom.Core
 import Control.Monad
@@ -50,7 +51,8 @@ androidNavBar style tabs = let ?style = style in mdo
             IOS     -> "style" =: "display: none;"
 
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
-        elAttr "a" ("class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;") $ text "Montague"
+        elAttr "a" ("class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;") $ text $
+            T.pack $ show Strings.AppTitle
         navMenu <- elAttr' "a" ("class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =:"on") $
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do

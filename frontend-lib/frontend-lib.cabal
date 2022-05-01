@@ -39,6 +39,7 @@ library
                , directory
   exposed-modules:
       Montague.Frontend
+    , Montague.Frontend.Strings
     , Montague.Frontend.Route
     , Montague.Frontend.Utils
     , Montague.Frontend.Utils.Javascript

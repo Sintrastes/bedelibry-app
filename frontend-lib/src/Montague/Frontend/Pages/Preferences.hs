@@ -14,6 +14,7 @@ import Montague.Frontend.Utils
 import Reflex.Dom.Core hiding (checkbox, button)
 import Data.Functor
 import qualified Data.Text as T
+import qualified Montague.Frontend.Strings as Strings
 import Data.Aeson.TH
 import Data.Aeson
 import Data.Default

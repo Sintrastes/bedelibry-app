@@ -4,6 +4,7 @@ module Montague.Frontend.Route where
 
 import Reflex.Dom.Core hiding (Home)
 import Montague.Frontend.NavBar
+import qualified Montague.Frontend.Strings as Strings
 
 data Route =
     Schema
@@ -11,9 +12,17 @@ data Route =
   | Preferences
   | Entities
   | Types
-    deriving(Eq, Enum, Bounded, Show)
+    deriving(Eq, Enum, Bounded)
 
 defaultPage = Schema
+
+instance Show Route where
+    show = \case
+        Schema -> show Strings.Schema
+        Home   -> show Strings.Home
+        Preferences -> show Strings.Preferences
+        Entities -> show Strings.Entities
+        Types -> show Strings.Types
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case

@@ -21,6 +21,7 @@ module Montague.Frontend.Pages.Schema where
 import Prelude hiding ((<=), div)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Control.Exception
 import Reflex.Dom.Core hiding (button, tabDisplay, Home)
@@ -38,8 +39,8 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
         catch (readFile (montagueDir <> "/schema.mont"))
             (\(e :: SomeException) -> return "")
 
-    elClass "p" "unselectable" $ 
-        text "Enter in the schema for your data:"
+    elClass "p" "unselectable" $
+        text $ T.pack $ show Strings.EnterSchema
 
     schemaText <- elAttr "div" ("spellcheck" =: "false" <> "class" =: "input-field col s12" <> "style" =: "display:flex;height:75%;width:100%;") $ textAreaElement (
         def & textAreaElementConfig_elementConfig
@@ -62,7 +63,7 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
     let parsedSchema = parseSchema .
           T.unpack <$>
             _textAreaElement_value schemaText
-    
+
     let maybeParsedSchema = eitherToMaybe <$>
           parsedSchema
 
@@ -75,11 +76,11 @@ schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
         elDynAttr "span" (savedStatus <&> \case
             True  -> "style" =: "float: right;" <> "class" =: "green-led"
             False -> "style" =: "float: right;" <> "class" =: "yellow-led") $ pure ()
-        
-        small $ elAttr "p" ("style" =: "margin-left: 1em;" <> "class" =: "unselectable") $ 
+
+        small $ elAttr "p" ("style" =: "margin-left: 1em;" <> "class" =: "unselectable") $
             dynText $ parsedSchema <&> (\case
-                Left e  -> "❌ Invalid schema: " <> T.pack (show e)
-                Right x -> "✅ Schema valid.")
+                Left e  -> "❌ " <> T.pack (show Strings.InvalidSchema) <> ": " <> T.pack (show e)
+                Right x -> "✅ " <> T.pack (show Strings.SchemaValid) <> ".")
 
         pure undoEvent
 

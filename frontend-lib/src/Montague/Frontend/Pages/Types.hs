@@ -20,6 +20,7 @@ module Montague.Frontend.Pages.Types where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Data.Proxy
 import Reflex.Dom.Core hiding (button)
@@ -35,13 +36,13 @@ import Montague.Frontend.Pages.Entity
 typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
 typePage style maybeParsedSchema = let ?style = style in scrollPage $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
-        button "New Type"
+        button $ T.pack $ show Strings.NewType
 
     modal modalEvent $ do
         modalHeader "Add a new type"
         
-        labeledTextEntry "Name"
-        labeledTextArea "Description"
+        labeledTextEntry $ T.pack $ show Strings.Name
+        labeledTextArea $ T.pack $ show Strings.Description
 
         pure $ pure ()
 
