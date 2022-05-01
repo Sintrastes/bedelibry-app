@@ -32,8 +32,8 @@ import Data.Functor
 import Control.Monad.Tree
 import Control.Monad
 
-entityPage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
-entityPage style maybeParsedSchema = let ?style = style in scrollPage $ do
+entityPage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
+entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewEntity
 

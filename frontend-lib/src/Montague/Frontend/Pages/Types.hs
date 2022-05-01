@@ -33,8 +33,8 @@ import Control.Monad.Tree
 import Control.Monad
 import Montague.Frontend.Pages.Entity
 
-typePage ::  _ => Dynamic t Style -> Dynamic t (Maybe SomeLexicon) -> m ()
-typePage style maybeParsedSchema = let ?style = style in scrollPage $ do
+typePage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
+typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewType
 

@@ -32,8 +32,8 @@ import System.Info
 import System.Directory
 import Data.List
 
-schemaPage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
-schemaPage style montagueDir = let ?style = style in noScrollPage $ mdo
+schemaPage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
+schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ mdo
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
         catch (readFile (montagueDir <> "/schema.mont"))

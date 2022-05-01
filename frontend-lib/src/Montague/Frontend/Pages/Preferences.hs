@@ -23,34 +23,6 @@ import Control.Exception
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 
-data PreferenceData = PreferenceData {
-    stylePref :: Style,
-    darkMode  :: Bool,
-    textSize  :: TextSize
-}
-
-data TextSize =
-      Small
-    | Medium
-    | Large
-  deriving(Eq)
-
-instance Show TextSize where
-    show = \case
-        Small  -> show Strings.Small
-        Medium -> show Strings.Medium
-        Large  -> show Strings.Large
-
-$(deriveJSON defaultOptions 'PreferenceData)
-$(deriveJSON defaultOptions ''TextSize)
-
-instance Default PreferenceData where
-    def = PreferenceData {
-        stylePref = Android,
-        darkMode  = False,
-        textSize  = Medium
-    }
-
 prefRow :: _ => m a -> m a
 prefRow x = elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
 
@@ -90,8 +62,8 @@ radioPref header description values initialValue = do
     holdDyn initialValue 
         submitPrefEvent
 
-preferencePage :: _ => Dynamic t Style -> FilePath -> m (Dynamic t PreferenceData)
-preferencePage style montagueDir = let ?style = style in scrollPage $ do
+preferencePage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t PreferenceData)
+preferencePage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
     let prefsFile = montagueDir <> "/preferences.json"
 
     -- Load the preference data from disk.

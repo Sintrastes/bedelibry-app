@@ -73,28 +73,28 @@ body = mdo
     --         pure $ Right ())
     --     (\(e :: SomeException) -> pure $ Left e)
 
-    topNavEvents <- androidNavBar (stylePref <$> prefs) (enumValues @Route)
+    topNavEvents <- androidNavBar prefs (enumValues @Route)
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
     (prefs, pageNavEvents) <- tabDisplay Route.defaultPage enumValues navEvents $ do
-        maybeParsedSchema <- tab Route.Schema $ schemaPage (stylePref <$> prefs) 
+        maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
             montagueDir
 
-        tab Route.Home $ homePage maybeParsedSchema $ stylePref <$> prefs
+        tab Route.Home $ homePage maybeParsedSchema $ prefs
 
-        prefs <- tab Route.Preferences $ preferencePage (stylePref <$> prefs)
+        prefs <- tab Route.Preferences $ preferencePage prefs
             montagueDir
 
-        tab Route.Entities $ entityPage (stylePref <$> prefs) maybeParsedSchema
+        tab Route.Entities $ entityPage prefs maybeParsedSchema
 
-        tab Route.Types $ typePage (stylePref <$> prefs) maybeParsedSchema
+        tab Route.Types $ typePage prefs maybeParsedSchema
 
         pure prefs
 
     currentPage <- holdDyn Route.defaultPage navEvents
 
-    bottomNavEvents <- iOSNavBar currentPage (prefs <&> stylePref) (enumValues @Route)
+    bottomNavEvents <- iOSNavBar currentPage prefs (enumValues @Route)
 
     prerender (pure ()) $ do
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)

@@ -20,6 +20,7 @@ module Montague.Frontend.Utils where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
+import qualified Montague.Frontend.Strings as Strings
 import Reflex.Dom.Core hiding (button, checkbox)
 import qualified Reflex.Dom.Core as RD
 import Language.Javascript.JSaddle (eval, liftJSM)
@@ -79,6 +80,41 @@ example = mkForm $ do
         bind secondField
 -}
 
+data Style =
+    Android
+  | IOS
+
+$(deriveJSON defaultOptions ''Style)
+
+data TextSize =
+      Small
+    | Medium
+    | Large
+  deriving(Eq)
+
+instance Show TextSize where
+    show = \case
+        Small  -> show Strings.Small
+        Medium -> show Strings.Medium
+        Large  -> show Strings.Large
+
+$(deriveJSON defaultOptions ''TextSize)
+
+data PreferenceData = PreferenceData {
+    stylePref :: Style,
+    darkMode  :: Bool,
+    textSize  :: TextSize
+}
+
+$(deriveJSON defaultOptions 'PreferenceData)
+
+instance Default PreferenceData where
+    def = PreferenceData {
+        stylePref = Android,
+        darkMode  = False,
+        textSize  = Medium
+    }
+
 class MonadNav r t m where
     writeNavEvents :: Event t r -> m ()
 
@@ -106,12 +142,6 @@ li x = el "li" $ x
 noScrollPage x = elClass "div" "column main-column" x
 
 scrollPage x = elAttr "div" ("class" =: "column") x
-
-data Style =
-    Android
-  | IOS
-
-$(deriveJSON defaultOptions ''Style)
 
 -- | A button widget that is styled appropriately
 --    depending on the currently set style.
@@ -220,7 +250,11 @@ checkbox label initialValue = do
         return res
 
 appText :: _ => T.Text -> m ()
-appText x = elClass "p" "unselectable" $ text x
+appText x =  elDynAttr "p" attrs $ text x 
+  where attrs = ?prefs <&> textSize <&> \case
+            Small  -> "class" =: "unselectable" 
+            Medium -> "class" =: "unselectable" 
+            Large  -> "class" =: "unselectable" 
 
 radioGroup :: (MonadHold t m, DomBuilder t m, Eq a, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 radioGroup name values initialValue = do

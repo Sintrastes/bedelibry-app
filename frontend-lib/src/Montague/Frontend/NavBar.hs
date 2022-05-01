@@ -12,10 +12,10 @@ import Data.Functor
 class DomBuilder t m => HasIcon t m e where
     icon :: e -> m ()
 
-iOSNavBar :: _ => Dynamic t e -> Dynamic t Style -> [e] -> m (Event t e)
-iOSNavBar currentlySelected style tabs =
-  let ?style = style in
-  let widget = style <&> (\case
+iOSNavBar :: _ => Dynamic t e -> Dynamic t PreferenceData -> [e] -> m (Event t e)
+iOSNavBar currentlySelected prefs tabs = let ?prefs = prefs in 
+  let ?style = stylePref <$> prefs in
+  let widget = ?style <&> (\case
         IOS -> elClass "div" "p-mobile-tabs" $ do
             menuEvents <- forM tabs $ \tab -> do
                let isSelected = currentlySelected <&> (== tab)
@@ -44,8 +44,8 @@ iOSNavButton isSelected label icon = el "div" $ do
             text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
-androidNavBar :: _ => Dynamic t Style -> [e] -> m (Event t e)
-androidNavBar style tabs = let ?style = style in mdo
+androidNavBar :: _ => Dynamic t PreferenceData -> [e] -> m (Event t e)
+androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"

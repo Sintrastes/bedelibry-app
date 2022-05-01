@@ -33,8 +33,8 @@ import Control.Monad.IO.Class
 import Data.Functor
 import Data.Maybe
 
-homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t Style -> m ()
-homePage maybeParsedSchema style = let ?style = style in noScrollPage $ do
+homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t PreferenceData -> m ()
+homePage maybeParsedSchema prefs = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ do
     appText $ T.pack $ show Strings.EnterSentence
 
     inputText <- textEntry
