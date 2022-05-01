@@ -219,11 +219,12 @@ checkbox label initialValue = do
         text label
         return res
 
-radioGroup :: (MonadHold t m, DomBuilder t m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
+radioGroup :: (MonadHold t m, DomBuilder t m, Eq a, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 radioGroup name values initialValue = do
     events <- forM values $ \value -> do
         event <- el' "p" $ el "label" $ do
-            elAttr "input" ("type" =: "radio" <> "name" =: name) $
+            elAttr "input" ("type" =: "radio" <> "name" =: name <> 
+                if value == initialValue then "checked" =: "" else empty) $
                 pure ()
             el "span" $ text $ T.pack $ show value
         pure $ value <$ domEvent Click (fst event)

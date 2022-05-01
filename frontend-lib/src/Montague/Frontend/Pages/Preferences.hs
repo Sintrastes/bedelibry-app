@@ -73,7 +73,7 @@ checkboxPref header description initialValue = do
 
     pure res
 
-radioPref :: (PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
+radioPref :: (Eq a, PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
 radioPref header description values initialValue = do
     modalDismissEvent <- prefRow $ elClass "div" "col s10" $ do
         prefHeader header
