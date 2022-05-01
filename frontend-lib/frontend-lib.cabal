@@ -34,6 +34,7 @@ library
                , montague
                , transformers
                , profunctors
+               , comonad
                , aeson
                , directory
   exposed-modules:
