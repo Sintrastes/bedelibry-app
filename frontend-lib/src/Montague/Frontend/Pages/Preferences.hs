@@ -66,14 +66,14 @@ preferencePage style montagueDir = let ?style = style in scrollPage $ do
     -- Load the preference data from disk.
     loadedPrefs <- loadPrefs prefsFile
 
-    styleChecked <- checkboxPref "Use Android style" 
-        "Specify whether or not to use the Android theme."
+    styleChecked <- checkboxPref (T.pack $ show Strings.StylePrefHeader)
+        (T.pack $ show Strings.StylePrefDescription)
         (loadedPrefs & stylePref & \case
             Android -> True
             IOS     -> False)
 
-    darkMode <- checkboxPref "Enable dark mode"
-        "Speicfy whether or not darn mode is enabled."
+    darkMode <- checkboxPref (T.pack $ show Strings.DarkModePrefHeader)
+        (T.pack $ show Strings.DarkModePrefDescription)
         (loadedPrefs & darkMode)
     
     let styleDyn = styleChecked <&> \case

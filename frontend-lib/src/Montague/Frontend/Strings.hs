@@ -20,6 +20,10 @@ data Strings =
   | Name
   | Description
   | AppTitle
+  | StylePrefHeader
+  | StylePrefDescription
+  | DarkModePrefHeader
+  | DarkModePrefDescription
 
 instance Show Strings where
     show = \case
@@ -39,3 +43,7 @@ instance Show Strings where
         Name          -> "Name"
         Description   -> "Description"
         AppTitle      -> "Montague"
+        StylePrefHeader -> "Use Android style"
+        StylePrefDescription -> "Specify whether or not to use the Android theme."
+        DarkModePrefHeader -> "Enable dark mode"
+        DarkModePrefDescription -> "Speicfy whether or not darn mode is enabled."
