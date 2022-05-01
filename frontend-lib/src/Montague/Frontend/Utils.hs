@@ -252,9 +252,9 @@ checkbox label initialValue = do
 appText :: _ => T.Text -> m ()
 appText x =  elDynAttr "p" attrs $ text x 
   where attrs = ?prefs <&> textSize <&> \case
-            Small  -> "class" =: "unselectable" 
-            Medium -> "class" =: "unselectable" 
-            Large  -> "class" =: "unselectable" 
+            Small  -> "class" =: "unselectable" <> "style" =: "font-size: 1em;"
+            Medium -> "class" =: "unselectable" <> "style" =: "font-size: 1.2em"
+            Large  -> "class" =: "unselectable" <> "style" =: "font-size: 1.45em"
 
 radioGroup :: (MonadHold t m, DomBuilder t m, Eq a, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
 radioGroup name values initialValue = do
