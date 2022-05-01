@@ -37,7 +37,7 @@ project ./. ({ pkgs, ... }: {
         rev = "6e0623fb689a7b60889a023e0676d3fb3de876ea";
         sha256 = "bYPUUKdBWNMru6FrVCJcz7dsRkHE47Ji4JWTln6ADwE=";
       }) {};
-      android-activity = self.callPackage "./android-activity" {
+      android-activity = self.callPackage ./android-activity {
           inherit (nixpkgs.buildPackages) jdk;
       };
     };
