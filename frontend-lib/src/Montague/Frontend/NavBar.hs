@@ -47,13 +47,13 @@ iOSNavButton isSelected label icon = el "div" $ do
 androidNavBar :: _ => Dynamic t PreferenceData -> [e] -> m (Event t e)
 androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
-            Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
+            Android -> "class" =: "nav-wrapper light-blue darken-1"
             IOS     -> "style" =: "display: none;"
 
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
-        elAttr "a" ("class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;") $ text $
+        elAttr "a" ("class" =: "brand-logo" <> "style" =: "padding-left: 1em;") $ text $
             T.pack $ show Strings.AppTitle
-        navMenu <- elAttr' "a" ("class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =:"on") $
+        navMenu <- elAttr' "a" ("class" =: "sidenav-trigger") $
             elClass "i" "material-icons" $ text "menu"
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
