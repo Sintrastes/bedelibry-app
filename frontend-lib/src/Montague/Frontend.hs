@@ -125,3 +125,8 @@ updateCSS = \case
             "https://sintrastes.github.io/demos/montague/materialize.min.css"
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
         pure ()
+    UbuntuTouch -> do
+        modifyLink "css-style"
+            "https://sintrastes.github.io/demos/montague/ubuntu-touch.css"
+        liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
+        pure ()

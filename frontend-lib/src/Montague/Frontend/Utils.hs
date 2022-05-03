@@ -83,6 +83,7 @@ example = mkForm $ do
 data Style =
     Android
   | IOS
+  | UbuntuTouch
 
 $(deriveJSON defaultOptions ''Style)
 
@@ -147,8 +148,9 @@ scrollPage x = elAttr "div" ("class" =: "column") x
 --    depending on the currently set style.
 button label = do
     let attributes = ?style <&> \case
-          Android -> "class" =: "waves-effect waves-light btn light-blue"
-          IOS     -> "class" =: "p-btn p-btn-mob"
+          Android     -> "class" =: "waves-effect waves-light btn light-blue"
+          UbuntuTouch -> "class" =: ""
+          IOS         -> "class" =: "p-btn p-btn-mob"
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
 
@@ -159,8 +161,9 @@ select names items initialValue = do
     join <$> widgetHold initialWidget (getWidget <$> updated ?style)
   where
       getWidget = \case
-          Android -> selectAndroid names items initialValue
-          IOS     -> selectIOS names items initialValue
+          Android     -> selectAndroid names items initialValue
+          UbuntuTouch -> selectAndroid names items initialValue
+          IOS         -> selectIOS names items initialValue
 
 
 selectIOS :: (MonadHold t m, DomBuilder t m, MonadFix m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
@@ -242,7 +245,7 @@ checkbox :: _ => T.Text -> Bool -> m (Dynamic t Bool)
 checkbox label initialValue = do
     let labelAttrs = ?style <&> (\case
             IOS -> "class" =: "p-form-checkbox-cont"
-            Android -> mempty)
+            _   -> mempty)
     el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
         res <- _checkbox_value <$> RD.checkbox initialValue def
         el "span" $ pure ()
@@ -279,7 +282,8 @@ textLink txt navTo = do
 modalHeader :: _ => T.Text -> m ()
 modalHeader txt = do
     dyn $ ?style <&> \case
-        IOS     -> el "h3" $ text txt
+        IOS         -> el "h3" $ text txt
+        UbuntuTouch -> el "h3" $ text txt
         Android -> elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1em;") $ text txt
     pure ()
 
