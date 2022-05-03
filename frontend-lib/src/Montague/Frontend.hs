@@ -56,6 +56,7 @@ import Control.Monad.Tree
 import Montague.Frontend.Route (Route)
 import qualified Montague.Frontend.Route as Route
 
+import Montague.Frontend.Pages.Welcome
 import Montague.Frontend.Pages.Home
 import Montague.Frontend.Pages.Entity
 import Montague.Frontend.Pages.Types
@@ -89,6 +90,8 @@ body = mdo
         tab Route.Entities $ entityPage prefs maybeParsedSchema
 
         tab Route.Types $ typePage prefs maybeParsedSchema
+
+        tab Route.Welcome welcomePage
 
         pure prefs
 

@@ -12,9 +12,10 @@ data Route =
   | Preferences
   | Entities
   | Types
+  | Welcome
     deriving(Eq, Enum, Bounded)
 
-defaultPage = Schema
+defaultPage = Welcome
 
 instance Show Route where
     show = \case
@@ -23,6 +24,7 @@ instance Show Route where
         Preferences -> show Strings.Preferences
         Entities -> show Strings.Entities
         Types -> show Strings.Types
+        Welcome -> "Welcome"
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case
@@ -31,3 +33,4 @@ instance DomBuilder t m => HasIcon t m Route where
         Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
         Entities    -> elAttr "i" ("data-feather" =: "book") $ pure ()
         Types       -> elAttr "i" ("data-feather" =: "edit") $ pure ()
+        Welcome     -> pure ()

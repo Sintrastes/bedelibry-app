@@ -45,6 +45,7 @@ library
     , Montague.Frontend.Utils.Javascript
     , Montague.Frontend.TabDisplay
     , Montague.Frontend.NavBar
+    , Montague.Frontend.Pages.Welcome
     , Montague.Frontend.Pages.Home
     , Montague.Frontend.Pages.Schema
     , Montague.Frontend.Pages.Entity
