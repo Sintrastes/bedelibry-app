@@ -156,8 +156,8 @@ button label = do
 select :: _ => Show a => T.Text -> [a] -> a -> m (Dynamic t a)
 select names items initialValue = do
     initialWidget <- getWidget <$> sample (current ?style)
-    join <$> widgetHold initialWidget (getWidget <$> updated ?style) 
-  where 
+    join <$> widgetHold initialWidget (getWidget <$> updated ?style)
+  where
       getWidget = \case
           Android -> selectAndroid names items initialValue
           IOS     -> selectIOS names items initialValue
@@ -171,7 +171,7 @@ selectIOS label items initialValue = do
                 (item <$) . domEvent Click . fst <$>
                     el' "option" (text $ T.pack $
                         show item))
-    
+
     foldDyn const initialValue
         changeSelection
 
@@ -250,7 +250,7 @@ checkbox label initialValue = do
         return res
 
 appText :: _ => T.Text -> m ()
-appText x =  elDynAttr "p" attrs $ text x 
+appText x =  elDynAttr "p" attrs $ text x
   where attrs = ?prefs <&> textSize <&> \case
             Small  -> "class" =: "unselectable" <> "style" =: "font-size: 1em;"
             Medium -> "class" =: "unselectable" <> "style" =: "font-size: 1.2em"
@@ -260,7 +260,7 @@ radioGroup :: (MonadHold t m, DomBuilder t m, Eq a, Show a) => T.Text -> [a] -> 
 radioGroup name values initialValue = do
     events <- forM values $ \value -> do
         event <- el' "p" $ el "label" $ do
-            elAttr "input" ("type" =: "radio" <> "name" =: name <> 
+            elAttr "input" ("type" =: "radio" <> "name" =: name <>
                 if value == initialValue then "checked" =: "" else empty) $
                 pure ()
             el "span" $ text $ T.pack $ show value
@@ -369,6 +369,30 @@ textEntry =
         def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ attrs)
+  where
+    attrs = "class" =: "p-form-text p-form-no-validate"
+
+autocompleteTextEntry :: _ => (T.Text -> [T.Text]) -> m (Dynamic t T.Text)
+autocompleteTextEntry autocomplete = do
+    res <- inputElement (
+        def & inputElementConfig_elementConfig
+            . elementConfig_initialAttributes
+            .~ attrs)
+
+    let optionsDyn = autocomplete <$> (res & _inputElement_value)
+
+    let dropdownAttrs = "class" =: "autocomplete-content dropdown-content" <>
+            "style" =: ("display: block; width: 437.398px;"<>
+               " left: 10.5px; top: 43px; height: 50px;" <> 
+               "transform-origin: 0px 0px;" <> 
+               "opacity: 1; transform: scaleX(1) scaleY(1);")
+
+    elAttr "ul" dropdownAttrs $ do
+        dyn $ optionsDyn <&> \options->
+            forM_ options $ \option -> do
+                el "li" $ text option
+
+    pure $ res & _inputElement_value
   where
     attrs = "class" =: "p-form-text p-form-no-validate"
 
