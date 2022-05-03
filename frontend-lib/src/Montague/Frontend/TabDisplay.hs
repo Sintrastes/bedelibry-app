@@ -21,11 +21,10 @@ tab label x = liftF (Tab label x id)
 
 tabDisplay :: (Eq e, MonadFix m, MonadHold t m, DomBuilder t m, PostBuild t m) =>
      e
-  -> [e]
   -> Event t e
   -> Tab t r e m a
   -> m (a, [Event t r])
-tabDisplay defaultTab tabs navEvents = tabDisplay' defaultTab tabs navEvents wrap
+tabDisplay defaultTab navEvents = tabDisplay' defaultTab navEvents wrap
   where
     displayAttrs navEvents label = navEvents <&> \selected ->
         if selected == label
@@ -36,12 +35,11 @@ tabDisplay defaultTab tabs navEvents = tabDisplay' defaultTab tabs navEvents wra
 
 tabDisplay' :: (MonadHold t m, MonadFix m) =>
      e
-  -> [e]
   -> Event t e
   -> (forall r. Dynamic t e -> e -> m r -> m r)
   -> Tab t r e m a
   -> m (a, [Event t r])
-tabDisplay' defaultTab tabs navEvents wrap tab = mdo
+tabDisplay' defaultTab navEvents wrap tab = mdo
     currentTab <- holdDyn defaultTab navEvents
     wrapComponents wrap currentTab (runWriterT tab)
 

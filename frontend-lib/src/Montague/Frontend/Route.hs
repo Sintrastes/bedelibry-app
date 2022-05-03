@@ -17,6 +17,15 @@ data Route =
 
 defaultPage = Welcome
 
+pagesWithTabs = 
+  [
+    Schema
+  , Home
+  , Preferences
+  , Entities
+  , Types
+  ]
+
 instance Show Route where
     show = \case
         Schema -> show Strings.Schema
