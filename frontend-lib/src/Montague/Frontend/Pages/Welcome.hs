@@ -11,7 +11,7 @@ module Montague.Frontend.Pages.Welcome where
 import Reflex.Dom.Core
 
 welcomePage :: _ => m ()
-welcomePage = elAttr "div" ("style" =: "display: flex;margin: 2em;flex-direction: column;align-items: center;justify-content: center;height: 70vh;") $ do
+welcomePage = elAttr "div" centerDivAttrs $ do
     elClass "p" "grey-text text-lighten-1" $ 
         text "Welcome to Montague!"
     elClass "p" "grey-text text-lighten-1" $ do
@@ -22,3 +22,10 @@ welcomePage = elAttr "div" ("style" =: "display: flex;margin: 2em;flex-direction
         text "For a more in-depth tutorial, visit "
         elAttr "a" ("href" =: "https://sintrastes.github.io/bedelibry/") $
             text "the tutorial."
+  where
+    centerDivAttrs = "style" =: ("display: flex;" 
+       <> "margin: 2em;" 
+       <> "flex-direction: column;" 
+       <> "align-items: center;" 
+       <> "justify-content: center;"
+       <> "height: 70vh;")
