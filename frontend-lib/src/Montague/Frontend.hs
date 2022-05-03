@@ -91,7 +91,7 @@ body = mdo
 
         tab Route.Types $ typePage prefs maybeParsedSchema
 
-        tab Route.Welcome welcomePage
+        tab Route.Welcome $ welcomePage prefs
 
         pure prefs
 
