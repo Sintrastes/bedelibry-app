@@ -373,7 +373,7 @@ textEntry =
     attrs = "class" =: "p-form-text p-form-no-validate"
 
 autocompleteTextEntry :: _ => (T.Text -> [T.Text]) -> m (Dynamic t T.Text)
-autocompleteTextEntry autocomplete = do
+autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
     res <- inputElement (
         def & inputElementConfig_elementConfig
             . elementConfig_initialAttributes
@@ -382,15 +382,15 @@ autocompleteTextEntry autocomplete = do
     let optionsDyn = autocomplete <$> (res & _inputElement_value)
 
     let dropdownAttrs = "class" =: "autocomplete-content dropdown-content" <>
-            "style" =: ("display: block; width: 437.398px;"<>
-               " left: 10.5px; top: 43px; height: 50px;" <> 
+            "style" =: ("display: block; width: 99%;"<>
+               "top: 43px;left:2px; height: auto;" <> 
                "transform-origin: 0px 0px;" <> 
                "opacity: 1; transform: scaleX(1) scaleY(1);")
 
     elAttr "ul" dropdownAttrs $ do
         dyn $ optionsDyn <&> \options->
             forM_ options $ \option -> do
-                el "li" $ text option
+                el "li" $ el "span" $ text option
 
     pure $ res & _inputElement_value
   where

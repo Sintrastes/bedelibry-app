@@ -37,14 +37,17 @@ homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t PreferenceData -> m 
 homePage maybeParsedSchema prefs = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ do
     appText $ T.pack $ show Strings.EnterSentence
 
-    inputText <- textEntry
+    inputText <- autocompleteTextEntry (\x -> 
+        if x /= "" 
+            then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
+            else [])
 
     let parsed = do
             schema <- maybeParsedSchema
             case schema of
                 Nothing -> pure Nothing
                 Just schema -> do
-                    text <- T.unpack <$> _inputElement_value inputText
+                    text <- T.unpack <$> inputText
                     pure $ getParseFromLexicon schema show text
 
     let isValid = isJust <$> parsed
