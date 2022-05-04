@@ -33,7 +33,7 @@ import Control.Monad.Tree
 import Control.Monad
 
 entityPage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
-entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
+entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewEntity
 
@@ -59,18 +59,27 @@ entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePre
                 [] -> elAttr "div" centerContent $
                     el "div" $ do
                         elClass "p" grayText $ text "No entities have been specified."
-                _ -> elClass "ul" "collection" $ 
+                _ -> elAttr "ul" ("class" =: "collection" <> "data-role" =: "listview") $ 
                     forM_ typingPairs (\(entity, typ) -> do
-                        elClass "li" "collection-item" $ do
-                            el "span" $ text $
-                                T.pack $ show entity <> ": "
-                            elAttr "span" ("style" =: "float: right;") $ text $
-                                T.pack $ intercalate " | " . fmap show $ typ
-                            el "p" $ text $ T.pack $ getDocs entity)
+                        entityDisplay getDocs entity typ)
     pure ()
   where
     getEntities :: (Bounded a, Enum a) => Proxy a -> [a]
     getEntities Proxy = enumValues
+
+    entityDisplay getDocs entity typ = dyn $ ?style <&> \case
+        UbuntuTouch -> elClass "li" "collection-item" $ do
+            el "p" $ text $
+                T.pack $ show entity <> ": "
+            elAttr "p" ("style" =: "float: right;") $ text $
+                T.pack $ intercalate " | " . fmap show $ typ
+            el "p" $ text $ T.pack $ getDocs entity
+        _ -> elClass "li" "collection-item" $ do
+            el "span" $ text $
+                T.pack $ show entity <> ": "
+            elAttr "span" ("style" =: "float: right;") $ text $
+                T.pack $ intercalate " | " . fmap show $ typ
+            el "p" $ text $ T.pack $ getDocs entity
 
     grayText = "unselectable grey-text text-lighten-1"
 

@@ -34,7 +34,7 @@ import Control.Monad
 import Montague.Frontend.Pages.Entity
 
 typePage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
-typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
+typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewType
 

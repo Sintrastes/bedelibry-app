@@ -69,11 +69,10 @@ preferencePage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref 
     -- Load the preference data from disk.
     loadedPrefs <- loadPrefs prefsFile
 
-    styleChecked <- checkboxPref (T.pack $ show Strings.StylePrefHeader)
+    styleUpdated <- radioPref (T.pack $ show Strings.StylePrefHeader)
         (T.pack $ show Strings.StylePrefDescription)
-        (loadedPrefs & stylePref & \case
-            Android -> True
-            IOS     -> False)
+        [Android, IOS, UbuntuTouch]
+        (loadedPrefs & stylePref)
 
     darkMode <- checkboxPref (T.pack $ show Strings.DarkModePrefHeader)
         (T.pack $ show Strings.DarkModePrefDescription)
@@ -83,13 +82,9 @@ preferencePage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref 
         "Set the default text size for the application"
         [Small, Medium, Large]
         (loadedPrefs & textSize)
-    
-    let styleDyn = styleChecked <&> \case
-            True  -> Android
-            False -> IOS
 
     let dynPrefs = PreferenceData <$> 
-          styleDyn <*>
+          styleUpdated <*>
           darkMode <*>
           textSize
 

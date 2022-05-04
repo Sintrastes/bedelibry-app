@@ -78,7 +78,7 @@ body = mdo
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
-    (prefs, pageNavEvents) <- tabDisplay Route.defaultPage navEvents $ do
+    (prefs, pageNavEvents) <- elAttr "div" ("data-role" =: "mainview") $ tabDisplay Route.defaultPage navEvents $ do
         maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
             montagueDir
 

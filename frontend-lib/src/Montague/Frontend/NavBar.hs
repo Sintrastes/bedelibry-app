@@ -16,13 +16,13 @@ iOSNavBar :: _ => Dynamic t e -> Dynamic t PreferenceData -> [e] -> m (Event t e
 iOSNavBar currentlySelected prefs tabs = let ?prefs = prefs in 
   let ?style = stylePref <$> prefs in
   let widget = ?style <&> (\case
-        IOS -> elClass "div" "p-mobile-tabs" $ do
+        Android -> pure never
+        _ -> elClass "div" "p-mobile-tabs" $ do
             menuEvents <- forM tabs $ \tab -> do
                let isSelected = currentlySelected <&> (== tab)
                btnEvents <- iOSNavButton isSelected (T.pack $ show tab) (icon tab)
                pure $ tab <$ btnEvents
-            pure $ leftmost menuEvents
-        Android -> pure never)
+            pure $ leftmost menuEvents)
   in
      switch . current <$> dynWidgetHold widget
 
@@ -48,7 +48,7 @@ androidNavBar :: _ => Dynamic t PreferenceData -> [e] -> m (Event t e)
 androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
-            IOS     -> "style" =: "display: none;"
+            _       -> "style" =: "display: none;"
 
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
         elAttr "a" ("class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;") $ text $

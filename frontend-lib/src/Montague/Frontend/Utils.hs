@@ -83,9 +83,14 @@ example = mkForm $ do
 data Style =
     Android
   | IOS
-  | UbuntuTouch
+  | UbuntuTouch deriving(Eq)
 
 $(deriveJSON defaultOptions ''Style)
+
+instance Show Style where
+    show Android = "Android"
+    show IOS = "iOS"
+    show UbuntuTouch = "Ubuntu Touch"
 
 data TextSize =
       Small
@@ -149,7 +154,7 @@ scrollPage x = elAttr "div" ("class" =: "column") x
 button label = do
     let attributes = ?style <&> \case
           Android     -> "class" =: "waves-effect waves-light btn light-blue"
-          UbuntuTouch -> "class" =: ""
+          UbuntuTouch -> "data-role" =: "button"
           IOS         -> "class" =: "p-btn p-btn-mob"
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
@@ -244,11 +249,11 @@ elSvg tag a1 a2 = do
 checkbox :: _ => T.Text -> Bool -> m (Dynamic t Bool)
 checkbox label initialValue = do
     let labelAttrs = ?style <&> (\case
-            IOS -> "class" =: "p-form-checkbox-cont"
+            IOS -> "class" =: "checkbox p-form-checkbox-cont"
             _   -> mempty)
     el "form" $ el "p" $ elDynAttr "label" labelAttrs $ do
         res <- _checkbox_value <$> RD.checkbox initialValue def
-        el "span" $ pure ()
+        elClass "span" "checkbox" $ pure ()
         text label
         return res
 
@@ -291,17 +296,23 @@ modalHeader txt = do
 modal :: (?style :: Dynamic t Style, MonadFix m, PostBuild t m, MonadHold t m, DomBuilder t m)
       => Event t () -> m (Dynamic t a) -> m (Event t (Maybe a))
 modal onClick contents = mdo
-    (res, onCancel, onSubmit) <- elDynAttr "div" iosOverlayAttrs $ elDynAttr "div" modalAttrs $ do
+    (res, onCancel, onSubmit) <- elDynAttr "div" iosOverlayAttrs $ elDynAttr "div" modalAttrs $ el "section" $ do
         res <- elClass "div" "modal-content"
             contents
 
+        let okAttrs = "class" =: "modal-close waves-effect waves-green btn-flat" <>
+                "data-role" =: "button"
+
+        let cancelAttrs = "class" =: "negative modal-close waves-effect waves-green btn-flat" <>
+                "data-role" =: "button"
+
         (onCancel, onSubmit) <- elClass "div" "modal-footer p-modal-button-container" $ do
             onCancel <- domEvent Click . fst <$>
-                elClass' "a" "modal-close waves-effect waves-green btn-flat" (
-                    text "Cancel")
+                elAttr' "a" cancelAttrs
+                    (text "Cancel")
             onSubmit <- domEvent Click . fst <$>
-                elClass' "a" "modal-close waves-effect waves-green btn-flat" (
-                    text "Ok")
+                elAttr' "a" okAttrs 
+                    (text "Ok")
 
             pure (onCancel, onSubmit)
 
@@ -324,6 +335,10 @@ modal onClick contents = mdo
                 "style" =: ("overflow: visible;" <> "z-index: 1003;" <>
                     "display: block;" <> "opacity: 1;" <>
                     "top: 10%;" <> "transform: scaleX(1) scaleY(1);")
+            (UbuntuTouch, Closed)   -> "data-role" =: "dialog" <>
+                "style" =: "display: none;"
+            (UbuntuTouch, Open)     -> "data-role" =: "dialog" <>
+                "style" =: "display: block; height: 100vh;"
             (IOS, Closed) -> "class" =: "p-modal"
             (IOS, Open)   -> "class" =: "p-modal active"
 
@@ -357,7 +372,7 @@ labeledTextEntry label = elClass "div" "input-field col" $ do
         IOS -> elClass "label" "p-form-label" $ do
             text $ label <> ": "
             textEntry
-        Android -> do
+        _   -> do
             res <- textEntry
             elAttr "label" ("class" =: "active" <> "style" =: "left: 0rem;") $
                 text label
@@ -374,7 +389,8 @@ textEntry =
             . elementConfig_initialAttributes
             .~ attrs)
   where
-    attrs = "class" =: "p-form-text p-form-no-validate"
+    attrs = "class" =: "p-form-text p-form-no-validate" <>
+        "type" =: "text"
 
 autocompleteTextEntry :: _ => (T.Text -> [T.Text]) -> m (Dynamic t T.Text)
 autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
@@ -398,7 +414,8 @@ autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
 
     pure $ res & _inputElement_value
   where
-    attrs = "class" =: "p-form-text p-form-no-validate"
+    attrs = "type" =: "text" <> 
+        "class" =: "p-form-text p-form-no-validate"
 
 
 toast message = do
