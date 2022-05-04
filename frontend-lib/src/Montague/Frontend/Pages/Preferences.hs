@@ -20,6 +20,7 @@ import Data.Aeson
 import Data.Default
 import Data.Maybe hiding (mapMaybe)
 import Control.Exception
+import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 
@@ -62,8 +63,8 @@ radioPref header description values initialValue = do
     holdDyn initialValue 
         submitPrefEvent
 
-preferencePage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t PreferenceData)
-preferencePage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
+preferencePage :: _ => Event t Bool -> Dynamic t PreferenceData -> FilePath -> m (Dynamic t PreferenceData)
+preferencePage hideWelcomeUpdates prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ do
     let prefsFile = montagueDir <> "/preferences.json"
 
     -- Load the preference data from disk.
@@ -83,10 +84,14 @@ preferencePage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref 
         [Small, Medium, Large]
         (loadedPrefs & textSize)
 
+    hideWelcomePage <- holdDyn (loadedPrefs & dontShowWelcomePage)
+        hideWelcomeUpdates
+
     let dynPrefs = PreferenceData <$> 
           styleUpdated <*>
           darkMode <*>
-          textSize
+          textSize <*>
+          hideWelcomePage
 
     -- Whenever the preferences update, save it to file.
     persistPrefs dynPrefs prefsFile

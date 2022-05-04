@@ -5,6 +5,7 @@ module Montague.Frontend.Route where
 import Reflex.Dom.Core hiding (Home)
 import Montague.Frontend.NavBar
 import qualified Montague.Frontend.Strings as Strings
+import Montague.Frontend.Utils
 
 data Route =
     Schema
@@ -15,7 +16,10 @@ data Route =
   | Welcome
     deriving(Eq, Enum, Bounded)
 
-defaultPage = Welcome
+defaultPage initialPrefs = 
+    if dontShowWelcomePage initialPrefs
+        then Home
+        else Welcome
 
 pagesWithTabs = 
   [

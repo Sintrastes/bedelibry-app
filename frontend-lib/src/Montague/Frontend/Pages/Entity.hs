@@ -68,7 +68,7 @@ entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePre
     getEntities Proxy = enumValues
 
     entityDisplay getDocs entity typ = dyn $ ?style <&> \case
-        UbuntuTouch -> elClass "li" "collection-item" $ do
+        UbuntuTouch -> el "li" $ do
             el "p" $ text $
                 T.pack $ show entity <> ": "
             elAttr "p" ("style" =: "float: right;") $ text $

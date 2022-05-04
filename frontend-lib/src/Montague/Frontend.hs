@@ -78,24 +78,25 @@ body = mdo
 
     let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
 
-    (prefs, pageNavEvents) <- elAttr "div" ("data-role" =: "mainview") $ tabDisplay Route.defaultPage navEvents $ do
-        maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
-            montagueDir
+    (prefs, pageNavEvents) <- elAttr "div" ("data-role" =: "mainview") $ 
+        tabDisplay (Route.defaultPage initialPref) navEvents $ do
+            hideWelcomePage <- tab Route.Welcome $ welcomePage prefs
+        
+            maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
+                montagueDir
 
-        tab Route.Home $ homePage maybeParsedSchema prefs
+            tab Route.Home $ homePage maybeParsedSchema prefs
 
-        prefs <- tab Route.Preferences $ preferencePage prefs
-            montagueDir
+            prefs <- tab Route.Preferences $ preferencePage hideWelcomePage 
+                prefs montagueDir
 
-        tab Route.Entities $ entityPage prefs maybeParsedSchema
+            tab Route.Entities $ entityPage prefs maybeParsedSchema
 
-        tab Route.Types $ typePage prefs maybeParsedSchema
+            tab Route.Types $ typePage prefs maybeParsedSchema
 
-        tab Route.Welcome $ welcomePage prefs
+            pure prefs
 
-        pure prefs
-
-    currentPage <- holdDyn Route.defaultPage navEvents
+    currentPage <- holdDyn (Route.defaultPage initialPref) navEvents
 
     bottomNavEvents <- iOSNavBar currentPage prefs Route.pagesWithTabs
 
@@ -103,10 +104,10 @@ body = mdo
         liftJSM $ eval ("setTimeout(function(){ feather.replace(); }, 50);" :: T.Text)
         pure ()
 
-    initialPref <- sample $ current $ prefs <&> stylePref
+    initialPref <- sample $ current prefs
 
     prerender (pure ()) $
-        initialPref & updateCSS
+        initialPref & stylePref & updateCSS
 
     prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> 
         updateCSS

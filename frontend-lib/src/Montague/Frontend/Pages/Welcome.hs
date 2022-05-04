@@ -11,7 +11,7 @@ module Montague.Frontend.Pages.Welcome where
 import Reflex.Dom.Core hiding (checkbox)
 import Montague.Frontend.Utils
 
-welcomePage :: _ => Dynamic t PreferenceData -> m ()
+welcomePage :: _ => Dynamic t PreferenceData -> m (Event t Bool)
 welcomePage prefs = let ?style = stylePref <$> prefs in do
     elAttr "div" centerDivAttrs $ do
         elClass "p" "grey-text text-lighten-1" $ 
@@ -24,10 +24,12 @@ welcomePage prefs = let ?style = stylePref <$> prefs in do
             text "For a more in-depth tutorial, visit "
             elAttr "a" ("href" =: "https://sintrastes.github.io/bedelibry/") $
                 text "the tutorial."
+
     elAttr "div" bottomDivAttrs $ do
-        checkbox "" False
+        res <- checkbox "" False
         elClass "p" "grey-text text-lighten-1" $ 
             text "Don't show this page in the future"
+        pure $ updated res
   where
     centerDivAttrs = "style" =: ("display: flex;" 
        <> "margin: 2em;" 

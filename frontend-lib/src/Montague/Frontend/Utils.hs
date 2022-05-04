@@ -109,7 +109,8 @@ $(deriveJSON defaultOptions ''TextSize)
 data PreferenceData = PreferenceData {
     stylePref :: Style,
     darkMode  :: Bool,
-    textSize  :: TextSize
+    textSize  :: TextSize,
+    dontShowWelcomePage :: Bool
 }
 
 $(deriveJSON defaultOptions 'PreferenceData)
@@ -118,7 +119,8 @@ instance Default PreferenceData where
     def = PreferenceData {
         stylePref = Android,
         darkMode  = False,
-        textSize  = Medium
+        textSize  = Medium,
+        dontShowWelcomePage = False
     }
 
 class MonadNav r t m where
