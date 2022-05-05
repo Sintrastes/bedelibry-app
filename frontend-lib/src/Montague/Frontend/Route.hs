@@ -11,10 +11,10 @@ data Route =
     Schema
   | Home
   | Preferences
-  | Entities
-  | Types
+  | Entities { entityAnchor :: Maybe String }
+  | Types { typeAnchor :: Maybe String }
   | Welcome
-    deriving(Eq, Enum, Bounded)
+    deriving(Eq)
 
 defaultPage initialPrefs = 
     if dontShowWelcomePage initialPrefs
@@ -26,8 +26,8 @@ pagesWithTabs =
     Schema
   , Home
   , Preferences
-  , Entities
-  , Types
+  , Entities Nothing
+  , Types Nothing
   ]
 
 instance Show Route where
@@ -35,8 +35,8 @@ instance Show Route where
         Schema -> show Strings.Schema
         Home   -> show Strings.Home
         Preferences -> show Strings.Preferences
-        Entities -> show Strings.Entities
-        Types -> show Strings.Types
+        Entities _ -> show Strings.Entities
+        Types _ -> show Strings.Types
         Welcome -> "Welcome"
 
 instance DomBuilder t m => HasIcon t m Route where
@@ -44,6 +44,6 @@ instance DomBuilder t m => HasIcon t m Route where
         Schema      -> elAttr "i" ("data-feather" =: "file-text") $ pure ()
         Home        -> elAttr "i" ("data-feather" =: "home") $ pure ()
         Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
-        Entities    -> elAttr "i" ("data-feather" =: "book") $ pure ()
-        Types       -> elAttr "i" ("data-feather" =: "edit") $ pure ()
+        Entities _  -> elAttr "i" ("data-feather" =: "book") $ pure ()
+        Types    _  -> elAttr "i" ("data-feather" =: "edit") $ pure ()
         Welcome     -> pure ()

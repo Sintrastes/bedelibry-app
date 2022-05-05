@@ -93,9 +93,9 @@ body = mdo
             prefs <- tab Route.Preferences $ preferencePage hideWelcomePage 
                 prefs montagueDir
 
-            tab Route.Entities $ entityPage prefs maybeParsedSchema
+            tab (Route.Entities Nothing) $ entityPage prefs maybeParsedSchema
 
-            tab Route.Types $ typePage prefs maybeParsedSchema
+            tab (Route.Types Nothing) $ typePage prefs maybeParsedSchema
 
             pure prefs
 

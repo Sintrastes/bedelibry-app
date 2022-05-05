@@ -76,14 +76,14 @@ entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePre
                 T.pack $ show entity <> ": "
             elAttr "p" ("style" =: "float: right;") $ textLink
                 (T.pack $ intercalate " | " . fmap show $ typ)
-                Route.Types
+                (Route.Types Nothing)
             el "p" $ text $ T.pack $ getDocs entity
         _ -> elClass "li" "collection-item" $ do
             el "span" $ text $
                 T.pack $ show entity <> ": "
             elAttr "span" ("style" =: "float: right;") $ textLink 
                 (T.pack $ intercalate " | " . fmap show $ typ)
-                Route.Types
+                (Route.Types Nothing)
             el "p" $ text $ T.pack $ getDocs entity
 
     grayText = "unselectable grey-text text-lighten-1"
