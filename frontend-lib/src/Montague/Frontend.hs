@@ -76,7 +76,10 @@ body = mdo
 
     topNavEvents <- androidNavBar prefs Route.pagesWithTabs
 
-    let navEvents = leftmost $ pageNavEvents ++ [topNavEvents, bottomNavEvents]
+    let navEvents = leftmost [
+            switch $ current $ leftmost <$> pageNavEvents, 
+            topNavEvents, 
+            bottomNavEvents]
 
     (prefs, pageNavEvents) <- elAttr "div" ("data-role" =: "mainview") $ 
         tabDisplay (Route.defaultPage initialPref) navEvents $ do
