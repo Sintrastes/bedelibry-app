@@ -26,6 +26,7 @@ library
                , data-default
                , free
                , jsaddle
+               , reflex
                , reflex-dom-core
                , text
                , lens

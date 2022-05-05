@@ -35,6 +35,8 @@ import Control.Monad
 import Data.Profunctor
 import Data.Functor.Compose
 import Data.Aeson.TH
+import Reflex.DynamicWriter.Class
+import Reflex.DynamicWriter.Base
 
 type Form t m a b
     = Star (Compose m (Dynamic t)) a b
@@ -277,12 +279,12 @@ radioGroup name values initialValue = do
         pure $ value <$ domEvent Click (fst event)
     holdDyn initialValue (leftmost events)
 
-textLink :: _ => T.Text -> r -> m ()
+textLink :: _ => T.Text -> r -> DynamicWriterT t (Event t r) m ()
 textLink txt navTo = do
     clickEvents <- domEvent Click . fst <$>
         elClass' "a" "text-link" (text txt)
 
-    writeNavEvents (navTo <$ clickEvents)
+    tellDyn $ pure (navTo <$ clickEvents)
 
     pure ()
 
