@@ -279,12 +279,12 @@ radioGroup name values initialValue = do
         pure $ value <$ domEvent Click (fst event)
     holdDyn initialValue (leftmost events)
 
-textLink :: _ => T.Text -> r -> DynamicWriterT t (Event t r) m ()
+textLink :: _ => T.Text -> r -> DynamicWriterT t [Event t r] m ()
 textLink txt navTo = do
     clickEvents <- domEvent Click . fst <$>
         elClass' "a" "text-link" (text txt)
 
-    tellDyn $ pure (navTo <$ clickEvents)
+    tellDyn $ pure [navTo <$ clickEvents]
 
     pure ()
 

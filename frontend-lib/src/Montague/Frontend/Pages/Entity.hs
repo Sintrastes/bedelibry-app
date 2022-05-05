@@ -23,6 +23,8 @@ import qualified Data.Text.Encoding as T
 import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Data.Proxy
+import Montague.Frontend.Route (Route)
+import qualified Montague.Frontend.Route as Route
 import Reflex.Dom.Core hiding (button, select)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
@@ -31,8 +33,9 @@ import Data.List
 import Data.Functor
 import Control.Monad.Tree
 import Control.Monad
+import Reflex.DynamicWriter.Base
 
-entityPage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
+entityPage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
 entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewEntity
@@ -71,14 +74,16 @@ entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePre
         UbuntuTouch -> el "li" $ do
             el "p" $ text $
                 T.pack $ show entity <> ": "
-            elAttr "p" ("style" =: "float: right;") $ text $
-                T.pack $ intercalate " | " . fmap show $ typ
+            elAttr "p" ("style" =: "float: right;") $ textLink
+                (T.pack $ intercalate " | " . fmap show $ typ)
+                Route.Types
             el "p" $ text $ T.pack $ getDocs entity
         _ -> elClass "li" "collection-item" $ do
             el "span" $ text $
                 T.pack $ show entity <> ": "
-            elAttr "span" ("style" =: "float: right;") $ text $
-                T.pack $ intercalate " | " . fmap show $ typ
+            elAttr "span" ("style" =: "float: right;") $ textLink 
+                (T.pack $ intercalate " | " . fmap show $ typ)
+                Route.Types
             el "p" $ text $ T.pack $ getDocs entity
 
     grayText = "unselectable grey-text text-lighten-1"
