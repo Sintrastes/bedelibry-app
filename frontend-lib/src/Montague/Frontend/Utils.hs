@@ -85,7 +85,8 @@ example = mkForm $ do
 data Style =
     Android
   | IOS
-  | UbuntuTouch deriving(Eq)
+  | UbuntuTouch
+  | Gtk deriving(Eq)
 
 $(deriveJSON defaultOptions ''Style)
 
