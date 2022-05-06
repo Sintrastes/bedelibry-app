@@ -61,6 +61,7 @@ import Montague.Frontend.Pages.Home
 import Montague.Frontend.Pages.Entity
 import Montague.Frontend.Pages.Types
 import Montague.Frontend.Pages.Schema
+import Montague.Frontend.Pages.About
 
 body :: _ => m ()
 body = mdo
@@ -96,6 +97,8 @@ body = mdo
             tab (Route.Entities Nothing) $ entityPage prefs maybeParsedSchema
 
             tab (Route.Types Nothing) $ typePage prefs maybeParsedSchema
+
+            tab Route.About aboutPage
 
             pure prefs
 

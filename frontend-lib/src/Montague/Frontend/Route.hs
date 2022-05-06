@@ -13,6 +13,7 @@ data Route =
   | Preferences
   | Entities { entityAnchor :: Maybe String }
   | Types { typeAnchor :: Maybe String }
+  | About
   | Welcome
     deriving(Eq)
 
@@ -28,6 +29,7 @@ pagesWithTabs =
   , Preferences
   , Entities Nothing
   , Types Nothing
+  , About
   ]
 
 instance Show Route where
@@ -38,6 +40,7 @@ instance Show Route where
         Entities _ -> show Strings.Entities
         Types _ -> show Strings.Types
         Welcome -> "Welcome"
+        About -> "About"
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case
@@ -46,4 +49,5 @@ instance DomBuilder t m => HasIcon t m Route where
         Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
         Entities _  -> elAttr "i" ("data-feather" =: "book") $ pure ()
         Types    _  -> elAttr "i" ("data-feather" =: "edit") $ pure ()
+        About       -> elAttr "i" ("data-feather" =: "help-circle") $ pure ()
         Welcome     -> pure ()
