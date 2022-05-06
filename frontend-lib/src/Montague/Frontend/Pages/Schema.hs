@@ -34,6 +34,9 @@ import Data.List
 
 schemaPage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ mdo
+    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
+        button "Export Schema"
+    
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
         catch (readFile (montagueDir <> "/schema.mont"))
