@@ -34,6 +34,7 @@ library
                , monad-tree
                , montague
                , meriv-core
+               , pure-prolog
                , transformers
                , profunctors
                , comonad
