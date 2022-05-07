@@ -40,7 +40,7 @@ project ./. ({ pkgs, ... }: {
       meriv-core = self.callCabal2nix "meriv-core" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "meriv-core";
-        rev = "413ac017684fcf59474a6cc2dccb9fb6d33825f1";
+        rev = "81a62ab935ccae5a775b19e75eb8aabb76ed39de";
         sha256 = "OpxBga//brv8Z4iC/xCpdEW8k+4Nu9bsx3NHu7B3Zy8=";
       }) {};
     };
