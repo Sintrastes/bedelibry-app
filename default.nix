@@ -25,9 +25,6 @@ project ./. ({ pkgs, ... }: {
     m1-frontend = ./m1-frontend;
   };
 
-  ghc8_10 = ["common" "backend" "frontend" "frontend-lib" "m1-frontend"];
-  ghcjs8_10 = ["common" "backend" "frontend" "frontend-lib" "m1-frontend"];
-
   overrides = self: super: {
       monad-tree = self.callHackageDirect {
         pkg = "monad-tree";
