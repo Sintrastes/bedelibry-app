@@ -1,8 +1,8 @@
 {
-  "owner": "sintrastes",
+  "owner": "ProEnergyVIP",
   "repo": "obelisk",
-  "branch": "master",
+  "branch": "ghc-8.10",
   "private": false,
-  "rev": "de0bfa352f2826c5fc6429774941de54da633c97",
+  "rev": "a6b056fd8701b04a96cc02533d97a1173164ec70",
   "sha256": "0s7qx6zy7i9n6rqy2qbmxnrq30gzzm7mgrcknb60xd5j1mgdhzjf"
 }
