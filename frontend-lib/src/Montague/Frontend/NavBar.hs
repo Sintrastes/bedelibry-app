@@ -17,6 +17,7 @@ iOSNavBar currentlySelected prefs tabs = let ?prefs = prefs in
   let ?style = stylePref <$> prefs in
   let widget = ?style <&> (\case
         Android -> pure never
+        Gtk -> pure never
         _ -> elClass "div" "p-mobile-tabs" $ do
             menuEvents <- forM tabs $ \tab -> do
                let isSelected = currentlySelected <&> (== tab)

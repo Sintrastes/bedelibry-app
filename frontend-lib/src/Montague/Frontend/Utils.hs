@@ -94,6 +94,7 @@ instance Show Style where
     show Android = "Android"
     show IOS = "iOS"
     show UbuntuTouch = "Ubuntu Touch"
+    show Gtk = "Linux (GTK)"
 
 data TextSize =
       Small
@@ -161,6 +162,7 @@ button label = do
           Android     -> "class" =: "waves-effect waves-light btn light-blue"
           UbuntuTouch -> "data-role" =: "button"
           IOS         -> "class" =: "p-btn p-btn-mob"
+          Gtk         -> "class" =: "gtk-btn"
     domEvent Click . fst <$> elDynAttr' "a" attributes
       (text label)
 
@@ -171,9 +173,8 @@ select names items initialValue = do
     join <$> widgetHold initialWidget (getWidget <$> updated ?style)
   where
       getWidget = \case
-          Android     -> selectAndroid names items initialValue
-          UbuntuTouch -> selectAndroid names items initialValue
-          IOS         -> selectIOS names items initialValue
+          IOS   -> selectIOS names items initialValue
+          _     -> selectAndroid names items initialValue
 
 
 selectIOS :: (MonadHold t m, DomBuilder t m, MonadFix m, Show a) => T.Text -> [a] -> a -> m (Dynamic t a)
@@ -292,9 +293,8 @@ textLink txt navTo = do
 modalHeader :: _ => T.Text -> m ()
 modalHeader txt = do
     dyn $ ?style <&> \case
-        IOS         -> el "h3" $ text txt
-        UbuntuTouch -> el "h3" $ text txt
         Android -> elAttr "h5" ("style" =: "margin-top: 0em; margin-bottom:1em;") $ text txt
+        _       -> el "h3" $ text txt
     pure ()
 
 -- | Helper function to open a simple Ok/Cancel modal dialog.
@@ -346,6 +346,7 @@ modal onClick contents = mdo
                 "style" =: "display: block; height: 100vh;"
             (IOS, Closed) -> "class" =: "p-modal"
             (IOS, Open)   -> "class" =: "p-modal active"
+            (Gtk, _)      -> "style" =: "display: none;"
 
     let iosOverlayAttrs = liftM2 (,) ?style modalVisibility <&> \case
             (IOS, Closed) -> "class" =: "p-modal-background"

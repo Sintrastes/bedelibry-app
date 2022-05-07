@@ -16,25 +16,35 @@
     --gtk-accent: #4a90d9;
     --gtk-accent-dark: #184472;
   
-    --gtk-textbox-grad-to: #d9d9d9;
+    --gtk-textbox-grad-to: #f0f0f0;
     --gtk-textbox-grad-from: #ffffff;
     --gtk-textbox-focus: #729fcf;
     --gtk-textbox-border: #babdb6;
   
-    --gtk-checkbox-grad-from: #ebebe9;
-    --gtk-checkbox-grad-to: #fdfdfc;
+    --gtk-checkbox-grad-from: #dadada;
+    --gtk-checkbox-grad-to: #ffffff;
+}
+
+body {
+    background-color: var(--gtk-bg);
+}
+
+p, span, h1, h2, h3, h4, h5, a, label {
+    font-family: cantarell;
+    color: #555753;
 }
   
 .gtk-btn {
     --content:
-      <p>Export Schema</a>;
+      <p>Export Schema</p>;
     height: auto;
-    font-size: 11px;
-    padding: 4px;
+    font-size: 13dp;
+    padding: 4px 8px 4px 8px;
+    margin: 4px;
     background-image: linear-gradient(
-        var(--gtk-btn-grad-from), 
-        97%, 
-        var(--gtk-btn-grad-to)
+        var(--gtk-btn-grad-to), 
+        85%,
+        var(--gtk-btn-grad-from)
     );
     border-color: var(--gtk-btn-border);
     border-style: solid;
@@ -43,21 +53,22 @@
     border-radius: 2px;
 }
   
-.gtk-textbox {
+input[type=text] {
     --content:<input type="text" class="gtk-textbox"/>;
     background-image: linear-gradient(
-        var(--gtk-textbox-grad-from), 
-        50%, 
-        var(--gtk-textbox-grad-to)
+        var(--gtk-textbox-grad-to), 
+        10%, 
+        var(--gtk-textbox-grad-from)
     );
     font-family: cantarell;
+    border-width:1px;
     border-radius: 3px;
     border-color: var(--gtk-text-border);
     font-size: 12px;
     padding: 4px;
 }
   
-.gtk-textbox:focus {
+input[type=text]:focus, textarea:focus {
     outline: none !important;
     border:1px solid var(--gtk-textbox-focus);
     box-shadow: 0 0 2px var(--gtk-textbox-focus);
@@ -78,19 +89,16 @@ input[type=checkbox] {
     -o-appearance: none;
     appearance: none;
     background: linear-gradient(
-        var(--gtk-btn-grad-from),
-        var(--gtk-btn-grad-to)
+        var(--gtk-btn-grad-to),
+        95%,
+        var(--gtk-btn-grad-from)
     );
     border-radius:3px;
-    height: 16px;
-    width: 16px;
+    height: 15px;
+    width: 15px;
     background-size: 50%;
 }
 
-textarea .gtk {
+textarea {
     border-color: var(--gtk-text-border);
-}
-  
-.gtk {
-    background-color: var(--gtk-bg);
 }
