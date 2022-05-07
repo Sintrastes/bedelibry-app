@@ -33,6 +33,7 @@ library
                , partial-order
                , monad-tree
                , montague
+               , meriv-core
                , transformers
                , profunctors
                , comonad
