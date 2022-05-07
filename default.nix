@@ -41,7 +41,7 @@ project ./. ({ pkgs, ... }: {
         owner = "sintrastes";
         repo = "meriv-core";
         rev = "413ac017684fcf59474a6cc2dccb9fb6d33825f1";
-        sha256 = "J5smYPhshQZwD6Qn4YIvjBQPXn1/5UDAkgyP+8QT6aI=";
+        sha256 = "OpxBga//brv8Z4iC/xCpdEW8k+4Nu9bsx3NHu7B3Zy8=";
       }) {};
     };
 })
