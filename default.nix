@@ -43,7 +43,7 @@ project ./. ({ pkgs, ... }: {
         rev = "81a62ab935ccae5a775b19e75eb8aabb76ed39de";
         sha256 = "OpxBga//brv8Z4iC/xCpdEW8k+4Nu9bsx3NHu7B3Zy8=";
       }) {};
-      meriv-core = self.callCabal2nix "pure-prolog" (pkgs.fetchFromGitHub {
+      pure-prolog = self.callCabal2nix "pure-prolog" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "pure-prolog";
         rev = "6d3d21d639d435e2a79e0f3629caf0dd899ac81d";
