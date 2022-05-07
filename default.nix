@@ -37,7 +37,7 @@ project ./. ({ pkgs, ... }: {
         rev = "55f22d3efa2fc1565bac70f6cc1bb8cd9397f721";
         sha256 = "J5smYPhshQZwD6Qn4YIvjBQPXn1/5UDAkgyP+8QT6aI=";
       }) {};
-      meriv-core = self.callCabal2nix "montague" (pkgs.fetchFromGitHub {
+      meriv-core = self.callCabal2nix "meriv-core" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "meriv-core";
         rev = "413ac017684fcf59474a6cc2dccb9fb6d33825f1";
