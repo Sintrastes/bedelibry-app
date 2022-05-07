@@ -33,7 +33,6 @@ library
                , partial-order
                , monad-tree
                , montague
-               , meriv-core
                , pure-prolog
                , transformers
                , profunctors
