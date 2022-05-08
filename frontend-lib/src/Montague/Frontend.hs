@@ -77,7 +77,7 @@ body = mdo
     --         pure $ Right ())
     --     (\(e :: SomeException) -> pure $ Left e)
 
-    topNavEvents <- androidNavBar currentPage prefs Route.pagesWithTabs
+    (topNavEvents, addBtnClicks) <- androidNavBar currentPage prefs Route.pagesWithTabs
 
     let navEvents = leftmost [
             switch $ current $ leftmost <$> pageNavEvents, 
@@ -101,9 +101,9 @@ body = mdo
             prefs <- tab Route.Preferences $ preferencePage hideWelcomePage 
                 prefs montagueDir
 
-            tab (Route.Entities Nothing) $ entityPage prefs maybeParsedSchema
+            tab (Route.Entities Nothing) $ entityPage addBtnClicks prefs maybeParsedSchema
 
-            tab (Route.Types Nothing) $ typePage prefs maybeParsedSchema
+            tab (Route.Types Nothing) $ typePage addBtnClicks prefs maybeParsedSchema
 
             tab Route.Notes notesPage
 

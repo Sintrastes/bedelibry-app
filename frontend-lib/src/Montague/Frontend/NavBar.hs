@@ -44,7 +44,7 @@ iOSNavButton isSelected label icon = el "div" $ do
             text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
-androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e)
+androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, Event t ())
 androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
@@ -65,19 +65,21 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             Route.Entities _ -> "class" =: "right"
             _                -> "style" =: "display: none;"
 
-    (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
+    (navBarEvents, toggleMenuEvent, addBtnClicks) <- elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
+        
         elDynAttr "div" filterIconAttrs $ do
             elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") $ pure ()
-        elDynAttr "div" addIconAttrs $ do
+        addBtnClicks <- elDynAttr' "a" addIconAttrs $ do
             elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") $ pure ()
+        
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
                 btnEvents <- navButton (T.pack $ show tab)
                 pure $ tab <$ btnEvents)
 
-            pure (leftmost menuEvents, domEvent Click (fst navMenu))
+            pure (leftmost menuEvents, domEvent Click (fst navMenu), domEvent Click (fst addBtnClicks))
 
     elDynAttr "div" overlayAttrs $ pure ()
 
@@ -104,7 +106,7 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
         pure $ leftmost tabEvents
 
-    pure $ leftmost [navBarEvents, navPaneEvents]
+    pure (leftmost [navBarEvents, navPaneEvents], addBtnClicks)
 
 sidebarButton x = li $
     domEvent Click . fst <$>

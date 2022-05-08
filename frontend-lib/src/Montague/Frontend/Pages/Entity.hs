@@ -35,12 +35,9 @@ import Control.Monad.Tree
 import Control.Monad
 import Reflex.DynamicWriter.Base
 
-entityPage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
-entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
-    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
-        button $ T.pack $ show Strings.NewEntity
-
-    modal modalEvent $ do
+entityPage ::  _ => Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
+entityPage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
+    modal addBtnClicks $ do
         modalHeader "Add a new entity"
 
         select "Type" ["Person", "Place", "Thing"] "Person"

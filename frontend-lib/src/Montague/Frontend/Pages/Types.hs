@@ -36,12 +36,9 @@ import Control.Monad
 import Control.Monad.Fix
 import Montague.Frontend.Pages.Entity
 
-typePage :: _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
-typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
-    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
-        button $ T.pack $ show Strings.NewType
-
-    modal modalEvent $ do
+typePage :: _ => Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
+typePage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
+    modal addBtnClicks $ do
         modalHeader "Add a new type"
         
         labeledTextEntry $ T.pack $ show Strings.Name
