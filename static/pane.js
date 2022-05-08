@@ -1,7 +1,6 @@
 // From html-dom. See https://github.com/1milligram/html-dom/blob/master/LICENSE for license.
 
 function addPaneDragListener() {
-  document.addEventListener('DOMContentLoaded', function () {
     // Query the element
     const resizer = document.getElementById('dragMe');
     const leftSide = resizer.previousElementSibling;
@@ -60,5 +59,4 @@ function addPaneDragListener() {
 
     // Attach the handler
     resizer.addEventListener('mousedown', mouseDownHandler);
-  });
 }
