@@ -40,7 +40,8 @@ library
                , aeson
                , directory
   exposed-modules:
-      Montague.Frontend
+      Montague.Parser.Markdown
+    , Montague.Frontend
     , Montague.Frontend.Strings
     , Montague.Frontend.Route
     , Montague.Frontend.Utils

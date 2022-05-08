@@ -28,5 +28,5 @@
 .container__right {
     /* Take the remaining width */
     flex: 1;
-    display: flex;
+    display: block;
 }

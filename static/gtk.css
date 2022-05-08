@@ -52,6 +52,31 @@ p, span, h1, h2, h3, h4, h5, a, label {
     font-family: cantarell;
     border-radius: 2px;
 }
+
+.gtk-navbar {
+    --content:
+      <p>Export Schema</p>;
+    height: auto;
+    font-size: 13dp;
+    padding: 4px 8px 4px 8px;
+    margin: 0px;
+    background-image: linear-gradient(
+        var(--gtk-btn-grad-to), 
+        85%,
+        var(--gtk-btn-grad-from)
+    );
+    border-width: 0px;
+    font-family: cantarell;
+}
+
+#nav-mobile > li {
+    list-style-type: none;
+    display: inline-block;
+}  
+
+#nav-mobile a {
+    padding: 15px;
+}
   
 input[type=text] {
     --content:<input type="text" class="gtk-textbox"/>;
