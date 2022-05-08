@@ -58,12 +58,12 @@ p, span, h1, h2, h3, h4, h5, a, label {
       <p>Export Schema</p>;
     height: auto;
     font-size: 13dp;
-    padding: 4px 8px 4px 8px;
+    padding: 2px 8px 2px 8px;
     margin: 0px;
     background-image: linear-gradient(
-        var(--gtk-btn-grad-to), 
-        85%,
-        var(--gtk-btn-grad-from)
+        #e2e2e2, 
+        50%,
+        #f1f1f1
     );
     border-width: 0px;
     font-family: cantarell;

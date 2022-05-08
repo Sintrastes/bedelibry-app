@@ -56,16 +56,10 @@ androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> pref
             Android -> "class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =:"on"
             _       -> "style" =: "display: none;"
 
-    let titleAttrs = ?style <&> \case
-            Android -> "class" =: "unselectable brand-logo" <> "style" =: "padding-left: 1em;"
-            _       -> "style" =: "display: none;"
-
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
-        elDynAttr "a" titleAttrs $ text $
-            T.pack $ show Strings.AppTitle
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
-        elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "right hide-on-med-and-down") $ do
+        elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
                 btnEvents <- navButton (T.pack $ show tab)
                 pure $ tab <$ btnEvents)
