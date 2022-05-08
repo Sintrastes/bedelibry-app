@@ -34,7 +34,13 @@ import Data.List
 
 schemaPage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ mdo
-    modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
+    let headerAttrs = "style" =: 
+            ("display: flex;" <> "justify-content: space-between;" <> 
+            "align-items: center;" <> "margin-top:7.5px;")
+
+    modalEvent <- elAttr "div" headerAttrs $ do
+        appText $
+            T.pack $ show Strings.EnterSchema
         button "Export Schema"
     
     -- Load the schema from disk.
@@ -42,12 +48,9 @@ schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> 
         catch (readFile (montagueDir <> "/schema.mont"))
             (\(e :: SomeException) -> return "")
 
-    appText $
-        T.pack $ show Strings.EnterSchema
-
     let textAttrs = "spellcheck" =: "false" <>
           "class" =: "input-field col s12" <> 
-          "style" =: "display:flex;height:75%;width:100%;"
+          "style" =: "display:flex;height:72%;width:100%;"
 
     schemaText <- elAttr "div" textAttrs $ textAreaElement (
         def & textAreaElementConfig_elementConfig
