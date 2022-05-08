@@ -3,9 +3,11 @@
 module Montague.Frontend.Route where
 
 import Reflex.Dom.Core hiding (Home)
-import Montague.Frontend.NavBar
 import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
+
+class DomBuilder t m => HasIcon t m e where
+    icon :: e -> m ()
 
 data Route =
     Schema

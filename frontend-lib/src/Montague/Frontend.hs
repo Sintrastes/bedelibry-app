@@ -77,7 +77,7 @@ body = mdo
     --         pure $ Right ())
     --     (\(e :: SomeException) -> pure $ Left e)
 
-    topNavEvents <- androidNavBar prefs Route.pagesWithTabs
+    topNavEvents <- androidNavBar currentPage prefs Route.pagesWithTabs
 
     let navEvents = leftmost [
             switch $ current $ leftmost <$> pageNavEvents, 

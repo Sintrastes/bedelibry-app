@@ -8,9 +8,8 @@ import Montague.Frontend.Utils
 import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
-
-class DomBuilder t m => HasIcon t m e where
-    icon :: e -> m ()
+import Montague.Frontend.Route (Route, icon)
+import qualified Montague.Frontend.Route as Route
 
 iOSNavBar :: _ => Dynamic t e -> Dynamic t PreferenceData -> [e] -> m (Event t e)
 iOSNavBar currentlySelected prefs tabs = let ?prefs = prefs in 
@@ -45,8 +44,8 @@ iOSNavButton isSelected label icon = el "div" $ do
             text label)
 
 -- | Nav bar widget. Only shown with an Android style enabled.
-androidNavBar :: _ => Dynamic t PreferenceData -> [e] -> m (Event t e)
-androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
+androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e)
+androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "unselectable nav-wrapper light-blue darken-1"
             Gtk     -> "class" =: "unselectable gtk-navbar"
@@ -56,9 +55,16 @@ androidNavBar prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> pref
             Android -> "class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =:"on"
             _       -> "style" =: "display: none;"
 
+    let filterIconAttrs = currentPage <&> \case
+            Route.Types _    -> "class" =: "right"
+            Route.Entities _ -> "class" =: "right"
+            _                -> "style" =: "display: none;"
+
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
+        elDynAttr "div" filterIconAttrs $ do
+            elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") $ pure ()
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
                 btnEvents <- navButton (T.pack $ show tab)
