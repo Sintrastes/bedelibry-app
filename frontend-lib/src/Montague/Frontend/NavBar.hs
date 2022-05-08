@@ -60,11 +60,18 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             Route.Entities _ -> "class" =: "right"
             _                -> "style" =: "display: none;"
 
+    let addIconAttrs = currentPage <&> \case
+            Route.Types _    -> "class" =: "right"
+            Route.Entities _ -> "class" =: "right"
+            _                -> "style" =: "display: none;"
+
     (navBarEvents, toggleMenuEvent) <- elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
         elDynAttr "div" filterIconAttrs $ do
             elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") $ pure ()
+        elDynAttr "div" addIconAttrs $ do
+            elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") $ pure ()
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do
                 btnEvents <- navButton (T.pack $ show tab)
