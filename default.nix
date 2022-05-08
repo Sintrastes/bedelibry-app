@@ -47,7 +47,7 @@ project ./. ({ pkgs, ... }: {
         owner = "sintrastes";
         repo = "pure-prolog";
         rev = "140534d2c095322e5f800f7510f93b5492cd5f72";
-        sha256 = "ztEv8LiOwhK9s/SR6WAciSqvIw5lYf7LFlK7GK8l5Ic=";
+        sha256 = "3KLblRkKmKZM4TZjaxR9ycNOZXoNV4zoiPVEyI1vRPY=";
       }) {};
     };
 })
