@@ -46,7 +46,7 @@ project ./. ({ pkgs, ... }: {
       pure-prolog = self.callCabal2nix "pure-prolog" (pkgs.fetchFromGitHub {
         owner = "sintrastes";
         repo = "pure-prolog";
-        rev = "65e5d1605f27547996dedb0575bf612f45f8c2e0";
+        rev = "d2a94bdc86b06ad9db416a1f8a4ed7a9c5636156";
         sha256 = "Gtp1Icp9bNxsN3DqeI4Li+h1j9oG5XSViLTcOB4xdGA=";
       }) {};
     };
