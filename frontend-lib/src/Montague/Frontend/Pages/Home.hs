@@ -48,13 +48,15 @@ homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in
                 then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
                 else [])
 
-        let parsed = do
-                schema <- maybeParsedSchema
-                case schema of
-                    Nothing -> pure Nothing
-                    Just schema -> do
-                        text <- T.unpack <$> inputText
-                        pure $ getParseFromLexicon schema show text
+        parsedEvent <- debounce 0.20 $ updated $ do
+            schema <- maybeParsedSchema
+            case schema of
+                Nothing -> pure Nothing
+                Just schema -> do
+                    text <- T.unpack <$> inputText
+                    pure $ getParseFromLexicon schema show text
+
+        parsed <- holdDyn Nothing parsedEvent
 
         let isValid = isJust <$> parsed
 
