@@ -98,12 +98,22 @@ body = mdo
                 maybeParsedSchema 
                 prefs
 
-            prefs <- tab Route.Preferences $ preferencePage hideWelcomePage 
-                prefs montagueDir
+            prefs <- tab Route.Preferences $ preferencePage 
+                hideWelcomePage 
+                prefs 
+                montagueDir
 
-            tab (Route.Entities Nothing) $ entityPage addBtnClicks prefs maybeParsedSchema
+            tab (Route.Entities Nothing) $ entityPage 
+                -- Only pass in events when on this page.
+                (gate (whenPageIs $ Route.Entities Nothing) addBtnClicks)
+                prefs 
+                maybeParsedSchema
 
-            tab (Route.Types Nothing) $ typePage addBtnClicks prefs maybeParsedSchema
+            tab (Route.Types Nothing) $ typePage 
+                -- Only pass in events when on this page.
+                (gate (whenPageIs $ Route.Types Nothing) addBtnClicks) 
+                prefs 
+                maybeParsedSchema
 
             tab Route.Notes notesPage
 
@@ -112,6 +122,9 @@ body = mdo
             pure prefs
 
     currentPage <- holdDyn (Route.defaultPage initialPref) navEvents
+
+    -- Helper function to get a dynamic for when a specific route is active.
+    let whenPageIs p = current currentPage <&> (== p)
 
     bottomNavEvents <- iOSNavBar currentPage prefs Route.pagesWithTabs
 
