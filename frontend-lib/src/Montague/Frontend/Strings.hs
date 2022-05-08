@@ -27,6 +27,8 @@ data Strings =
   | Small
   | Medium 
   | Large
+  | InvalidRuleset
+  | RulesetValid 
 
 instance Show Strings where
     show = \case
@@ -53,3 +55,5 @@ instance Show Strings where
         Small  -> "Small"
         Medium -> "Medium"
         Large  -> "Large"
+        InvalidRuleset -> "Invalid ruleset (syntax error)"
+        RulesetValid -> "Ruleset is valid"
