@@ -90,9 +90,12 @@ body = mdo
             maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
                 montagueDir
 
-            tab Route.KnowledgeBase knowledgeBasePage
+            maybeParsedProgram <- tab Route.KnowledgeBase knowledgeBasePage
 
-            tab Route.Home $ homePage maybeParsedSchema prefs
+            tab Route.Home $ homePage 
+                maybeParsedProgram 
+                maybeParsedSchema 
+                prefs
 
             prefs <- tab Route.Preferences $ preferencePage hideWelcomePage 
                 prefs montagueDir

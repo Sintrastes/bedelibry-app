@@ -29,6 +29,7 @@ data Strings =
   | Large
   | InvalidRuleset
   | RulesetValid 
+  | EnterQuery
 
 instance Show Strings where
     show = \case
@@ -57,3 +58,4 @@ instance Show Strings where
         Large  -> "Large"
         InvalidRuleset -> "Invalid ruleset (syntax error)"
         RulesetValid -> "Ruleset is valid"
+        EnterQuery -> "Enter a query:"

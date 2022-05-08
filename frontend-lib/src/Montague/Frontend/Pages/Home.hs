@@ -33,32 +33,50 @@ import Control.Monad.IO.Class
 import Data.Functor
 import Data.Maybe
 
-homePage :: _ => Dynamic t (Maybe SomeLexicon) -> Dynamic t PreferenceData -> m ()
-homePage maybeParsedSchema prefs = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ do
-    appText $ T.pack $ show Strings.EnterSentence
+import Parser
+import Ast
 
-    inputText <- autocompleteTextEntry (\x -> 
-        if x /= "" 
-            then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
-            else [])
+homePage :: _ => Dynamic t (Maybe Program) -> Dynamic t (Maybe SomeLexicon) -> Dynamic t PreferenceData -> m ()
+homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in 
+    let ?style = stylePref <$> prefs in noScrollPage $ do
+        -- Parsing
+        appText $ T.pack $ show Strings.EnterSentence
 
-    let parsed = do
-            schema <- maybeParsedSchema
-            case schema of
-                Nothing -> pure Nothing
-                Just schema -> do
-                    text <- T.unpack <$> inputText
-                    pure $ getParseFromLexicon schema show text
+        inputText <- autocompleteTextEntry (\x -> 
+            if x /= "" 
+                then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
+                else [])
 
-    let isValid = isJust <$> parsed
+        let parsed = do
+                schema <- maybeParsedSchema
+                case schema of
+                    Nothing -> pure Nothing
+                    Just schema -> do
+                        text <- T.unpack <$> inputText
+                        pure $ getParseFromLexicon schema show text
 
-    let parsedDisplay = T.pack .
-            fromMaybe (show Strings.CouldNotParse) <$>
-            parsed
+        let isValid = isJust <$> parsed
 
-    let parsedFmt = isValid <&> (\case
-            True  -> mempty
-            False -> "class" =: "red-text p-strawberry-500-color")
+        let parsedDisplay = T.pack .
+                fromMaybe (show Strings.CouldNotParse) <$>
+                parsed
 
-    elDynAttr "p" parsedFmt $ do
-        dynText parsedDisplay
+        let parsedFmt = isValid <&> (\case
+                True  -> mempty
+                False -> "class" =: "red-text p-strawberry-500-color")
+
+        elDynAttr "p" parsedFmt $ do
+            dynText parsedDisplay
+
+        -- Queries.
+
+        appText $ T.pack $ show Strings.EnterQuery
+
+        queryText <- autocompleteTextEntry (\x -> 
+            if x /= "" 
+                then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
+                else [])
+
+        let goal = goalFromString . T.unpack <$> queryText
+    
+        pure ()
