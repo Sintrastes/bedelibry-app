@@ -21,7 +21,7 @@ data Route =
 
 defaultPage initialPrefs = 
     if dontShowWelcomePage initialPrefs
-        then Home
+        then Notes
         else Welcome
 
 pagesWithTabs = 

@@ -32,5 +32,11 @@ header = do
     "href" =: "https://sintrastes.github.io/demos/montague/main.css" <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
+  elAttr "link" (
+    "href" =: "https://sintrastes.github.io/demos/montague/pane.css" <>
+    "type" =: "text/css" <>
+    "rel" =: "stylesheet") blank
+  elAttr "script" (
+    "src" =: "https://sintrastes.github.io/demos/montague/pane.js") blank
 
 main = run 3911 $ mainWidgetWithHead header body
