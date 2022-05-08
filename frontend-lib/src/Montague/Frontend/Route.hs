@@ -10,6 +10,7 @@ import Montague.Frontend.Utils
 data Route =
     Schema
   | Home
+  | Notes
   | Preferences
   | Entities { entityAnchor :: Maybe String }
   | Types { typeAnchor :: Maybe String }
@@ -31,6 +32,7 @@ pagesWithTabs =
   , Preferences
   , Entities Nothing
   , Types Nothing
+  , Notes
   , About
   ]
 
@@ -44,6 +46,7 @@ instance Show Route where
         Welcome -> "Welcome"
         About -> "About"
         KnowledgeBase -> "Knowledge Base"
+        Notes -> "Notes"
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case
@@ -54,4 +57,5 @@ instance DomBuilder t m => HasIcon t m Route where
         Types    _    -> elAttr "i" ("data-feather" =: "edit") $ pure ()
         About         -> elAttr "i" ("data-feather" =: "help-circle") $ pure ()
         KnowledgeBase -> elAttr "i" ("data-feather" =: "book-open") $ pure ()
+        Notes         -> elAttr "i" ("data-feather" =: "edit") $ pure ()
         Welcome       -> pure ()

@@ -49,6 +49,7 @@ library
     , Montague.Frontend.NavBar
     , Montague.Frontend.Pages.Welcome
     , Montague.Frontend.Pages.Home
+    , Montague.Frontend.Pages.Notes
     , Montague.Frontend.Pages.Schema
     , Montague.Frontend.Pages.Entity
     , Montague.Frontend.Pages.Types
