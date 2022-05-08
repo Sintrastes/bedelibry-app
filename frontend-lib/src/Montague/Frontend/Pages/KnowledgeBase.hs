@@ -7,8 +7,12 @@ import qualified Data.Text as T
 import System.Info
 import Data.Version
 import Montague.Frontend.Utils
+import Data.Maybe
 
-knowledgeBasePage :: DomBuilder t m => m (Dynamic t T.Text)
+import Ast
+import Parser
+
+knowledgeBasePage :: DomBuilder t m => m (Dynamic t (Maybe Program))
 knowledgeBasePage = noScrollPage $ do
     let textAttrs = "spellcheck" =: "false" <>
           "class" =: "input-field col s12" <> 
@@ -25,7 +29,8 @@ knowledgeBasePage = noScrollPage $ do
             .~ T.pack ""
      )
 
-    pure $ _textAreaElement_value schemaText
+    pure $ eitherToMaybe . clausesFromString "" . T.unpack <$> 
+        _textAreaElement_value schemaText
   where boxResizing = "-webkit-box-sizing: border-box;"
           <> "-moz-box-sizing: border-box;"
           <> "box-sizing: border-box;"
