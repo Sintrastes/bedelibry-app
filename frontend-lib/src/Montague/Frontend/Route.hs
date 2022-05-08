@@ -25,9 +25,9 @@ defaultPage initialPrefs =
 
 pagesWithTabs = 
   [
-    Schema
+    Home
+  , Schema
   , KnowledgeBase
-  , Home
   , Preferences
   , Entities Nothing
   , Types Nothing
