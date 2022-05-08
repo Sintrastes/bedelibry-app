@@ -35,6 +35,7 @@ import Data.Maybe
 
 import Parser
 import Ast
+import Interp
 
 homePage :: _ => Dynamic t (Maybe Program) -> Dynamic t (Maybe SomeLexicon) -> Dynamic t PreferenceData -> m ()
 homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in 
@@ -77,6 +78,19 @@ homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in
                 then filter (\el -> x `T.isPrefixOf` el) ["one", "two", "three"]
                 else [])
 
-        let goal = goalFromString . T.unpack <$> queryText
+        let goal = goalFromString . T.unpack . ("?- " <>) <$> queryText
+
+        let result = do
+            maybeGoal <- goal
+            maybeProgram <- maybeParsedProgram
+            pure $ case (maybeGoal, maybeProgram) of
+                (Right g, Just p) -> T.pack $ show $
+                    preformSearch p g
+                _ -> ""
     
+        el "p" $ dynText result
+
         pure ()
+
+preformSearch program goal = bfs $
+    makeReportTree program goal
