@@ -23,6 +23,8 @@ import qualified Data.Text.Encoding as T
 import qualified Montague.Frontend.Strings as Strings
 import Montague.Frontend.Utils
 import Data.Proxy
+import Montague.Frontend.Route (Route)
+import qualified Montague.Frontend.Route as Route
 import Reflex.Dom.Core hiding (button)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
@@ -31,9 +33,10 @@ import Data.List
 import Data.Functor
 import Control.Monad.Tree
 import Control.Monad
+import Control.Monad.Fix
 import Montague.Frontend.Pages.Entity
 
-typePage ::  _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> m ()
+typePage :: _ => Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
 typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
     modalEvent <- elAttr "div" ("style" =: "display: flex; justify-content: flex-end;") $
         button $ T.pack $ show Strings.NewType
@@ -50,7 +53,10 @@ typePage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref 
         Nothing -> elAttr "div" centerContent $
             el "div" $ do 
                 elClass "p" grayText $ text "No types have been specified."
-                elClass "p" grayText $ text "You can add them in the schema page."
+                elClass "p" grayText $ do
+                    text "You can add them in "
+                    textLink "the schema page" Route.Schema
+                    text "."
         Just (SomeLexicon pT pA _ _ semantics) -> elClass "ul" "collection" $ do
             let types = getTypes pT
             forM_ types (\typ -> do

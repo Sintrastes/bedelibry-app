@@ -53,7 +53,10 @@ entityPage prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePre
         Nothing -> elAttr "div" centerContent $
             el "div" $ do
                 elClass "p" grayText $ text "No schema has been specified."
-                elClass "p" grayText $ text "You need to enter one in the schema page."
+                elClass "p" grayText $ do
+                    text "You need to enter one in "
+                    textLink "the schema page" Route.Schema
+                    text "."
         Just (SomeLexicon pT pA getDocs _ semantics) -> do
             let entities = getEntities pA
             let types = fmap (bfs . typeOfAtom semantics) entities
