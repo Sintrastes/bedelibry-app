@@ -36,4 +36,4 @@ notesPage = elAttr "div" ("class" =: "container" <> "style" =: "height: 91.5vh;"
     pure ()
   where
     attrs = "class" =: "p-form-text p-form-no-validate" <>
-        "type" =: "text" <> "style" =: "height: 100%; width: 100%;"
+        "type" =: "text" <> "style" =: "resize: none; height: 100%; width: 100%;"
