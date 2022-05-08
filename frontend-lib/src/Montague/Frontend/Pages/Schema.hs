@@ -45,7 +45,11 @@ schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> 
     appText $
         T.pack $ show Strings.EnterSchema
 
-    schemaText <- elAttr "div" ("spellcheck" =: "false" <> "class" =: "input-field col s12" <> "style" =: "display:flex;height:75%;width:100%;") $ textAreaElement (
+    let textAttrs = "spellcheck" =: "false" <>
+          "class" =: "input-field col s12" <> 
+          "style" =: "display:flex;height:75%;width:100%;"
+
+    schemaText <- elAttr "div" textAttrs $ textAreaElement (
         def & textAreaElementConfig_elementConfig
             . elementConfig_initialAttributes
             .~ ("class" =: "p-form-text p-form-no-validate" <>

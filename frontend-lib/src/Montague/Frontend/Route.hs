@@ -15,6 +15,7 @@ data Route =
   | Types { typeAnchor :: Maybe String }
   | About
   | Welcome
+  | KnowledgeBase
     deriving(Eq)
 
 defaultPage initialPrefs = 
@@ -25,6 +26,7 @@ defaultPage initialPrefs =
 pagesWithTabs = 
   [
     Schema
+  , KnowledgeBase
   , Home
   , Preferences
   , Entities Nothing
@@ -41,13 +43,15 @@ instance Show Route where
         Types _ -> show Strings.Types
         Welcome -> "Welcome"
         About -> "About"
+        KnowledgeBase -> "Knowledge Base"
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case
-        Schema      -> elAttr "i" ("data-feather" =: "file-text") $ pure ()
-        Home        -> elAttr "i" ("data-feather" =: "home") $ pure ()
-        Preferences -> elAttr "i" ("data-feather" =: "settings") $ pure ()
-        Entities _  -> elAttr "i" ("data-feather" =: "book") $ pure ()
-        Types    _  -> elAttr "i" ("data-feather" =: "edit") $ pure ()
-        About       -> elAttr "i" ("data-feather" =: "help-circle") $ pure ()
-        Welcome     -> pure ()
+        Schema        -> elAttr "i" ("data-feather" =: "file-text") $ pure ()
+        Home          -> elAttr "i" ("data-feather" =: "home") $ pure ()
+        Preferences   -> elAttr "i" ("data-feather" =: "settings") $ pure ()
+        Entities _    -> elAttr "i" ("data-feather" =: "book") $ pure ()
+        Types    _    -> elAttr "i" ("data-feather" =: "edit") $ pure ()
+        About         -> elAttr "i" ("data-feather" =: "help-circle") $ pure ()
+        KnowledgeBase -> elAttr "i" ("data-feather" =: "book-open") $ pure ()
+        Welcome       -> pure ()

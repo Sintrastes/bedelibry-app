@@ -54,4 +54,5 @@ library
     , Montague.Frontend.Pages.Types
     , Montague.Frontend.Pages.Preferences
     , Montague.Frontend.Pages.About
+    , Montague.Frontend.Pages.KnowledgeBase
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

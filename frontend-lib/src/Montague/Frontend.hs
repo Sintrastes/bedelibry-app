@@ -62,6 +62,7 @@ import Montague.Frontend.Pages.Entity
 import Montague.Frontend.Pages.Types
 import Montague.Frontend.Pages.Schema
 import Montague.Frontend.Pages.About
+import Montague.Frontend.Pages.KnowledgeBase
 
 body :: _ => m ()
 body = mdo
@@ -88,6 +89,8 @@ body = mdo
         
             maybeParsedSchema <- tab Route.Schema $ schemaPage prefs
                 montagueDir
+
+            tab Route.KnowledgeBase knowledgeBasePage
 
             tab Route.Home $ homePage maybeParsedSchema prefs
 
