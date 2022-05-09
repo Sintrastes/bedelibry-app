@@ -38,10 +38,9 @@ schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> 
             ("display: flex;" <> "justify-content: space-between;" <> 
             "align-items: center;" <> "margin-top:7.5px;")
 
-    modalEvent <- elAttr "div" headerAttrs $ do
+    elAttr "div" headerAttrs $ do
         appText $
             T.pack $ show Strings.EnterSchema
-        button "Export Schema"
     
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $

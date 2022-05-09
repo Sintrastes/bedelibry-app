@@ -65,6 +65,16 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             Route.Entities _ -> "class" =: "right"
             _                -> "style" =: "display: none;"
 
+    let saveIconAttrs = currentPage <&> \case
+            Route.Schema        -> "class" =: "right"
+            Route.KnowledgeBase -> "class" =: "right"
+            _                   -> "style" =: "display: none;"
+
+    let exportIconAttrs = currentPage <&> \case
+            Route.Schema        -> "class" =: "right"
+            Route.KnowledgeBase -> "class" =: "right"
+            _                   -> "style" =: "display: none;"
+
     (navBarEvents, toggleMenuEvent, addBtnClicks) <- elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
@@ -73,6 +83,11 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") $ pure ()
         addBtnClicks <- elDynAttr' "a" addIconAttrs $ do
             elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") $ pure ()
+        elDynAttr' "a" saveIconAttrs $ do
+            elAttr "i" ("data-feather" =: "save" <> "style" =: "display:block; margin: 15px;") $ pure ()
+        elDynAttr' "a" exportIconAttrs $ do
+            elAttr "i" ("class" =: "material-icons") $ 
+                text "import_export"
         
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do
             menuEvents <- forM tabs (\tab -> do

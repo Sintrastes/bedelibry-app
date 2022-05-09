@@ -72,7 +72,6 @@ homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in
             dynText parsedDisplay
 
         -- Queries.
-        {-
         appText $ T.pack $ show Strings.EnterQuery
 
         queryText <- autocompleteTextEntry (\x -> 
@@ -91,7 +90,6 @@ homePage  maybeParsedProgram maybeParsedSchema prefs = let ?prefs = prefs in
                 _ -> ""
     
         el "p" $ dynText result 
-        -}
 
         pure ()
 
