@@ -80,11 +80,11 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             elClass "i" "material-icons" $ text "menu"
         
         elDynAttr "div" filterIconAttrs $ do
-            elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") $ pure ()
+            elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") blank
         addBtnClicks <- elDynAttr' "a" addIconAttrs $ do
-            elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") $ pure ()
+            elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") blank
         elDynAttr' "a" saveIconAttrs $ do
-            elAttr "i" ("data-feather" =: "save" <> "style" =: "display:block; margin: 15px;") $ pure ()
+            elAttr "i" ("data-feather" =: "save" <> "style" =: "display:block; margin: 15px;") blank
         elDynAttr' "a" exportIconAttrs $ do
             elAttr "i" ("class" =: "material-icons") $ 
                 text "import_export"
@@ -96,7 +96,7 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
             pure (leftmost menuEvents, domEvent Click (fst navMenu), domEvent Click (fst addBtnClicks))
 
-    elDynAttr "div" overlayAttrs $ pure ()
+    elDynAttr "div" overlayAttrs blank
 
     sidebarOpened <- accumDyn (\s _ -> not s) False
         (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
