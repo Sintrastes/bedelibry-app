@@ -64,6 +64,7 @@ import Montague.Frontend.Pages.Schema
 import Montague.Frontend.Pages.About
 import Montague.Frontend.Pages.Notes
 import Montague.Frontend.Pages.KnowledgeBase
+import Montague.Frontend.Pages.SchemaManagement
 
 body :: _ => m ()
 body = mdo
@@ -120,6 +121,9 @@ body = mdo
             tab Route.Notes notesPage
 
             tab Route.About aboutPage
+
+            tab Route.SchemaManagement 
+                schemaManagementPage
 
             pure prefs
 

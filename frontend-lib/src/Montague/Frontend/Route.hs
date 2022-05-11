@@ -19,6 +19,7 @@ data Route =
   | About
   | Welcome
   | KnowledgeBase
+  | SchemaManagement
     deriving(Eq)
 
 defaultPage initialPrefs = 
@@ -36,6 +37,7 @@ pagesWithTabs =
   , Types Nothing
   , Notes
   , About
+  , SchemaManagement
   ]
 
 instance Show Route where
@@ -49,6 +51,7 @@ instance Show Route where
         About -> "About"
         KnowledgeBase -> "Knowledge Base"
         Notes -> "Notes"
+        SchemaManagement -> "Schema Management"
 
 instance DomBuilder t m => HasIcon t m Route where
     icon = \case
@@ -60,4 +63,4 @@ instance DomBuilder t m => HasIcon t m Route where
         About         -> elAttr "i" ("data-feather" =: "help-circle") blank
         KnowledgeBase -> elAttr "i" ("data-feather" =: "book-open") blank
         Notes         -> elAttr "i" ("data-feather" =: "edit") blank
-        Welcome       -> blank
+        _             -> blank
