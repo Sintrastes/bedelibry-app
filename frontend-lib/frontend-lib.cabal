@@ -30,6 +30,7 @@ library
                , reflex-dom-core
                , text
                , lens
+               , parsec
                , partial-order
                , monad-tree
                , montague
