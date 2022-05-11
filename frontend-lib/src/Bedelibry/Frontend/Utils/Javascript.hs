@@ -1,7 +1,7 @@
 
 {-# LANGUAGE OverloadedStrings, PartialTypeSignatures #-}
 
-module Montague.Frontend.Utils.Javascript where
+module Bedelibry.Frontend.Utils.Javascript where
 
 import qualified Data.Text as T
 import Language.Javascript.JSaddle (eval, liftJSM)

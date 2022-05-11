@@ -16,15 +16,15 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Pages.Entity where
+module Bedelibry.Frontend.Pages.Entity where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Montague.Frontend.Strings as Strings
-import Montague.Frontend.Utils
+import qualified Bedelibry.Frontend.Strings as Strings
+import Bedelibry.Frontend.Utils
 import Data.Proxy
-import Montague.Frontend.Route (Route)
-import qualified Montague.Frontend.Route as Route
+import Bedelibry.Frontend.Route (Route)
+import qualified Bedelibry.Frontend.Route as Route
 import Reflex.Dom.Core hiding (button, select)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)

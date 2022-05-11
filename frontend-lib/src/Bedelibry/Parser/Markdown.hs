@@ -1,5 +1,5 @@
 
-module Montague.Parser.Markdown where
+module Bedelibry.Parser.Markdown where
 
 import Text.Parsec hiding (token)
 import qualified Data.Text as T

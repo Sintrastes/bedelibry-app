@@ -6,10 +6,10 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE CPP #-}
 
-module Montague.Frontend.Pages.Welcome where
+module Bedelibry.Frontend.Pages.Welcome where
 
 import Reflex.Dom.Core hiding (checkbox)
-import Montague.Frontend.Utils
+import Bedelibry.Frontend.Utils
 
 welcomePage :: _ => Dynamic t PreferenceData -> m (Event t Bool)
 welcomePage prefs = let ?style = stylePref <$> prefs in do

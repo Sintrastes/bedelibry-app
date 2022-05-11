@@ -1,10 +1,10 @@
 {-# LANGUAGE LambdaCase, FlexibleInstances, MultiParamTypeClasses, OverloadedStrings #-}
 
-module Montague.Frontend.Route where
+module Bedelibry.Frontend.Route where
 
 import Reflex.Dom.Core hiding (Home)
-import qualified Montague.Frontend.Strings as Strings
-import Montague.Frontend.Utils
+import qualified Bedelibry.Frontend.Strings as Strings
+import Bedelibry.Frontend.Utils
 
 class DomBuilder t m => HasIcon t m e where
     icon :: e -> m ()

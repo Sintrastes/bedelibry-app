@@ -16,15 +16,15 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Pages.Types where
+module Bedelibry.Frontend.Pages.Types where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Montague.Frontend.Strings as Strings
-import Montague.Frontend.Utils
+import qualified Bedelibry.Frontend.Strings as Strings
+import Bedelibry.Frontend.Utils
 import Data.Proxy
-import Montague.Frontend.Route (Route)
-import qualified Montague.Frontend.Route as Route
+import Bedelibry.Frontend.Route (Route)
+import qualified Bedelibry.Frontend.Route as Route
 import Reflex.Dom.Core hiding (button)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
@@ -34,7 +34,7 @@ import Data.Functor
 import Control.Monad.Tree
 import Control.Monad
 import Control.Monad.Fix
-import Montague.Frontend.Pages.Entity
+import Bedelibry.Frontend.Pages.Entity
 
 typePage :: _ => Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
 typePage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do

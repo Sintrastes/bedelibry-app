@@ -1,5 +1,5 @@
 {-# LANGUAGE GADTs, RankNTypes, RecursiveDo, OverloadedStrings, FlexibleContexts #-}
-module Montague.Frontend.TabDisplay where
+module Bedelibry.Frontend.TabDisplay where
 
 import qualified Data.Text as T
 import Control.Monad.Free

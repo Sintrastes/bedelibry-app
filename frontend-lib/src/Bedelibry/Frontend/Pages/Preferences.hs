@@ -8,13 +8,13 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE CPP #-}
 
-module Montague.Frontend.Pages.Preferences where
+module Bedelibry.Frontend.Pages.Preferences where
 
-import Montague.Frontend.Utils
+import Bedelibry.Frontend.Utils
 import Reflex.Dom.Core hiding (checkbox, button)
 import Data.Functor
 import qualified Data.Text as T
-import qualified Montague.Frontend.Strings as Strings
+import qualified Bedelibry.Frontend.Strings as Strings
 import Data.Aeson.TH
 import Data.Aeson
 import Data.Default

@@ -1,14 +1,14 @@
 {-# LANGUAGE ImplicitParams, OverloadedStrings, PartialTypeSignatures, LambdaCase, ScopedTypeVariables #-}
 
-module Montague.Frontend.Pages.KnowledgeBase where
+module Bedelibry.Frontend.Pages.KnowledgeBase where
 
 import Reflex.Dom.Core hiding (button, tabDisplay)
 import qualified Data.Text as T
 import System.Info
 import Data.Version
-import Montague.Frontend.Utils
+import Bedelibry.Frontend.Utils
 import Data.Maybe
-import qualified Montague.Frontend.Strings as Strings
+import qualified Bedelibry.Frontend.Strings as Strings
 import Data.Functor
 import Control.Exception
 import Control.Monad.IO.Class

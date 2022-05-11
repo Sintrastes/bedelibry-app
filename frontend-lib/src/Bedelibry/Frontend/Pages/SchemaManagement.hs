@@ -1,7 +1,7 @@
 
 {-# LANGUAGE PartialTypeSignatures, OverloadedStrings #-}
 
-module Montague.Frontend.Pages.SchemaManagement where
+module Bedelibry.Frontend.Pages.SchemaManagement where
 
 import Reflex.Dom.Core
 import System.Directory

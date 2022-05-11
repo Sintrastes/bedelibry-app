@@ -6,15 +6,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module Montague.Frontend.Pages.Notes where
+module Bedelibry.Frontend.Pages.Notes where
 
 import Reflex.Dom.Core hiding (button, tabDisplay)
 import qualified Data.Text as T
 import System.Info
 import Data.Version
-import Montague.Frontend.Utils
+import Bedelibry.Frontend.Utils
 import Data.Maybe
-import qualified Montague.Frontend.Strings as Strings
+import qualified Bedelibry.Frontend.Strings as Strings
 import Language.Javascript.JSaddle (eval, liftJSM)
 import Data.Functor
 

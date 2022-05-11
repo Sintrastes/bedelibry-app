@@ -16,11 +16,11 @@
     , TemplateHaskell
     , RecursiveDo #-}
 
-module Montague.Frontend.Utils where
+module Bedelibry.Frontend.Utils where
 
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Montague.Frontend.Strings as Strings
+import qualified Bedelibry.Frontend.Strings as Strings
 import Reflex.Dom.Core hiding (button, checkbox)
 import qualified Reflex.Dom.Core as RD
 import Language.Javascript.JSaddle (eval, liftJSM)
@@ -433,6 +433,6 @@ toastOnErrors x = do
     case res of
         Left  e ->
             liftFrontend' () $
-                toast $ "An exception occured when loading Montague: " <> T.pack (show e)
+                toast $ "An exception occured when loading Bedelibry: " <> T.pack (show e)
         Right _ ->
             pure ()

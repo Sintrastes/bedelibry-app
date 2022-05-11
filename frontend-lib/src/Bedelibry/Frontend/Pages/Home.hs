@@ -16,13 +16,13 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend.Pages.Home where
+module Bedelibry.Frontend.Pages.Home where
 
 import Prelude hiding ((<=), div)
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
-import qualified Montague.Frontend.Strings as Strings
-import Montague.Frontend.Utils
+import qualified Bedelibry.Frontend.Strings as Strings
+import Bedelibry.Frontend.Utils
 import Control.Exception
 import Reflex.Dom.Core hiding (button, tabDisplay, Home)
 import Montague.Lexicon hiding (enumValues)

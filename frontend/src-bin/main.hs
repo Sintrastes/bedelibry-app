@@ -2,7 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-import Montague.Frontend
+import Bedelibry.Frontend
 import Frontend.Obelisk
 import Common.Route
 import Obelisk.Frontend

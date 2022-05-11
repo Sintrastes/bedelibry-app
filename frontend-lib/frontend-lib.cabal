@@ -41,22 +41,22 @@ library
                , aeson
                , directory
   exposed-modules:
-      Montague.Parser.Markdown
-    , Montague.Frontend
-    , Montague.Frontend.Strings
-    , Montague.Frontend.Route
-    , Montague.Frontend.Utils
-    , Montague.Frontend.Utils.Javascript
-    , Montague.Frontend.TabDisplay
-    , Montague.Frontend.NavBar
-    , Montague.Frontend.Pages.Welcome
-    , Montague.Frontend.Pages.Home
-    , Montague.Frontend.Pages.Notes
-    , Montague.Frontend.Pages.Schema
-    , Montague.Frontend.Pages.Entity
-    , Montague.Frontend.Pages.Types
-    , Montague.Frontend.Pages.Preferences
-    , Montague.Frontend.Pages.About
-    , Montague.Frontend.Pages.KnowledgeBase
-    , Montague.Frontend.Pages.SchemaManagement
+      Bedelibry.Parser.Markdown
+    , Bedelibry.Frontend
+    , Bedelibry.Frontend.Strings
+    , Bedelibry.Frontend.Route
+    , Bedelibry.Frontend.Utils
+    , Bedelibry.Frontend.Utils.Javascript
+    , Bedelibry.Frontend.TabDisplay
+    , Bedelibry.Frontend.NavBar
+    , Bedelibry.Frontend.Pages.Welcome
+    , Bedelibry.Frontend.Pages.Home
+    , Bedelibry.Frontend.Pages.Notes
+    , Bedelibry.Frontend.Pages.Schema
+    , Bedelibry.Frontend.Pages.Entity
+    , Bedelibry.Frontend.Pages.Types
+    , Bedelibry.Frontend.Pages.Preferences
+    , Bedelibry.Frontend.Pages.About
+    , Bedelibry.Frontend.Pages.KnowledgeBase
+    , Bedelibry.Frontend.Pages.SchemaManagement
   ghc-options: -Wall -Wredundant-constraints -Wincomplete-uni-patterns -Wincomplete-record-updates -O -fno-show-valid-hole-fits

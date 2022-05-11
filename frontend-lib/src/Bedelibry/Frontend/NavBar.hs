@@ -1,15 +1,15 @@
 {-# LANGUAGE PartialTypeSignatures, ImplicitParams, MultiParamTypeClasses, OverloadedStrings, LambdaCase, RecursiveDo, FlexibleContexts, DataKinds, GADTs #-}
 
-module Montague.Frontend.NavBar where
+module Bedelibry.Frontend.NavBar where
 
 import qualified Data.Text as T
-import qualified Montague.Frontend.Strings as Strings
-import Montague.Frontend.Utils
+import qualified Bedelibry.Frontend.Strings as Strings
+import Bedelibry.Frontend.Utils
 import Reflex.Dom.Core
 import Control.Monad
 import Data.Functor
-import Montague.Frontend.Route (Route, icon)
-import qualified Montague.Frontend.Route as Route
+import Bedelibry.Frontend.Route (Route, icon)
+import qualified Bedelibry.Frontend.Route as Route
 
 iOSNavBar :: _ => Dynamic t e -> Dynamic t PreferenceData -> [e] -> m (Event t e)
 iOSNavBar currentlySelected prefs tabs = let ?prefs = prefs in 

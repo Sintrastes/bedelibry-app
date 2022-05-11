@@ -1,7 +1,7 @@
 
 {-# LANGUAGE LambdaCase #-}
 
-module Montague.Frontend.Strings where
+module Bedelibry.Frontend.Strings where
 
 data Strings =
     Home
@@ -48,7 +48,7 @@ instance Show Strings where
         NewType       -> "New Type"
         Name          -> "Name"
         Description   -> "Description"
-        AppTitle      -> "Montague"
+        AppTitle      -> "Bedelibry"
         StylePrefHeader -> "Use Android style"
         StylePrefDescription -> "Specify whether or not to use the Android theme."
         DarkModePrefHeader -> "Enable dark mode"

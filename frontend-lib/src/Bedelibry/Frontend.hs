@@ -16,13 +16,13 @@
     , TemplateHaskell
     , QuasiQuotes #-}
 
-module Montague.Frontend where
+module Bedelibry.Frontend where
 
-import Montague.Frontend.Utils
-import Montague.Frontend.Utils.Javascript
-import Montague.Frontend.TabDisplay
-import Montague.Frontend.Pages.Preferences
-import Montague.Frontend.NavBar
+import Bedelibry.Frontend.Utils
+import Bedelibry.Frontend.Utils.Javascript
+import Bedelibry.Frontend.TabDisplay
+import Bedelibry.Frontend.Pages.Preferences
+import Bedelibry.Frontend.NavBar
 
 import System.Info
 import Control.Exception
@@ -53,18 +53,18 @@ import System.Directory
 import Data.List
 import Control.Monad.Tree
 
-import Montague.Frontend.Route (Route)
-import qualified Montague.Frontend.Route as Route
+import Bedelibry.Frontend.Route (Route)
+import qualified Bedelibry.Frontend.Route as Route
 
-import Montague.Frontend.Pages.Welcome
-import Montague.Frontend.Pages.Home
-import Montague.Frontend.Pages.Entity
-import Montague.Frontend.Pages.Types
-import Montague.Frontend.Pages.Schema
-import Montague.Frontend.Pages.About
-import Montague.Frontend.Pages.Notes
-import Montague.Frontend.Pages.KnowledgeBase
-import Montague.Frontend.Pages.SchemaManagement
+import Bedelibry.Frontend.Pages.Welcome
+import Bedelibry.Frontend.Pages.Home
+import Bedelibry.Frontend.Pages.Entity
+import Bedelibry.Frontend.Pages.Types
+import Bedelibry.Frontend.Pages.Schema
+import Bedelibry.Frontend.Pages.About
+import Bedelibry.Frontend.Pages.Notes
+import Bedelibry.Frontend.Pages.KnowledgeBase
+import Bedelibry.Frontend.Pages.SchemaManagement
 
 body :: _ => m ()
 body = mdo

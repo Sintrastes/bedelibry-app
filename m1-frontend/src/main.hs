@@ -1,7 +1,7 @@
 
 {-# LANGUAGE OverloadedStrings, PartialTypeSignatures #-}
 
-import Montague.Frontend
+import Bedelibry.Frontend
 import Reflex.Dom.Core
 import Language.Javascript.JSaddle.Warp
 
