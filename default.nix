@@ -14,11 +14,11 @@
 with obelisk;
 project ./. ({ pkgs, ... }: {
 
-  android.applicationId = "org.bedelibry.demos.montague";
-  android.displayName = "Montague App";
+  android.applicationId = "org.bedelibry.app";
+  android.displayName = "Bedelibry";
   android.resources = ./static/res;
-  ios.bundleIdentifier = "org.bedelibry.demos.montague";
-  ios.bundleName = "Montague App";
+  ios.bundleIdentifier = "org.bedelibry.app";
+  ios.bundleName = "Bedelibry";
 
   packages = {
     frontend-lib = ./frontend-lib;

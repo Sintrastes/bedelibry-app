@@ -70,8 +70,8 @@ body :: _ => m ()
 body = mdo
     -- Setup the application directory.
     montagueDir <- if "android" `isInfixOf` os
-        then pure "/data/data/org.bedelibry.demos.montague"
-        else liftFrontend "/" getHomeDirectory <&> (<> "/.montague")
+        then pure "/data/data/org.bedelibry.app"
+        else liftFrontend "/" getHomeDirectory <&> (<> "/.bedelibry")
 
     -- toastOnErrors $ liftFrontend (Right ()) $ catch
     --     (do createDirectoryIfMissing True montagueDir
