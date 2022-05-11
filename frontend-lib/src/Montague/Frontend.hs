@@ -122,8 +122,9 @@ body = mdo
 
             tab Route.About aboutPage
 
-            tab Route.SchemaManagement 
+            tab Route.SchemaManagement $
                 schemaManagementPage
+                    montagueDir
 
             pure prefs
 
