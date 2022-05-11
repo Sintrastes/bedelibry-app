@@ -32,6 +32,9 @@ import System.Info
 import System.Directory
 import Data.List
 
+schemaPath :: String
+schemaPath = "/data/kb/schema.mont"
+
 schemaPage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ mdo
     let headerAttrs = "style" =: 
@@ -44,7 +47,7 @@ schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> 
     
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
-        catch (readFile (montagueDir <> "/schema.mont"))
+        catch (readFile (montagueDir <> schemaPath))
             (\(e :: SomeException) -> return "")
 
     let textAttrs = "spellcheck" =: "false" <>
@@ -109,7 +112,7 @@ schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> 
         latestSchemaText <- sample $ current $ T.unpack <$>
               _textAreaElement_value schemaText
         res <- liftIO $ try $
-            writeFile (montagueDir <> "/schema.mont") latestSchemaText
+            writeFile (montagueDir <> schemaPath) latestSchemaText
 
         case res of
             Left (e :: IOException)  -> toast $ "Error saving schema: " <> T.pack (show e)

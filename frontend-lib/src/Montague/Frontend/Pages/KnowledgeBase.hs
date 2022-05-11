@@ -17,7 +17,7 @@ import Ast
 import Parser
 
 knowledgeBaseName :: String
-knowledgeBaseName = "/knowledge_base.pl"
+knowledgeBaseName = "/data/kb/ruleset.pl"
 
 knowledgeBasePage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe Program))
 knowledgeBasePage prefs montagueDir = let ?style = stylePref <$> prefs in noScrollPage $ do
