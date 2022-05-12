@@ -1,5 +1,5 @@
 
-{-# LANGUAGE PartialTypeSignatures, OverloadedStrings #-}
+{-# LANGUAGE PartialTypeSignatures, OverloadedStrings, ScopedTypeVariables #-}
 
 module Bedelibry.Frontend.Pages.SchemaManagement where
 
@@ -11,6 +11,8 @@ import qualified Data.Text as T
 
 schemaManagementPage :: _ => FilePath -> m ()
 schemaManagementPage montagueDir = do
-    dirs <- liftIO $ listDirectory $ montagueDir <> "/data/kb"
-    forM_ dirs $ \dir ->
-        el "p" $ text $ T.pack dir
+    prerender blank $ do
+        dirs <- liftIO $ listDirectory $ montagueDir <> "/data/kb"
+        forM_ dirs $ \dir ->
+            el "p" $ text $ T.pack dir
+    pure ()
