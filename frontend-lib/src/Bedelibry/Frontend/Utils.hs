@@ -82,6 +82,9 @@ example = mkForm $ do
         bind secondField
 -}
 
+divider :: _ => m ()
+divider = elClass "div" "divider" $ pure ()
+
 data Style =
     Android
   | IOS

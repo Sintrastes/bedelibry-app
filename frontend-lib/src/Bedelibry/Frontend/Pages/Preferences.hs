@@ -30,9 +30,6 @@ prefRow x = elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
 prefHeader :: _ => T.Text -> m ()
 prefHeader headerText = elAttr "p" ("style" =: "font-weight: bold;") $ text headerText
 
-divider :: _ => m ()
-divider = elClass "div" "divider" $ pure ()
-
 checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
 checkboxPref header description initialValue = do
     res <- prefRow $ do
