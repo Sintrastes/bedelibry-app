@@ -67,6 +67,7 @@ a.btn:hover {
 
 body {
   background-color: var(--background-color);
+  opacity: var(--background-opacity);
   transition: background-color 0.5s ease-in;
 }
 
