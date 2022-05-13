@@ -47,7 +47,7 @@ iOSNavButton isSelected label icon = el "div" $ do
 androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, Event t ())
 androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
-            Android -> "class" =: "unselectable nav-wrapper white"
+            Android -> "class" =: "unselectable nav-wrapper"
             Gtk     -> "class" =: "unselectable gtk-navbar"
             _       -> "style" =: "display: none;"
 
@@ -85,16 +85,16 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
     (navBarEvents, toggleMenuEvent, addBtnClicks) <- elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
-            elClass "i" "material-icons grey-text" $ text "menu"
+            elClass "i" "material-icons" $ text "menu"
         
         elDynAttr "div" filterIconAttrs $ do
-            elAttr "i" ("data-feather" =: "filter" <> "class" =: "grey-text" <> "style" =: "display:block; margin: 15px;") blank
+            elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") blank
         addBtnClicks <- elDynAttr' "a" addIconAttrs $ do
-            elAttr "i" ("data-feather" =: "plus" <> "class" =: "grey-text" <> "style" =: "display:block; margin: 15px;") blank
+            elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") blank
         elDynAttr' "a" saveIconAttrs $ do
-            elAttr "i" ("data-feather" =: "save" <> "class" =: "grey-text" <> "style" =: "display:block; margin: 15px;") blank
+            elAttr "i" ("data-feather" =: "save" <> "style" =: "display:block; margin: 15px;") blank
         elDynAttr' "a" exportIconAttrs $ do
-            elAttr "i" ("class" =: "material-icons grey-text") $ 
+            elAttr "i" ("class" =: "material-icons") $ 
                 text "import_export"
         
         elAttr "ul" ("id" =: "nav-mobile" <> "class" =: "left hide-on-med-and-down") $ do

@@ -144,10 +144,25 @@ body = mdo
     prerender (pure ()) $
         initialPref & stylePref & updateCSS
 
+    prerender (pure ()) $
+        initialPref & updateCssColors
+
     prerender (pure never) $ performEvent $ updated (prefs <&> stylePref) <&> 
         updateCSS
 
+    prerender (pure never) $ performEvent $ updated prefs <&> 
+        updateCssColors
+
     pure ()
+
+updateCssColors :: _ => PreferenceData -> m ()
+updateCssColors prefs = case darkMode prefs of
+    True -> 
+        modifyLink "material-colors"
+            "https://sintrastes.github.io/demos/montague/material-colors-dark.css"
+    False -> 
+        modifyLink "material-colors"
+            "https://sintrastes.github.io/demos/montague/material-colors-default.css"
 
 updateCSS :: _ => Style -> m ()
 updateCSS = \case

@@ -37,6 +37,7 @@ header = do
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
   elAttr "link" (
+    "id" =: "material-colors" <>
     "href" =: "https://sintrastes.github.io/demos/montague/material-colors-default.css" <>
     "type" =: "text/css" <>
     "rel" =: "stylesheet") blank
