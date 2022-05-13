@@ -52,7 +52,7 @@ instance Show Strings where
         StylePrefHeader -> "Use Android style"
         StylePrefDescription -> "Specify whether or not to use the Android theme."
         DarkModePrefHeader -> "Enable dark mode"
-        DarkModePrefDescription -> "Speicfy whether or not darn mode is enabled."
+        DarkModePrefDescription -> "Speicfy whether or not dark mode is enabled."
         Small  -> "Small"
         Medium -> "Medium"
         Large  -> "Large"
