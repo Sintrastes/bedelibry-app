@@ -162,7 +162,7 @@ scrollPage x = elAttr "div" ("class" =: "column") x
 --    depending on the currently set style.
 button label = do
     let attributes = ?style <&> \case
-          Android     -> "class" =: "waves-effect waves-light btn light-blue"
+          Android     -> "class" =: "waves-effect waves-light btn"
           UbuntuTouch -> "data-role" =: "button"
           IOS         -> "class" =: "p-btn p-btn-mob"
           Gtk         -> "class" =: "gtk-btn"
