@@ -1,11 +1,11 @@
 [package]
-name = "montague"
+name = "bedelibry"
 version = "0.1.0"
-description = "A frontend for Montague"
+description = "A frontend for Bedelibry"
 authors = ["Nathan Bedell"]
 license = ""
 repository = ""
-default-run = "montague"
+default-run = "bedelibry"
 edition = "2021"
 rust-version = "1.57"
 
