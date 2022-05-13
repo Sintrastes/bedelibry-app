@@ -30,6 +30,23 @@ html {
   cursor: pointer;
 }
 
+nav {
+  color: var(--navbar-text-color);
+  background-color: var(--narbar-color);
+  transition: background-color 0.5s ease-in;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.5s ease-in;
+}
+
+.light-text {
+  color: var(--text-color-light);
+  transition: color 0.5s ease-in;
+}
+
 .yellow-led {
   height: 0.65em;
   width: 0.65em;

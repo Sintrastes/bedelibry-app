@@ -27,7 +27,7 @@ welcomePage prefs = let ?style = stylePref <$> prefs in do
 
     elAttr "div" bottomDivAttrs $ do
         res <- checkbox "" False
-        elClass "p" "grey-text text-lighten-1" $ 
+        elClass "p" "light-text" $ 
             text "Don't show this page in the future"
         pure $ updated res
   where
