@@ -130,4 +130,4 @@ sidebarButton x = li $
 
 navButton x = li $
     domEvent Click . fst <$>
-        elClass' "a" "grey-text" (text x)
+        el' "a" (text x)
