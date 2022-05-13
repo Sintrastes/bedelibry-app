@@ -45,6 +45,11 @@ nav a {
   transition: color 0.5s ease-in;
 }
 
+#nav-mobile a {
+  color: var(--navbar-text-color);
+  transition: color 0.5s ease-in;
+}
+
 nav svg {
   color: var(--navbar-text-color);
   transition: color 0.5s ease-in;
@@ -55,6 +60,16 @@ a.btn {
 }
 
 body {
+  background-color: var(--background-color);
+  transition: background-color 0.5s ease-in;
+}
+
+ul.collection {
+  background-color: var(--background-color);
+  transition: background-color 0.5s ease-in;
+}
+
+.collection li.collection-item {
   background-color: var(--background-color);
   transition: background-color 0.5s ease-in;
 }
