@@ -51,6 +51,7 @@
     "allowlist": {
       "all": true
     },
+    "macOSPrivateApi": true,
     "windows": [
       {
         "title": "Montague",
