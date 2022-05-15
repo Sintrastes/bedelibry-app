@@ -76,6 +76,12 @@ section {
   transition: all 0.5s ease-in;
 }
 
+section[data-role=list] {
+  background-color: transparent;
+  color: var(--text-color);
+  transition: all 0.5s ease-in;
+}
+
 .modal .modal-footer {
   background-color: var(--modal-background-color);
   color: var(--text-color);
@@ -83,12 +89,12 @@ section {
 }
 
 ul.collection {
-  background-color: var(--background-color);
+  background-color: transparent;
   transition: background-color 0.5s ease-in;
 }
 
 .collection li.collection-item {
-  background-color: var(--background-color);
+  background-color: transparent;
   transition: background-color 0.5s ease-in;
 }
 
