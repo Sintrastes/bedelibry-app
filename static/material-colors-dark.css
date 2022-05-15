@@ -2,7 +2,7 @@
 :root {
     --navbar-text-color: #ffffff;
     --narbar-color: #0d47a1;
-    --background-color: #000000;
+    --background-color: rgba(0,0,0,0.30);
     --text-color: #ffffff;
     --text-color-light: #ffffff;
     --button-color: #0d47a1;

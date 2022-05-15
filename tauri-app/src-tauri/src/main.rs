@@ -11,8 +11,7 @@ fn main() {
       let window = app.get_window("main").unwrap();
       
       window.eval("window.location.replace('http://127.0.0.1:3911')")?;
-      window.eval("window.transparent = true")?;
-
+      
       Ok(())
     })
     .run(tauri::generate_context!())
