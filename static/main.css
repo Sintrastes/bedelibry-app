@@ -96,6 +96,12 @@ ul.collection {
   color: var(--text-color-light);
 }
 
+.dropdown-content {
+  background-color: var(--modal-background-color);
+  color: var(--select-color);
+}
+
+
 p, span, h1, h2, h3, h4, h5 {
   color: var(--text-color);
   transition: color 0.5s ease-in;
