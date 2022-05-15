@@ -47,12 +47,12 @@ iOSNavButton isSelected label icon = el "div" $ do
 androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, Event t ())
 androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
-            Android -> "class" =: "unselectable nav-wrapper"
-            Gtk     -> "class" =: "unselectable gtk-navbar"
+            Android -> "data-tauri-drag-region" =: "" <> "class" =: "unselectable nav-wrapper"
+            Gtk     -> "data-tauri-drag-region" =: "" <> "class" =: "unselectable gtk-navbar"
             _       -> "style" =: "display: none;"
 
     let navMenuAttrs = ?style <&> \case
-            Android -> "class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =:"on"
+            Android -> "class" =: "unselectable-btn sidenav-trigger" <> "unselectable" =: "on"
             _       -> "style" =: "display: none;"
 
     let filterIconAttrs = currentPage <&> \case
