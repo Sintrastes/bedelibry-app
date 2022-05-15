@@ -1,4 +1,4 @@
-{-# LANGUAGE ImplicitParams, OverloadedStrings, PartialTypeSignatures, LambdaCase, ScopedTypeVariables #-}
+{-# LANGUAGE ImplicitParams, RecursiveDo, OverloadedStrings, PartialTypeSignatures, LambdaCase, ScopedTypeVariables #-}
 
 module Bedelibry.Frontend.Pages.KnowledgeBase where
 
@@ -20,7 +20,7 @@ knowledgeBaseName :: String
 knowledgeBaseName = "/data/kb/ruleset.pl"
 
 knowledgeBasePage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe Program))
-knowledgeBasePage prefs montagueDir = let ?style = stylePref <$> prefs in noScrollPage $ do
+knowledgeBasePage prefs montagueDir = let ?style = stylePref <$> prefs in noScrollPage $ mdo
     -- Load the knowledge base from disk.
     kbSchemaText <- liftFrontend "" $
         catch (readFile (montagueDir <> knowledgeBaseName))
@@ -41,15 +41,15 @@ knowledgeBasePage prefs montagueDir = let ?style = stylePref <$> prefs in noScro
             .~ T.pack kbSchemaText
      )
 
-    saveEvent <- button "save"
-
-    let parsedClauses = clausesFromString "" . T.unpack <$> 
-            _textAreaElement_value kbText
-
     small $ elAttr "p" ("style" =: "margin-left: 1em;" <> "class" =: "unselectable") $
         dynText $ parsedClauses <&> (\case
             Left e  -> "❌ " <> T.pack (show Strings.InvalidRuleset) <> ": " <> T.pack (show e)
             Right x -> "✅ " <> T.pack (show Strings.RulesetValid) <> ".")
+
+    saveEvent <- button "save"
+
+    let parsedClauses = clausesFromString "" . T.unpack <$> 
+            _textAreaElement_value kbText
 
     -- Persit the knowledge base to disk upon pressing save
     prerender (pure never) $ performEvent $ saveEvent <&> (\_ -> do

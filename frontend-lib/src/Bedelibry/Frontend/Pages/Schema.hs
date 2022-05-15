@@ -37,13 +37,8 @@ schemaPath = "/data/kb/schema.mont"
 
 schemaPage :: _ => Dynamic t PreferenceData -> FilePath -> m (Dynamic t (Maybe SomeLexicon))
 schemaPage prefs montagueDir = let ?prefs = prefs in let ?style = stylePref <$> prefs in noScrollPage $ mdo
-    let headerAttrs = "style" =: 
-            ("display: flex;" <> "justify-content: space-between;" <> 
-            "align-items: center;" <> "margin-top:7.5px;")
-
-    elAttr "div" headerAttrs $ do
-        appText $
-            T.pack $ show Strings.EnterSchema
+    appText $
+        T.pack $ show Strings.EnterSchema
     
     -- Load the schema from disk.
     loadedSchemaText <- liftFrontend "" $
