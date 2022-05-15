@@ -92,6 +92,10 @@ ul.collection {
   transition: background-color 0.5s ease-in;
 }
 
+.btn-flat {
+  color: var(--text-color-light);
+}
+
 p, span, h1, h2, h3, h4, h5 {
   color: var(--text-color);
   transition: color 0.5s ease-in;
