@@ -47,8 +47,8 @@ iOSNavButton isSelected label icon = el "div" $ do
 androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, Event t ())
 androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
-            Android -> "data-tauri-drag-region" =: "" <> "class" =: "unselectable nav-wrapper"
-            Gtk     -> "data-tauri-drag-region" =: "" <> "class" =: "unselectable gtk-navbar"
+            Android -> "class" =: "unselectable nav-wrapper"
+            Gtk     -> "class" =: "unselectable gtk-navbar"
             _       -> "style" =: "display: none;"
 
     let navMenuAttrs = ?style <&> \case
@@ -83,7 +83,7 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
         pure $ leftmost tabEvents
 
-    (navBarEvents, toggleMenuEvent, addBtnClicks) <- elDynAttr "nav" navAttrs $ el "div" $ do
+    (navBarEvents, toggleMenuEvent, addBtnClicks) <- elAttr "div" ("data-tauri-drag-region" =: "" <> "style" =: "user-select: none;") $ elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
         
