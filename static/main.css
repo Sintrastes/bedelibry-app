@@ -77,7 +77,7 @@ section {
 }
 
 .modal .modal-footer {
-  background-color: var(--background-color);
+  background-color: var(--modal-background-color);
   color: var(--text-color);
   transition: all 0.5s ease-in;
 }
@@ -113,9 +113,7 @@ a.text-link {
 }
 
 .input-field input[type=text]:not(.browser-default):focus + label {
-  border-bottom: 1px solid var(--input-focus-color);
-  -webkit-box-shadow: 0 1px 0 0 var(--input-focus-color);
-  box-shadow: 0 1px 0 0 var(--input-focus-color);
+  color: var(--input-focus-color);
 }
 
 input {
