@@ -76,7 +76,7 @@ section {
   transition: all 0.5s ease-in;
 }
 
-section div.modal-footer {
+.modal .modal-footer {
   background-color: var(--background-color);
   color: var(--text-color);
   transition: all 0.5s ease-in;
