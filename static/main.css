@@ -72,12 +72,14 @@ body {
 
 section {
   background-color: var(--background-color);
-  transition: background-color 0.5s ease-in;
+  color: var(--text-color);
+  transition: all 0.5s ease-in;
 }
 
-section {
+section div.modal-footer {
+  background-color: var(--background-color);
   color: var(--text-color);
-  transition: color 0.5s ease-in;
+  transition: all 0.5s ease-in;
 }
 
 ul.collection {

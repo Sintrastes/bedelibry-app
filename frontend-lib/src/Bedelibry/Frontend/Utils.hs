@@ -341,7 +341,7 @@ modal onClick contents = mdo
             (Android, Closed) -> "style" =: "display: none;"
             (Android, Open)   -> "class" =: "modal open" <>
                 "style" =: ("overflow: visible;" <> "z-index: 1003;" <>
-                    "display: block;" <> "opacity: 1;" <>
+                    "display: block;" <> "background-color: transparent;" <>
                     "top: 10%;" <> "transform: scaleX(1) scaleY(1);")
             (UbuntuTouch, Closed)   -> "data-role" =: "dialog" <>
                 "style" =: "display: none;"
