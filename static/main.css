@@ -97,7 +97,7 @@ p, span, h1, h2, h3, h4, h5 {
   transition: color 0.5s ease-in;
 }
 
-a:text-link {
+a.text-link {
   color: var(--link-color);
 }
 
