@@ -106,10 +106,10 @@ a.text-link {
   transition: color 0.5s ease-in;
 }
 
-input[type=text]:focus, textarea:focus {
-  border-bottom: 1px solid var(--input-select-color);
-  -webkit-box-shadow: 0 1px 0 0 var(--input-select-color);
-  box-shadow: 0 1px 0 0 var(--input-select-color);
+.input-field input[type=text]:focus, textarea:focus {
+  border-bottom: 1px solid var(--input-focus-color);
+  -webkit-box-shadow: 0 1px 0 0 var(--input-focus-color);
+  box-shadow: 0 1px 0 0 var(--input-focus-color);
 }
 
 input {
