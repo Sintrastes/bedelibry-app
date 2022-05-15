@@ -94,6 +94,15 @@ a:text-link {
   transition: color 0.5s ease-in;
 }
 
+input[type=text] {
+  color: var(--text-color);
+}
+
+textarea {
+  color: var(--text-color);
+}
+
+
 .yellow-led {
   height: 0.65em;
   width: 0.65em;
