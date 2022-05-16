@@ -28,14 +28,14 @@ prefRow :: _ => m a -> m a
 prefRow x = elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
 
 prefHeader :: _ => T.Text -> m ()
-prefHeader headerText = elAttr "p" ("style" =: "font-weight: bold;") $ text headerText
+prefHeader headerText = elAttr "p" ("class" =: "unselectable" <> "style" =: "font-weight: bold;") $ text headerText
 
 checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
 checkboxPref header description initialValue = do
     res <- prefRow $ do
         elClass "div" "col s10" $ do
             prefHeader header
-            el "p" $ text description
+            elClass "p" "unselectable" $ text description
         elAttr "div" ("class" =: "col s2 valign-wrapper" <> "style" =: "height: 7.5em;") $ 
             checkbox "" initialValue
 
@@ -47,7 +47,7 @@ radioPref :: (Eq a, PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadH
 radioPref header description values initialValue = do
     modalDismissEvent <- prefRow $ elClass "div" "col s10" $ do
         prefHeader header
-        el "p" $ text description
+        elClass "p" "unselectable" $ text description
         onClick <- button "Open"
         modal onClick $ do
             el "h5" $ text header
