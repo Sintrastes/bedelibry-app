@@ -10,6 +10,11 @@ html {
   height: 85vh;
 }
 
+.w3-sidebar {
+  background-color: var(--modal-background-color);
+  color: var(--text-color-light);
+}
+
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -112,7 +117,11 @@ ul.collection {
   border-bottom: 2px solid var(--input-focus-color);
 }
 
-[type="radio"].with-gap:checked+label:after {
+[type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:after {
+  background-color: var(--input-focus-color) !important;
+}
+
+[type="radio"]:checked+span:after, [type="radio"].with-gap:checked+span:before, [type="radio"].with-gap:checked+span:after {
   background-color: var(--input-focus-color) !important;
 }
 
