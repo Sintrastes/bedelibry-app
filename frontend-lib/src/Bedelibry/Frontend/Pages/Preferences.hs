@@ -82,7 +82,7 @@ preferencePage hideWelcomeUpdates prefs montagueDir = let ?prefs = prefs in let 
 
     styleUpdated <- radioPref (T.pack $ show Strings.StylePrefHeader)
         (T.pack $ show Strings.StylePrefDescription)
-        [Android, IOS, UbuntuTouch, Gtk]
+        [Android, IOS, UbuntuTouch, Gtk, Windows, MacOS]
         (loadedPrefs & stylePref)
 
     darkMode <- checkboxPref (T.pack $ show Strings.DarkModePrefHeader)

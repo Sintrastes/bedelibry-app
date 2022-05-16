@@ -89,15 +89,19 @@ data Style =
     Android
   | IOS
   | UbuntuTouch
-  | Gtk deriving(Eq)
+  | Gtk 
+  | Windows
+  | MacOS deriving(Eq)
 
 $(deriveJSON defaultOptions ''Style)
 
 instance Show Style where
     show Android = "Material Design Theme (Android)"
-    show IOS = "iOS"
-    show UbuntuTouch = "Ubuntu Touch"
-    show Gtk = "GTK theme (Linux)"
+    show IOS = "iOS Theme"
+    show UbuntuTouch = "Ubuntu Touch Theme"
+    show Gtk = "GTK Theme (Linux)"
+    show Windows = "Windows 10 Theme"
+    show MacOS = "Mac OS Theme"
 
 data TextSize =
       Small
