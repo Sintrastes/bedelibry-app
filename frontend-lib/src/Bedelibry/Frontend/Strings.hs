@@ -50,7 +50,7 @@ instance Show Strings where
         Description   -> "Description"
         AppTitle      -> "Bedelibry"
         StylePrefHeader -> "Configure Style"
-        StylePrefDescription -> "Specify which overaching style to use with Bedelibry."
+        StylePrefDescription -> "Specify which overarching style to use with Bedelibry."
         DarkModePrefHeader -> "Enable dark mode"
         DarkModePrefDescription -> "Specify whether or not dark mode is enabled."
         Small  -> "Small"

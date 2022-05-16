@@ -94,10 +94,10 @@ data Style =
 $(deriveJSON defaultOptions ''Style)
 
 instance Show Style where
-    show Android = "Android"
+    show Android = "Material Design Theme (Android)"
     show IOS = "iOS"
     show UbuntuTouch = "Ubuntu Touch"
-    show Gtk = "Linux (GTK)"
+    show Gtk = "GTK theme (Linux)"
 
 data TextSize =
       Small
