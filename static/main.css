@@ -107,6 +107,10 @@ ul.collection {
   color: var(--select-color);
 }
 
+[type="checkbox"]:checked+span:not(.lever):before {
+  border-right: 2px solid var(--input-focus-color);
+  border-bottom: 2px solid var(--input-focus-color);
+}
 
 p, span, h1, h2, h3, h4, h5 {
   color: var(--text-color);
