@@ -43,6 +43,19 @@ checkboxPref header description initialValue = do
 
     pure res
 
+multiSelectPref :: _ => T.Text -> T.Text -> [a] -> [a] -> m (Dynamic t [a])
+multiSelectPref header description values initialValue = do
+    res <- prefRow $ do
+        elClass "div" "col s10" $ do
+            prefHeader header
+            elClass "p" "unselectable" $ text description
+        elAttr "div" ("class" =: "col s2 valign-wrapper" <> "style" =: "height: 7.5em;") $ 
+            multiSelect values initialValue
+
+    divider
+
+    pure res
+
 radioPref :: (Eq a, PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
 radioPref header description values initialValue = do
     modalDismissEvent <- prefRow $ elClass "div" "col s10" $ do
