@@ -29,7 +29,7 @@ import Data.Function
 import Data.Functor
 import Data.Default
 import Control.Lens.Operators
-import Data.Map
+import Data.Map hiding(filter, map)
 import Control.Monad.Fix
 import Control.Monad
 import Data.Profunctor
@@ -319,7 +319,7 @@ modal onClick contents = mdo
                 elAttr' "a" cancelAttrs
                     (text "Cancel")
             onSubmit <- domEvent Click . fst <$>
-                elAttr' "a" okAttrs 
+                elAttr' "a" okAttrs
                     (text "Ok")
 
             pure (onCancel, onSubmit)
@@ -371,6 +371,13 @@ data ModalEvent =
       Open
     | Closed
 
+multiSelect :: _ => [a] -> [a] -> m (Dynamic t [a])
+multiSelect options initialValue = do
+    checkedDyn <- sequence <$> forM options (\option ->
+        checkbox (T.pack $ show option) (option `elem` initialValue))
+    return $ checkedDyn <&> \checked -> 
+        map fst $ filter snd $ zip options checked
+
 -- | A styled text entry from Materialize.css with a label.
 labeledTextEntry :: _ => T.Text -> m (Dynamic t (InputElement EventResult (DomBuilderSpace m) t))
 labeledTextEntry label = elClass "div" "input-field col" $ do
@@ -412,8 +419,8 @@ autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
 
     let dropdownAttrs = "class" =: "autocomplete-content dropdown-content" <>
             "style" =: ("display: block; width: 99%;"<>
-               "top: 43px;left:2px; height: auto;" <> 
-               "transform-origin: 0px 0px;" <> 
+               "top: 43px;left:2px; height: auto;" <>
+               "transform-origin: 0px 0px;" <>
                "opacity: 1; transform: scaleX(1) scaleY(1);")
 
     elAttr "ul" dropdownAttrs $ do
@@ -423,7 +430,7 @@ autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
 
     pure $ res & _inputElement_value
   where
-    attrs = "type" =: "text" <> 
+    attrs = "type" =: "text" <>
         "class" =: "p-form-text p-form-no-validate"
 
 
