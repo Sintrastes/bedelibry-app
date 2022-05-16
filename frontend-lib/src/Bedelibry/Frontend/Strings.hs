@@ -52,7 +52,7 @@ instance Show Strings where
         StylePrefHeader -> "Configure Style"
         StylePrefDescription -> "Specify which overaching style to use with Bedelibry."
         DarkModePrefHeader -> "Enable dark mode"
-        DarkModePrefDescription -> "Speicfy whether or not dark mode is enabled."
+        DarkModePrefDescription -> "Specify whether or not dark mode is enabled."
         Small  -> "Small"
         Medium -> "Medium"
         Large  -> "Large"
