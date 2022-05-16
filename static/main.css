@@ -112,6 +112,10 @@ ul.collection {
   border-bottom: 2px solid var(--input-focus-color);
 }
 
+[type="radio"].with-gap:checked+label:after {
+  background-color: var(--input-focus-color) !important;
+}
+
 p, span, h1, h2, h3, h4, h5 {
   color: var(--text-color);
   transition: color 0.5s ease-in;
