@@ -76,7 +76,7 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
             _                   -> "style" =: "display: none;"
 
     -- Nav bar menu
-    navPaneEvents <- elDynAttr "div" sidebarAttrs $ ul $ do
+    (navPane, navPaneEvents) <- elDynAttr' "div" sidebarAttrs $ ul $ do
         tabEvents        <- forM tabs (\tab -> do
             events <- sidebarButton (T.pack $ show tab)
             pure $ tab <$ events)
@@ -104,10 +104,13 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
             pure (leftmost menuEvents, domEvent Click (fst navMenu), domEvent Click (fst addBtnClicks))
 
-    sidebarOpened <- accumDyn (\s _ -> not s) False
-        (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents])
+    let outsideNavBarEvents = difference (domEvent Click overlay)
+            (domEvent Click navPane)
 
-    elDynAttr "div" overlayAttrs blank
+    sidebarOpened <- accumDyn (\s _ -> not s) False
+        (leftmost [() <$ toggleMenuEvent, () <$ navPaneEvents, () <$ outsideNavBarEvents])
+
+    (overlay, _) <- elDynAttr' "div" overlayAttrs blank
 
     let sidebarAttrs = sidebarOpened <&> \isOpened ->
           "class" =: "w3-sidebar w3-bar-block w3-border-right" <>
