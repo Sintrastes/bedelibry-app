@@ -100,7 +100,7 @@ entityPage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?sty
 enumValues :: (Bounded a, Enum a) => [a]
 enumValues = [minBound..maxBound]
 
-filterDialog :: _ => Event t () -> [typ] ->  m (Dynamic t (Endo [a]))
+filterDialog :: _ => Event t () -> [typ] -> m (Dynamic t (Endo [a]))
 filterDialog onClick types = do
     submitEvent <- modal onClick $ do
         modalHeader "Filter entities"

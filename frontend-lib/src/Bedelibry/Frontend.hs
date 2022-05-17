@@ -78,7 +78,7 @@ body = mdo
     --         pure $ Right ())
     --     (\(e :: SomeException) -> pure $ Left e)
 
-    (topNavEvents, addBtnClicks) <- androidNavBar currentPage prefs Route.pagesWithTabs
+    (topNavEvents, navBar) <- androidNavBar currentPage prefs Route.pagesWithTabs
 
     let navEvents = leftmost [
             switch $ current $ leftmost <$> pageNavEvents, 
@@ -108,13 +108,13 @@ body = mdo
 
             tab (Route.Entities Nothing) $ entityPage 
                 -- Only pass in events when on this page.
-                (gate (whenPageIs $ Route.Entities Nothing) addBtnClicks)
+                (gate (whenPageIs $ Route.Entities Nothing) $ addBtnClicks navBar)
                 prefs 
                 maybeParsedSchema
 
             tab (Route.Types Nothing) $ typePage 
                 -- Only pass in events when on this page.
-                (gate (whenPageIs $ Route.Types Nothing) addBtnClicks) 
+                (gate (whenPageIs $ Route.Types Nothing) $ addBtnClicks navBar) 
                 prefs 
                 maybeParsedSchema
 

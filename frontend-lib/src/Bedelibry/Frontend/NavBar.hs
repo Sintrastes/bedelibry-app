@@ -43,8 +43,15 @@ iOSNavButton isSelected label icon = el "div" $ do
             icon
             text label)
 
+data NavBarEvents t = NavBarEvents {
+    filterBtnClicks :: Event t (),
+    addBtnClicks    :: Event t (),
+    saveBtnClicks   :: Event t (),
+    importExportBtnCLicks :: Event t ()
+}
+
 -- | Nav bar widget. Only shown with an Android style enabled.
-androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, Event t ())
+androidNavBar :: _ => Dynamic t Route -> Dynamic t PreferenceData -> [e] -> m (Event t e, NavBarEvents t)
 androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = stylePref <$> prefs in mdo
     let navAttrs = ?style <&> \case
             Android -> "class" =: "unselectable nav-wrapper"
@@ -83,17 +90,17 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
 
         pure $ leftmost tabEvents
 
-    (navBarEvents, toggleMenuEvent, addBtnClicks) <- elAttr "div" ("data-tauri-drag-region" =: "" <> "style" =: "user-select: none;") $ elDynAttr "nav" navAttrs $ el "div" $ do
+    (navBarEvents, toggleMenuEvent, navBarBtnEvents) <- elAttr "div" ("data-tauri-drag-region" =: "" <> "style" =: "user-select: none;") $ elDynAttr "nav" navAttrs $ el "div" $ do
         navMenu <- elDynAttr' "a" navMenuAttrs $
             elClass "i" "material-icons" $ text "menu"
         
-        elDynAttr "div" filterIconAttrs $ do
+        filterBtnClicks <- elDynAttr' "div" filterIconAttrs $ do
             elAttr "i" ("data-feather" =: "filter" <> "style" =: "display:block; margin: 15px;") blank
         addBtnClicks <- elDynAttr' "a" addIconAttrs $ do
             elAttr "i" ("data-feather" =: "plus" <> "style" =: "display:block; margin: 15px;") blank
-        elDynAttr' "a" saveIconAttrs $ do
+        saveBtnClicks <- elDynAttr' "a" saveIconAttrs $ do
             elAttr "i" ("data-feather" =: "save" <> "style" =: "display:block; margin: 15px;") blank
-        elDynAttr' "a" exportIconAttrs $ do
+        importExportBtnClicks <- elDynAttr' "a" exportIconAttrs $ do
             elAttr "i" ("class" =: "material-icons") $ 
                 text "import_export"
         
@@ -102,7 +109,13 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
                 btnEvents <- navButton (T.pack $ show tab)
                 pure $ tab <$ btnEvents)
 
-            pure (leftmost menuEvents, domEvent Click (fst navMenu), domEvent Click (fst addBtnClicks))
+            let navBarBtnEvents = NavBarEvents 
+                    (domEvent Click (fst filterBtnClicks))
+                    (domEvent Click (fst addBtnClicks))
+                    (domEvent Click (fst saveBtnClicks))
+                    (domEvent Click (fst importExportBtnClicks))
+
+            pure (leftmost menuEvents, domEvent Click (fst navMenu), navBarBtnEvents)
 
     let outsideNavBarEvents = difference (domEvent Click overlay)
             (domEvent Click navPane)
@@ -124,7 +137,9 @@ androidNavBar currentPage prefs tabs = let ?prefs = prefs in let ?style = styleP
                 then "style" =: "display: block; opacity: 1;"
                 else "style" =: "display: none;"
 
-    pure (leftmost [navBarEvents, navPaneEvents], addBtnClicks)
+    pure (
+        leftmost [navBarEvents, navPaneEvents]
+      , navBarBtnEvents)
 
 sidebarButton x = li $
     domEvent Click . fst <$>
