@@ -37,8 +37,8 @@ import Control.Monad
 import Control.Monad.Fix
 import Reflex.DynamicWriter.Base
 
-entityPage ::  _ => Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
-entityPage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
+entityPage ::  _ => Event t () -> Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
+entityPage addBtnClicks filterBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?style = stylePref <$> prefs in scrollPage $ elAttr "section" ("data-role" =: "list") $ do
     modal addBtnClicks $ do
         modalHeader "Add a new entity"
 
@@ -60,6 +60,9 @@ entityPage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?sty
             let entities = getEntities pA
             let types = fmap (bfs . typeOfAtom semantics) entities
             let typingPairs = zip entities types
+
+            filterDialog filterBtnClicks types
+
             case entities of
                 [] -> elAttr "div" centerContent $
                     el "div" $ do

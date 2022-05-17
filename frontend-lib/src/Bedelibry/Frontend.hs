@@ -109,6 +109,7 @@ body = mdo
             tab (Route.Entities Nothing) $ entityPage 
                 -- Only pass in events when on this page.
                 (gate (whenPageIs $ Route.Entities Nothing) $ addBtnClicks navBar)
+                (gate (whenPageIs $ Route.Entities Nothing) $ filterBtnClicks navBar)
                 prefs 
                 maybeParsedSchema
 
