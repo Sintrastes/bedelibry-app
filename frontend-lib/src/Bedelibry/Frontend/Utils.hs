@@ -89,7 +89,7 @@ data Style =
     Android
   | IOS
   | UbuntuTouch
-  | Gtk 
+  | Gtk
   | Windows
   | MacOS deriving(Eq)
 
@@ -270,6 +270,15 @@ checkbox label initialValue = do
         text label
         return res
 
+rangeSelect :: _ => Int -> Int -> Int -> m (Dynamic t Int)
+rangeSelect minValue maxValue initialValue = do
+    el "form" $
+        elClass "p" "range-field" $
+            elAttr "input" ("type" =: "range" <> 
+                "min" =: T.pack (show minValue) <>
+                "max" =: T.pack (show maxValue)) blank
+    return $ pure initialValue
+
 appText :: _ => T.Text -> m ()
 appText x =  elDynAttr "p" attrs $ text x
   where attrs = ?prefs <&> textSize <&> \case
@@ -379,7 +388,7 @@ multiSelect :: _ => [a] -> [a] -> m (Dynamic t [a])
 multiSelect options initialValue = do
     checkedDyn <- sequence <$> forM options (\option ->
         checkbox (T.pack $ show option) (option `elem` initialValue))
-    return $ checkedDyn <&> \checked -> 
+    return $ checkedDyn <&> \checked ->
         map fst $ filter snd $ zip options checked
 
 -- | A styled text entry from Materialize.css with a label.
