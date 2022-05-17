@@ -109,6 +109,9 @@ ul.collection {
 
 .dropdown-content {
   background-color: var(--modal-background-color);
+}
+
+.dropdown-content li {
   color: var(--select-color);
 }
 
