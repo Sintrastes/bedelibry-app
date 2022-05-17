@@ -24,15 +24,18 @@ import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Fix
 
-prefRow :: _ => m a -> m a
-prefRow x = elAttr "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
+prefRow :: _ => m a -> m (a, Event t ())
+prefRow x = do
+    (e, res) <- elAttr' "div" ("class" =: "row" <> "style" =: "margin-bottom: 0;") x
+
+    pure (res, domEvent Click e)
 
 prefHeader :: _ => T.Text -> m ()
 prefHeader headerText = elAttr "p" ("class" =: "unselectable" <> "style" =: "font-weight: bold;") $ text headerText
 
 checkboxPref :: _ => T.Text -> T.Text -> Bool -> m (Dynamic t Bool)
 checkboxPref header description initialValue = do
-    res <- prefRow $ do
+    (res, _) <- prefRow $ do
         elClass "div" "col s10" $ do
             prefHeader header
             elClass "p" "unselectable" $ text description
@@ -45,7 +48,7 @@ checkboxPref header description initialValue = do
 
 multiSelectPref :: _ => T.Text -> T.Text -> [a] -> [a] -> m (Dynamic t [a])
 multiSelectPref header description values initialValue = do
-    res <- prefRow $ do
+    (res, _) <- prefRow $ do
         elClass "div" "col s10" $ do
             prefHeader header
             elClass "p" "unselectable" $ text description
@@ -58,13 +61,13 @@ multiSelectPref header description values initialValue = do
 
 radioPref :: (Eq a, PostBuild t m, MonadFix m, ?style :: Dynamic t Style, MonadHold t m, DomBuilder t m, Show a) => T.Text -> T.Text -> [a] -> a -> m (Dynamic t a)
 radioPref header description values initialValue = do
-    modalDismissEvent <- prefRow $ elClass "div" "col s10" $ do
+    (_, onClick) <- prefRow $ elClass "div" "col s10" $ do
         prefHeader header
         elClass "p" "unselectable" $ text description
-        onClick <- button "Open"
-        modal onClick $ do
-            el "h5" $ text header
-            radioGroup header values initialValue
+    
+    modalDismissEvent <- modal onClick $ do
+        el "h5" $ text header
+        radioGroup header values initialValue
 
     divider
 
