@@ -25,14 +25,16 @@ import Bedelibry.Frontend.Utils
 import Data.Proxy
 import Bedelibry.Frontend.Route (Route)
 import qualified Bedelibry.Frontend.Route as Route
-import Reflex.Dom.Core hiding (button, select)
+import Reflex.Dom.Core hiding (button, select, checkbox)
 import Montague.Types
 import Montague.Lexicon hiding (enumValues)
 import Montague.Semantics
 import Data.List
 import Data.Functor
+import Data.Monoid
 import Control.Monad.Tree
 import Control.Monad
+import Control.Monad.Fix
 import Reflex.DynamicWriter.Base
 
 entityPage ::  _ => Event t () -> Dynamic t PreferenceData -> Dynamic t (Maybe SomeLexicon) -> DynamicWriterT t [Event t Route] m ()
@@ -97,3 +99,14 @@ entityPage addBtnClicks prefs maybeParsedSchema = let ?prefs = prefs in let ?sty
 
 enumValues :: (Bounded a, Enum a) => [a]
 enumValues = [minBound..maxBound]
+
+filterDialog :: _ => Event t () -> [typ] ->  m (Dynamic t (Endo [a]))
+filterDialog onClick types = do
+    submitEvent <- modal onClick $ do
+        modalHeader "Filter entities"
+        forM types \x ->
+            checkbox (T.pack $ show x) True
+        return $ pure $ Endo id
+
+    holdDyn (Endo id) 
+        (mapMaybe id submitEvent)
