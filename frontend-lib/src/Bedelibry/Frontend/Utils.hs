@@ -446,6 +446,15 @@ autocompleteTextEntry autocomplete = elClass "div" "input-field col s12" $ do
     attrs = "type" =: "text" <>
         "class" =: "p-form-text p-form-no-validate"
 
+-- | Builds a Dynamic that updates as the file it points
+-- to updates.
+fileContents :: FilePath -> m (Dynamic t String)
+fileContents file = 
+    -- Note that this probably needs to be implemented with
+    -- something like newTriggerEvent
+    -- (see https://hackage.haskell.org/package/reflex-0.8.2.0/docs/Reflex-TriggerEvent-Class.html)
+    undefined
+
 
 toast message = do
     liftJSM $ eval ("console.log(\"toast\"); M.toast({html: '" <> message <> "'})" :: T.Text)
