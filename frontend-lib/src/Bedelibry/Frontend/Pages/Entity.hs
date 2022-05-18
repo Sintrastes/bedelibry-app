@@ -47,6 +47,7 @@ entityPage addBtnClicks filterBtnClicks prefs maybeParsedSchema = let ?prefs = p
     modal addBtnClicks $ do
         modalHeader "Add a new entity"
 
+        -- TODO: Replace this with actual types.
         select "Type" ["Person", "Place", "Thing"] "Person"
         labeledTextEntry $ T.pack $ show Strings.Name
         labeledTextArea $ T.pack $ show Strings.Description
@@ -112,6 +113,8 @@ filterDialog :: _ => Event t () -> [typ] -> m (Dynamic t (Endo [a]))
 filterDialog onClick types = do
     submitEvent <- modal onClick $ do
         modalHeader "Filter entities"
+        -- TODO: Have a filter for not displaying complex types.
+        -- TODO: Have a filter for not displaying ambiguous types.
         forM types \x ->
             checkbox (T.pack $ show x) True
         return $ pure $ Endo id

@@ -40,6 +40,7 @@ library
                , comonad
                , aeson
                , directory
+               , twitch
   exposed-modules:
       Bedelibry.Parser.Markdown
     , Bedelibry.Frontend
