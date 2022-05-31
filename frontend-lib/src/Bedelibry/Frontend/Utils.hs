@@ -455,7 +455,6 @@ fileContents file =
     -- (see https://hackage.haskell.org/package/reflex-0.8.2.0/docs/Reflex-TriggerEvent-Class.html)
     undefined
 
-
 toast message = do
     liftJSM $ eval ("console.log(\"toast\"); M.toast({html: '" <> message <> "'})" :: T.Text)
     pure ()
