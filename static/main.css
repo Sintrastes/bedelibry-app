@@ -54,6 +54,11 @@ nav a {
   transition: color 0.5s ease-in;
 }
 
+nav .brand-logo {
+  color: var(--navbar-text-color);
+  transition: color 0.5s ease-in;
+}
+
 #nav-mobile a {
   color: var(--navbar-text-color);
   transition: color 0.5s ease-in;
